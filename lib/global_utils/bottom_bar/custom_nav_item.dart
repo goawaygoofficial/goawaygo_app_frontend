@@ -1,0 +1,96 @@
+import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/models/user_model.dart';
+import 'package:flutter/material.dart';
+
+class CustomNavItem extends StatelessWidget {
+  final int currentPage;
+  final Function(int) onTap;
+  final UserModel? user;
+
+  const CustomNavItem({
+    super.key,
+    required this.currentPage,
+    required this.onTap,
+    this.user,
+  });
+
+  Widget _navItem({
+    required BuildContext context,
+    required String iconPath,
+    required String label,
+    required int index,
+    required bool isSelected,
+  }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final iconSize = screenWidth * 0.075;
+    const fontSize = 12.0;
+
+    return GestureDetector(
+      onTap: () => onTap(index),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            iconPath,
+            height: iconSize,
+            color: isSelected ? ColorsUtil.secondary : ColorsUtil.primary,
+          ),
+          SizedBox(height: screenHeight * 0.005),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? ColorsUtil.secondary : ColorsUtil.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      color: ColorsUtil.whiteColor,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.08,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _navItem(
+              context: context,
+              iconPath: 'assets/icons/home.png',
+              label: 'HOME',
+              index: 0,
+              isSelected: currentPage == 0,
+            ),
+            _navItem(
+              context: context,
+              iconPath: 'assets/icons/mytrips.png',
+              label: 'MY TRIPS',
+              index: 1,
+              isSelected: currentPage == 1,
+            ),
+            _navItem(
+              context: context,
+              iconPath: 'assets/icons/wanderbook.png',
+              label: 'WANDERBOOK',
+              index: 2,
+              isSelected: currentPage == 2,
+            ),
+            _navItem(
+              context: context,
+              iconPath: 'assets/icons/profile.png',
+              label: user == null ? 'SIGN IN' : 'PROFILE',
+              index: 3,
+              isSelected: currentPage == 3,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

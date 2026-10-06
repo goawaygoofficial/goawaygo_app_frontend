@@ -1,0 +1,220 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
+import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
+import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
+import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
+import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/custom_dialog.dart';
+import 'package:flutter/material.dart';
+
+class RegisterScreen extends StatefulWidget {
+  final VoidCallback onBack;
+
+  const RegisterScreen({super.key, required this.onBack});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  bool isStrongPassword(String password) {
+    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    return regex.hasMatch(password);
+  }
+
+  void _handleRegister() async {
+    FocusScope.of(context).unfocus();
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      await CustomDialogs.showErrorDialog(
+        context: context,
+        message: 'Please fill all fields.',
+      );
+      return;
+    }
+
+    if (!isStrongPassword(password)) {
+      await CustomDialogs.showErrorDialog(
+        context: context,
+        message:
+            'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+      );
+      return;
+    }
+
+    final error = await AuthService.signup(name, email, password);
+
+    if (error == null) {
+      await CustomDialogs.showSuccessDialog(
+        context: context,
+        message: 'Verification email sent! Please check your inbox.',
+        onDismiss: () {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 750),
+              pageBuilder: (_, __, ___) => const AuthScreen(),
+              transitionsBuilder: (_, animation, __, child) {
+                final slide = Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                );
+                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                );
+
+                return SlideTransition(
+                  position: slide,
+                  child: FadeTransition(opacity: fade, child: child),
+                );
+              },
+            ),
+          );
+        },
+      );
+    } else {
+      await CustomDialogs.showErrorDialog(context: context, message: error);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      backgroundColor: ColorsUtil.primary,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.04,
+              vertical: height * 0.02,
+            ),
+            child: Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: height * 0.15,
+                  ),
+                ),
+
+                /// --- Feature Items ---
+                Column(
+                  children: const [
+                    FeatureItem(
+                      icon: 'assets/images/auth_image_01.png',
+                      text: 'Travel the World in Your Terms',
+                    ),
+                    FeatureItem(
+                      icon: 'assets/images/auth_image_02.png',
+                      text: 'Personalised Travel Plans',
+                    ),
+                    FeatureItem(
+                      icon: 'assets/images/auth_image_03.png',
+                      text: 'Your Own WanderBook',
+                    ),
+                  ],
+                ),
+                SizedBox(height: height * 0.01),
+
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: "Enter your Name...",
+                    filled: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: height * 0.02,
+                      horizontal: width * 0.05,
+                    ),
+                    fillColor: ColorsUtil.whiteColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: height * 0.02),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    hintText: "Enter your Email address...",
+                    filled: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: height * 0.02,
+                      horizontal: width * 0.05,
+                    ),
+                    fillColor: ColorsUtil.whiteColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: height * 0.02),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: "Password...",
+                    filled: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: height * 0.02,
+                      horizontal: width * 0.05,
+                    ),
+                    fillColor: ColorsUtil.whiteColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: height * 0.04),
+
+                AuthButton(
+                  icon: 'assets/icons/email.png',
+                  text: 'REGISTER',
+                  bgColor: ColorsUtil.secondary,
+                  textColor: ColorsUtil.whiteColor,
+                  onTap: _handleRegister,
+                ),
+
+                /// --- Back to Sign In ---
+                TextButton(
+                  onPressed: widget.onBack,
+                  child: const Text(
+                    "Already have an account? Sign In",
+                    style: TextStyle(
+                      color: ColorsUtil.secondary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
