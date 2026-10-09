@@ -1,0 +1,20 @@
+# Normalize line endings to LF in the repo and working tree (dart format and CI expect LF),
+# regardless of each developer's core.autocrlf setting.
+* text=auto eol=lf
+
+# Windows scripts need CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.icns binary
+*.ttf binary
+*.otf binary
+*.jar binary
+*.so binary
