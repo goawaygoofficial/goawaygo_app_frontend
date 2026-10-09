@@ -65,7 +65,7 @@ class WanderbookProfileHeader extends StatelessWidget {
                       width: width * 0.09,
                       height: width * 0.09,
                       decoration: BoxDecoration(
-                        color: ColorsUtil.whiteColor.withOpacity(0.9),
+                        color: ColorsUtil.whiteColor.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
