@@ -69,15 +69,16 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
       bottomNavigationBar: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
-          final slideAnimation = Tween<Offset>(
-            begin: const Offset(0, 1),
-            end: Offset.zero,
-          ).animate(
-            CurvedAnimation(
-              parent: _animationController,
-              curve: Curves.easeInOut,
-            ),
-          );
+          final slideAnimation =
+              Tween<Offset>(
+                begin: const Offset(0, 1),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(
+                  parent: _animationController,
+                  curve: Curves.easeInOut,
+                ),
+              );
 
           final sizeAnimation = CurvedAnimation(
             parent: _animationController,
@@ -86,7 +87,7 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
 
           return SizeTransition(
             sizeFactor: sizeAnimation,
-            axisAlignment: -1.0,
+            alignment: AlignmentDirectional.topStart,
             child: SlideTransition(
               position: slideAnimation,
               child: FadeTransition(

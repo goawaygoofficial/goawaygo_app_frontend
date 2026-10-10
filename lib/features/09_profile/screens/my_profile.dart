@@ -41,10 +41,9 @@ class _MyProfileState extends State<MyProfile> {
                   vertical: size.height * 0.03,
                   horizontal: size.width * 0.06,
                 ),
-                child:
-                    isLoggedIn
-                        ? _buildProfileContent(height) // logged in
-                        : _buildGuestContent(width, height), // guest view
+                child: isLoggedIn
+                    ? _buildProfileContent(height) // logged in
+                    : _buildGuestContent(width, height), // guest view
               ),
             ),
           ),

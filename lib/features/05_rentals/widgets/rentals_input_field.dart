@@ -65,93 +65,88 @@ class _RentalsInputFieldState extends State<RentalsInputField> {
           SizedBox(width: width * 0.04),
           if (!widget.isCounter)
             Expanded(
-              child:
-                  widget.dropdownItems != null
-                      ? DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedValue,
-                          dropdownColor: ColorsUtil.primaryLight,
-                          iconEnabledColor: ColorsUtil.whiteColor,
-                          style: const TextStyle(
-                            color: ColorsUtil.whiteColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          items:
-                              widget.dropdownItems!.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedValue = newValue;
-                              if (widget.controller != null &&
-                                  newValue != null) {
-                                widget.controller!.text = newValue;
-                              }
-                            });
-                          },
-                        ),
-                      )
-                      : widget.controller == null
-                      ? Text(
-                        widget.hint!,
+              child: widget.dropdownItems != null
+                  ? DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedValue,
+                        dropdownColor: ColorsUtil.primaryLight,
+                        iconEnabledColor: ColorsUtil.whiteColor,
                         style: const TextStyle(
                           color: ColorsUtil.whiteColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
-                      )
-                      : widget.isTapEnabled == false
-                      ? TextField(
-                        controller: widget.controller,
-                        enableSuggestions: false,
-                        keyboardAppearance: Brightness.dark,
-                        cursorColor: ColorsUtil.whiteColor,
-                        style: const TextStyle(color: ColorsUtil.whiteColor),
-                        decoration: InputDecoration(
-                          hintText: widget.hint,
-                          hintStyle: const TextStyle(
-                            color: ColorsUtil.whiteColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: InputBorder.none,
+                        items: widget.dropdownItems!.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedValue = newValue;
+                            if (widget.controller != null && newValue != null) {
+                              widget.controller!.text = newValue;
+                            }
+                          });
+                        },
+                      ),
+                    )
+                  : widget.controller == null
+                  ? Text(
+                      widget.hint!,
+                      style: const TextStyle(
+                        color: ColorsUtil.whiteColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : widget.isTapEnabled == false
+                  ? TextField(
+                      controller: widget.controller,
+                      enableSuggestions: false,
+                      keyboardAppearance: Brightness.dark,
+                      cursorColor: ColorsUtil.whiteColor,
+                      style: const TextStyle(color: ColorsUtil.whiteColor),
+                      decoration: InputDecoration(
+                        hintText: widget.hint,
+                        hintStyle: const TextStyle(
+                          color: ColorsUtil.whiteColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
-                      : GestureDetector(
-                        onTap: widget.onTap,
-                        child: AbsorbPointer(
-                          child: TextField(
-                            controller: widget.controller,
-                            enableSuggestions: false,
-                            keyboardAppearance: Brightness.dark,
-                            cursorColor: ColorsUtil.whiteColor,
-                            style: const TextStyle(
+                        border: InputBorder.none,
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: widget.onTap,
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: widget.controller,
+                          enableSuggestions: false,
+                          keyboardAppearance: Brightness.dark,
+                          cursorColor: ColorsUtil.whiteColor,
+                          style: const TextStyle(color: ColorsUtil.whiteColor),
+                          decoration: InputDecoration(
+                            hintText: widget.hint,
+                            hintStyle: const TextStyle(
                               color: ColorsUtil.whiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
-                            decoration: InputDecoration(
-                              hintText: widget.hint,
-                              hintStyle: const TextStyle(
-                                color: ColorsUtil.whiteColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
+                    ),
             )
           else
             Expanded(
               child: Row(
                 children: [
                   InkWell(
-                    onTap:
-                        () => RentalsFormControllersUtils.decrementController(
+                    onTap: () =>
+                        RentalsFormControllersUtils.decrementController(
                           widget.controller,
                         ),
                     child: const Icon(Icons.remove, color: Colors.white),
@@ -177,8 +172,8 @@ class _RentalsInputFieldState extends State<RentalsInputField> {
                   ),
                   SizedBox(width: width * 0.02),
                   InkWell(
-                    onTap:
-                        () => RentalsFormControllersUtils.incrementController(
+                    onTap: () =>
+                        RentalsFormControllersUtils.incrementController(
                           widget.controller,
                         ),
                     child: const Icon(Icons.add, color: Colors.white),

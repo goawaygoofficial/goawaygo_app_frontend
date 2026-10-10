@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class AnimatedWaveBackground extends StatefulWidget {
@@ -50,10 +51,9 @@ class WavePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = Colors.white.withOpacity(0.08)
-          ..style = PaintingStyle.fill;
+    final paint = Paint()
+      ..color = Colors.white.withOpacity(0.08)
+      ..style = PaintingStyle.fill;
 
     final path = Path();
     final double waveHeight = 20;

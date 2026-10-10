@@ -44,66 +44,62 @@ class _FlightInputFieldState extends State<FlightInputField> {
           SizedBox(width: width * 0.04),
           if (!widget.isCounter)
             Expanded(
-              child:
-                  widget.controller == null
-                      ? Text(
-                        widget.hint!,
-                        style: const TextStyle(
+              child: widget.controller == null
+                  ? Text(
+                      widget.hint!,
+                      style: const TextStyle(
+                        color: ColorsUtil.whiteColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : widget.onTap != null
+                  ? GestureDetector(
+                      onTap: widget.onTap,
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: widget.controller,
+                          enableSuggestions: false,
+                          keyboardAppearance: Brightness.dark,
+                          cursorColor: ColorsUtil.whiteColor,
+                          style: const TextStyle(color: ColorsUtil.whiteColor),
+                          decoration: InputDecoration(
+                            hintText: widget.hint,
+                            hintStyle: const TextStyle(
+                              color: ColorsUtil.whiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    )
+                  : TextField(
+                      controller: widget.controller,
+                      enableSuggestions: false,
+                      keyboardAppearance: Brightness.dark,
+                      cursorColor: ColorsUtil.whiteColor,
+                      style: const TextStyle(color: ColorsUtil.whiteColor),
+                      decoration: InputDecoration(
+                        hintText: widget.hint,
+                        hintStyle: const TextStyle(
                           color: ColorsUtil.whiteColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
-                      )
-                      : widget.onTap != null
-                      ? GestureDetector(
-                        onTap: widget.onTap,
-                        child: AbsorbPointer(
-                          child: TextField(
-                            controller: widget.controller,
-                            enableSuggestions: false,
-                            keyboardAppearance: Brightness.dark,
-                            cursorColor: ColorsUtil.whiteColor,
-                            style: const TextStyle(
-                              color: ColorsUtil.whiteColor,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: widget.hint,
-                              hintStyle: const TextStyle(
-                                color: ColorsUtil.whiteColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      )
-                      : TextField(
-                        controller: widget.controller,
-                        enableSuggestions: false,
-                        keyboardAppearance: Brightness.dark,
-                        cursorColor: ColorsUtil.whiteColor,
-                        style: const TextStyle(color: ColorsUtil.whiteColor),
-                        decoration: InputDecoration(
-                          hintText: widget.hint,
-                          hintStyle: const TextStyle(
-                            color: ColorsUtil.whiteColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: InputBorder.none,
-                        ),
+                        border: InputBorder.none,
                       ),
+                    ),
             )
           else
             Expanded(
               child: Row(
                 children: [
                   InkWell(
-                    onTap:
-                        () => FlightFormControllersUtils.decrementController(
-                          widget.controller,
-                        ),
+                    onTap: () => FlightFormControllersUtils.decrementController(
+                      widget.controller,
+                    ),
                     child: const Icon(Icons.remove, color: Colors.white),
                   ),
                   SizedBox(width: width * 0.02),
@@ -127,10 +123,9 @@ class _FlightInputFieldState extends State<FlightInputField> {
                   ),
                   SizedBox(width: width * 0.02),
                   InkWell(
-                    onTap:
-                        () => FlightFormControllersUtils.incrementController(
-                          widget.controller,
-                        ),
+                    onTap: () => FlightFormControllersUtils.incrementController(
+                      widget.controller,
+                    ),
                     child: const Icon(Icons.add, color: Colors.white),
                   ),
                 ],
