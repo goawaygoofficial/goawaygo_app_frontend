@@ -22,7 +22,7 @@ class _WanderbookGridState extends State<WanderbookGrid> {
       ),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-          (_, __) => Container(
+          (_, _) => Container(
             decoration: BoxDecoration(
               color: Colors.orange.shade300,
               borderRadius: BorderRadius.circular(16),
