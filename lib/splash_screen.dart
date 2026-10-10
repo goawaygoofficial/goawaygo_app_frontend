@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, use_build_context_synchronously
 
 import 'dart:async';
+
 import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
 import 'package:app_frontend/global_utils/bottom_bar/bottom_bar.dart';
 import 'package:app_frontend/global_utils/colors.dart';

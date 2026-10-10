@@ -204,12 +204,11 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                           hint: 'Departure',
                           controller: departureController,
                           isTapEnabled: true,
-                          onTap:
-                              () => RentalsDatePickerUtils.selectDate(
-                                context,
-                                departureController,
-                                () => setState(() {}),
-                              ),
+                          onTap: () => RentalsDatePickerUtils.selectDate(
+                            context,
+                            departureController,
+                            () => setState(() {}),
+                          ),
                         ),
                       ),
                       if (isRoundTrip) ...[
@@ -220,12 +219,11 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                             hint: 'Return',
                             controller: returnController,
                             isTapEnabled: true,
-                            onTap:
-                                () => RentalsDatePickerUtils.selectDate(
-                                  context,
-                                  returnController,
-                                  () => setState(() {}),
-                                ),
+                            onTap: () => RentalsDatePickerUtils.selectDate(
+                              context,
+                              returnController,
+                              () => setState(() {}),
+                            ),
                           ),
                         ),
                       ],

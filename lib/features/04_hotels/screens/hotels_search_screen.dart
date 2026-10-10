@@ -114,12 +114,11 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                           icon: Icons.calendar_today,
                           hint: 'Check-in',
                           controller: checkinController,
-                          onTap:
-                              () => HotelDatePickerUtils.selectDate(
-                                context,
-                                checkinController,
-                                () => setState(() {}),
-                              ),
+                          onTap: () => HotelDatePickerUtils.selectDate(
+                            context,
+                            checkinController,
+                            () => setState(() {}),
+                          ),
                         ),
                       ),
                       SizedBox(width: width * 0.025),
@@ -128,12 +127,11 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                           icon: Icons.calendar_today,
                           hint: 'Check-out',
                           controller: checkoutController,
-                          onTap:
-                              () => HotelDatePickerUtils.selectDate(
-                                context,
-                                checkoutController,
-                                () => setState(() {}),
-                              ),
+                          onTap: () => HotelDatePickerUtils.selectDate(
+                            context,
+                            checkoutController,
+                            () => setState(() {}),
+                          ),
                         ),
                       ),
                     ],

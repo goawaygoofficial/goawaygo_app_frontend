@@ -109,12 +109,16 @@ class _AuthScreenState extends State<AuthScreen>
               transitionDuration: const Duration(milliseconds: 750),
               pageBuilder: (_, __, ___) => BottomBar(user: user),
               transitionsBuilder: (_, animation, __, child) {
-                final slide = Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
+                final slide =
+                    Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      ),
+                    );
                 final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(parent: animation, curve: Curves.easeInOut),
                 );
@@ -166,12 +170,16 @@ class _AuthScreenState extends State<AuthScreen>
               transitionDuration: const Duration(milliseconds: 750),
               pageBuilder: (_, __, ___) => BottomBar(user: user),
               transitionsBuilder: (_, animation, __, child) {
-                final slide = Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
+                final slide =
+                    Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      ),
+                    );
                 final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(parent: animation, curve: Curves.easeInOut),
                 );
@@ -239,28 +247,25 @@ class _AuthScreenState extends State<AuthScreen>
                                       transitionDuration: const Duration(
                                         milliseconds: 750,
                                       ),
-                                      pageBuilder:
-                                          (_, __, ___) => const BottomBar(),
-                                      transitionsBuilder: (
-                                        _,
-                                        animation,
-                                        __,
-                                        child,
-                                      ) {
-                                        final offsetAnimation = Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0),
-                                          end: Offset.zero,
-                                        ).animate(
-                                          CurvedAnimation(
-                                            parent: animation,
-                                            curve: Curves.easeInOut,
-                                          ),
-                                        );
-                                        return SlideTransition(
-                                          position: offsetAnimation,
-                                          child: child,
-                                        );
-                                      },
+                                      pageBuilder: (_, __, ___) =>
+                                          const BottomBar(),
+                                      transitionsBuilder:
+                                          (_, animation, __, child) {
+                                            final offsetAnimation =
+                                                Tween<Offset>(
+                                                  begin: const Offset(1.0, 0.0),
+                                                  end: Offset.zero,
+                                                ).animate(
+                                                  CurvedAnimation(
+                                                    parent: animation,
+                                                    curve: Curves.easeInOut,
+                                                  ),
+                                                );
+                                            return SlideTransition(
+                                              position: offsetAnimation,
+                                              child: child,
+                                            );
+                                          },
                                     ),
                                   );
                                 },
@@ -369,10 +374,9 @@ class _AuthScreenState extends State<AuthScreen>
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
-                                    onPressed:
-                                        () => setState(
-                                          () => showForgotPassword = true,
-                                        ),
+                                    onPressed: () => setState(
+                                      () => showForgotPassword = true,
+                                    ),
                                     child: const Text(
                                       "Forgot Password?",
                                       style: TextStyle(
@@ -395,8 +399,8 @@ class _AuthScreenState extends State<AuthScreen>
 
                                 /// --- Not Registered? Register ---
                                 TextButton(
-                                  onPressed:
-                                      () => setState(() => showRegister = true),
+                                  onPressed: () =>
+                                      setState(() => showRegister = true),
                                   child: const Text(
                                     "Not Registered? Register",
                                     style: TextStyle(
@@ -408,10 +412,9 @@ class _AuthScreenState extends State<AuthScreen>
                                 ),
                               ],
                             ),
-                            crossFadeState:
-                                _showForm
-                                    ? CrossFadeState.showSecond
-                                    : CrossFadeState.showFirst,
+                            crossFadeState: _showForm
+                                ? CrossFadeState.showSecond
+                                : CrossFadeState.showFirst,
                           ),
                         ],
                       ),

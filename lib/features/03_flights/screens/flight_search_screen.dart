@@ -205,12 +205,11 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                           icon: Icons.calendar_today,
                           hint: 'Departure',
                           controller: departureController,
-                          onTap:
-                              () => FlightDatePickerUtils.selectDate(
-                                context,
-                                departureController,
-                                () => setState(() {}),
-                              ),
+                          onTap: () => FlightDatePickerUtils.selectDate(
+                            context,
+                            departureController,
+                            () => setState(() {}),
+                          ),
                         ),
                       ),
                       if (isRoundTrip) ...[
@@ -220,12 +219,11 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                             icon: Icons.calendar_today,
                             hint: 'Return',
                             controller: returnController,
-                            onTap:
-                                () => FlightDatePickerUtils.selectDate(
-                                  context,
-                                  returnController,
-                                  () => setState(() {}),
-                                ),
+                            onTap: () => FlightDatePickerUtils.selectDate(
+                              context,
+                              returnController,
+                              () => setState(() {}),
+                            ),
                           ),
                         ),
                       ],

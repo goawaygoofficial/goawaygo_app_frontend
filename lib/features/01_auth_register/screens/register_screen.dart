@@ -52,8 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!isStrongPassword(password)) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message:
-            'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+        message: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
       );
       return;
     }
@@ -70,12 +69,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               transitionDuration: const Duration(milliseconds: 750),
               pageBuilder: (_, __, ___) => const AuthScreen(),
               transitionsBuilder: (_, animation, __, child) {
-                final slide = Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
+                final slide =
+                    Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      ),
+                    );
                 final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(parent: animation, curve: Curves.easeInOut),
                 );
