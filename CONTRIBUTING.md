@@ -107,5 +107,5 @@ flutter analyze
 flutter test
 ```
 
-Format code with `dart format lib test`. CI uses Flutter **3.29.0** (see `.github/workflows/ci.yml`).
+Format code with `dart format lib test`. CI uses Flutter **3.47.7** (see `.github/workflows/ci.yml`).
 Update it there when upgrading Flutter locally.
