@@ -62,8 +62,8 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 1000),
-          pageBuilder: (_, __, ___) => BottomBar(user: userProvider.user),
-          transitionsBuilder: (_, animation, __, child) {
+          pageBuilder: (_, _, _) => BottomBar(user: userProvider.user),
+          transitionsBuilder: (_, animation, _, child) {
             final slide = Tween<Offset>(
               begin: const Offset(1.0, 0.0),
               end: Offset.zero,

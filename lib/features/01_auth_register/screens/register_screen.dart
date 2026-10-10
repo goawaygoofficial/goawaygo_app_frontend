@@ -67,8 +67,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, __, ___) => const AuthScreen(),
-              transitionsBuilder: (_, animation, __, child) {
+              pageBuilder: (_, _, _) => const AuthScreen(),
+              transitionsBuilder: (_, animation, _, child) {
                 final slide =
                     Tween<Offset>(
                       begin: const Offset(1.0, 0.0),

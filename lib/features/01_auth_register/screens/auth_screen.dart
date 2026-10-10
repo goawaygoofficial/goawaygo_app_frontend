@@ -107,8 +107,8 @@ class _AuthScreenState extends State<AuthScreen>
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, __, ___) => BottomBar(user: user),
-              transitionsBuilder: (_, animation, __, child) {
+              pageBuilder: (_, _, _) => BottomBar(user: user),
+              transitionsBuilder: (_, animation, _, child) {
                 final slide =
                     Tween<Offset>(
                       begin: const Offset(1.0, 0.0),
@@ -168,8 +168,8 @@ class _AuthScreenState extends State<AuthScreen>
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, __, ___) => BottomBar(user: user),
-              transitionsBuilder: (_, animation, __, child) {
+              pageBuilder: (_, _, _) => BottomBar(user: user),
+              transitionsBuilder: (_, animation, _, child) {
                 final slide =
                     Tween<Offset>(
                       begin: const Offset(1.0, 0.0),
@@ -247,10 +247,10 @@ class _AuthScreenState extends State<AuthScreen>
                                       transitionDuration: const Duration(
                                         milliseconds: 750,
                                       ),
-                                      pageBuilder: (_, __, ___) =>
+                                      pageBuilder: (_, _, _) =>
                                           const BottomBar(),
                                       transitionsBuilder:
-                                          (_, animation, __, child) {
+                                          (_, animation, _, child) {
                                             final offsetAnimation =
                                                 Tween<Offset>(
                                                   begin: const Offset(1.0, 0.0),
