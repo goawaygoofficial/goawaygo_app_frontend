@@ -95,7 +95,7 @@ Review them like any other PR: CI must pass, and read the changelog for major up
 
 ```bash
 flutter pub get
-cp .env.example .env          # fill in BASE_URL and GOOGLE_CLIENT_ID
+cp .env.example .env          # Google client IDs are pre-filled; check BASE_URL
 flutter run
 ```
 

@@ -6,16 +6,16 @@ Backend: [goawayofficial/goaway_backend](https://github.com/goawayofficial/goawa
 
 ## Features
 
-| Module | Folder | What it does |
-|---|---|---|
-| Auth | `lib/features/01_auth_register` | Email sign up / sign in, Google Sign-In, forgot password |
-| Home | `lib/features/02_home` | Category buttons and card carousel |
-| Flights | `lib/features/03_flights` | Flight search form |
-| Hotels | `lib/features/04_hotels` | Hotel search form |
-| Rentals | `lib/features/05_rentals` | Rental search form |
-| Destination info | `lib/features/06_destinationInfo` | Destination details |
-| Wanderbook | `lib/features/08_wanderbook` | Travel profile, tabs and photo grid |
-| Profile | `lib/features/09_profile` | My profile and other users' profiles |
+| Module           | Folder                            | What it does                                             |
+| ---------------- | --------------------------------- | -------------------------------------------------------- |
+| Auth             | `lib/features/01_auth_register`   | Email sign up / sign in, Google Sign-In, forgot password |
+| Home             | `lib/features/02_home`            | Category buttons and card carousel                       |
+| Flights          | `lib/features/03_flights`         | Flight search form                                       |
+| Hotels           | `lib/features/04_hotels`          | Hotel search form                                        |
+| Rentals          | `lib/features/05_rentals`         | Rental search form                                       |
+| Destination info | `lib/features/06_destinationInfo` | Destination details                                      |
+| Wanderbook       | `lib/features/08_wanderbook`      | Travel profile, tabs and photo grid                      |
+| Profile          | `lib/features/09_profile`         | My profile and other users' profiles                     |
 
 ## Tech stack
 
@@ -43,11 +43,13 @@ lib/
 ## Getting started
 
 ### Prerequisites
+
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (Dart 3.7+)
 - Android Studio / Xcode for emulators, or a physical device
 - The [backend](https://github.com/goawayofficial/goaway_backend) running locally or deployed
 
 ### 1. Clone and install
+
 ```bash
 git clone https://github.com/goawayofficial/goaway_app_frontend.git
 cd goaway_app_frontend
@@ -55,22 +57,38 @@ flutter pub get
 ```
 
 ### 2. Create `.env`
-Copy the example and fill in the values:
+
+Copy the example. It already contains the project's (public) Google client IDs:
+
 ```bash
 cp .env.example .env
 ```
 
-| Variable | Description | Example |
-|---|---|---|
-| `BASE_URL` | Backend URL, no trailing slash | `http://10.0.2.2:8080` (Android emulator → your PC's localhost) |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | `xxxx.apps.googleusercontent.com` |
+| Variable               | Description                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------- |
+| `BASE_URL`             | Backend URL, no trailing slash. Android emulator → your PC's localhost: `http://10.0.2.2:8080`          |
+| `GOOGLE_WEB_CLIENT_ID` | Google **Web** OAuth client. The app requests ID tokens for this audience; the backend only accepts it. |
+| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawayofficial.app`                                      |
 
 > `.env` is bundled into the app as an asset, so anyone with the app can read it. Only put **public** config here — never real secrets.
 
-### 3. Add Firebase / Google config (Android)
-Place `google-services.json` in `android/app/`. Get it from the project owner or the Firebase console. It is gitignored.
+### 3. Google Sign-In on your machine (Android)
+
+App ID (Android package and iOS bundle ID): **`com.goawayofficial.app`**. Google Cloud project: `goaway-483709`.
+
+Android has no client ID in the app: Google recognises it by the package name **and the SHA-1 of the signing
+key**. Each developer's debug key is different, so ask the project owner to add yours as an Android OAuth client
+(package `com.goawayofficial.app`). Get your SHA-1 with:
+
+```bash
+keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
+```
+
+(PowerShell. On macOS/Linux use `~/.android/debug.keystore`.) Release builds signed by Google Play need their
+own Android client with the SHA-1 from Play Console → _App integrity_.
 
 ### 4. Run
+
 ```bash
 flutter run
 ```
