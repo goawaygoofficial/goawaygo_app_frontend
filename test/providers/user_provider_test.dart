@@ -92,5 +92,46 @@ void main() {
 
       expect(provider.user, isNull);
     });
+
+    test('reloadUser replaces the user with the server copy', () async {
+      backend.on(
+        'GET',
+        '/api/users/me',
+        (_) async => FakeBackend.json(FakeBackend.userJson()),
+      );
+      final provider = UserProvider()
+        ..signIn(UserModel(id: 7, name: 'Asha', email: 'asha@example.com'));
+      expect(provider.user?.emailVerified, isFalse);
+
+      await provider.reloadUser();
+
+      expect(provider.user?.emailVerified, isTrue);
+    });
+
+    test('reloadUser does nothing when signed out', () async {
+      final provider = UserProvider();
+
+      await provider.reloadUser();
+
+      expect(provider.user, isNull);
+      expect(backend.count('GET', '/api/users/me'), 0);
+    });
+
+    test(
+      'reloadUser keeps the current user when the server cannot be reached',
+      () async {
+        backend.on(
+          'GET',
+          '/api/users/me',
+          (_) async => FakeBackend.error(503, 'unavailable', 'Down'),
+        );
+        final provider = UserProvider()
+          ..signIn(UserModel(id: 7, name: 'Asha', email: 'asha@example.com'));
+
+        await provider.reloadUser();
+
+        expect(provider.user?.email, 'asha@example.com');
+      },
+    );
   });
 }
