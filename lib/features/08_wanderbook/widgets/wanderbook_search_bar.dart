@@ -54,8 +54,6 @@ class _WanderbookSearchBarState extends State<WanderbookSearchBar> {
               ),
             ),
           ),
-          SizedBox(width: width * 0.03),
-          Icon(Icons.notifications, color: ColorsUtil.secondary, size: 28),
         ],
       ),
     );

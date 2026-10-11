@@ -30,7 +30,7 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
       HomeScreen(user: widget.user, toggleBottomBar: _toggleBottomBar),
       const Center(child: Text('My Trips Page')),
       WanderbookHome(user: widget.user),
-      MyProfile(user: widget.user, toggleBottomBar: _toggleBottomBar),
+      MyProfile(toggleBottomBar: _toggleBottomBar),
     ]);
 
     _animationController = AnimationController(

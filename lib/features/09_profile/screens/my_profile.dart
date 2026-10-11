@@ -1,28 +1,46 @@
-import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
-import 'package:app_frontend/features/01_auth_register/sign_out.dart';
+import 'package:app_frontend/features/01_auth_register/screens/forgot_password_screen.dart';
+import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
+import 'package:app_frontend/features/01_auth_register/widgets/sign_in_panel.dart';
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
-import 'package:app_frontend/features/09_profile/widgets/auth_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/verify_email_banner.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
-import 'package:app_frontend/models/user_model.dart';
+import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+/// The Profile tab. Signed out, it signs in right here with the same panel as the sign-in screen; signed in, it
+/// shows the profile tiles. Sign out lives on the User Profile page only.
 class MyProfile extends StatefulWidget {
   final void Function(bool) toggleBottomBar;
-  final UserModel? user;
 
-  const MyProfile({super.key, this.user, required this.toggleBottomBar});
+  const MyProfile({super.key, required this.toggleBottomBar});
 
   @override
   State<MyProfile> createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> {
-  bool _showAuthScreen = false;
   bool _showUserProfile = false;
+  bool _showRegister = false;
+  bool _showForgotPassword = false;
+
+  void _open(void Function() show) {
+    setState(show);
+    widget.toggleBottomBar(false);
+  }
+
+  void _closeOverlays() {
+    setState(() {
+      _showUserProfile = false;
+      _showRegister = false;
+      _showForgotPassword = false;
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
+    widget.toggleBottomBar(true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +48,8 @@ class _MyProfileState extends State<MyProfile> {
     final width = size.width;
     final height = size.height;
 
-    final isLoggedIn = widget.user != null;
+    // Follows sign-in / sign-out as it happens (signing in here keeps the user on this tab).
+    final user = context.watch<UserProvider>().user;
 
     return Scaffold(
       backgroundColor: ColorsUtil.primary,
@@ -43,111 +62,63 @@ class _MyProfileState extends State<MyProfile> {
                   vertical: size.height * 0.03,
                   horizontal: size.width * 0.06,
                 ),
-                child: isLoggedIn
-                    ? _buildProfileContent(height) // logged in
-                    : _buildGuestContent(width, height), // guest view
+                child: user != null
+                    ? _buildProfileContent(height)
+                    : _buildGuestContent(width, height),
               ),
             ),
           ),
 
+          // Signed out: Register / Forgot Password from the sign-in panel.
           SlideFadeTransition(
-            visible: _showAuthScreen,
-            onClose: () {
-              setState(() {
-                _showAuthScreen = false;
-              });
-            },
-            child: AuthScreen(
-              onClose: () {
-                setState(() {
-                  _showAuthScreen = false;
-                });
-              },
-            ),
+            visible: _showRegister,
+            onClose: _closeOverlays,
+            child: RegisterScreen(onBack: _closeOverlays),
+          ),
+          SlideFadeTransition(
+            visible: _showForgotPassword,
+            onClose: _closeOverlays,
+            child: ForgotPasswordScreen(onBack: _closeOverlays),
           ),
 
           SlideFadeTransition(
             visible: _showUserProfile,
-            onClose: () {
-              setState(() {
-                _showUserProfile = false;
-                widget.toggleBottomBar(true);
-              });
-            },
-            child: UserProfilePage(
-              user: widget.user,
-              onClose: () {
-                setState(() {
-                  _showUserProfile = false;
-                  widget.toggleBottomBar(true);
-                });
-              },
-            ),
+            onClose: _closeOverlays,
+            child: UserProfilePage(user: user, onClose: _closeOverlays),
           ),
         ],
       ),
     );
   }
 
-  /// --- Guest Content (Logo + Feature + Sign In) ---
+  /// --- Signed out: logo, features and the sign-in panel ---
   Widget _buildGuestContent(double width, double height) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
           'assets/images/logo.png',
           width: width * 0.3,
-          height: height * 0.25,
+          height: height * 0.2,
         ),
-        Column(
-          children: const [
-            FeatureItem(
-              icon: 'assets/images/auth_image_01.png',
-              text: 'Travel the World in Your Terms',
-            ),
-            FeatureItem(
-              icon: 'assets/images/auth_image_02.png',
-              text: 'Personalised Travel Plans',
-            ),
-            FeatureItem(
-              icon: 'assets/images/auth_image_03.png',
-              text: 'Your Own WanderBook',
-            ),
-          ],
-        ),
-        SizedBox(height: height * 0.05),
-        AuthButton(
-          text: 'SIGN IN',
-          bgColor: ColorsUtil.secondary,
-          textColor: ColorsUtil.whiteColor,
-          onTap: () {
-            setState(() {
-              _showAuthScreen = true;
-              widget.toggleBottomBar(false);
-            });
-          },
+        const FeatureList(),
+        SizedBox(height: height * 0.03),
+        SignInPanel(
+          onSignedIn: (_) {}, // Stay on Profile; it rebuilds as signed in.
+          onRegister: () => _open(() => _showRegister = true),
+          onForgotPassword: () => _open(() => _showForgotPassword = true),
         ),
       ],
     );
   }
 
-  /// --- Logged In Content (Profile Buttons) ---
+  /// --- Signed in: profile tiles ---
   Widget _buildProfileContent(double height) {
-    final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Sign out, top-right, styled like the header's notification bell.
-        Align(
-          alignment: Alignment.centerRight,
-          child: SignOutIconButton(
-            color: ColorsUtil.secondaryLight,
-            size: width * 0.075,
-          ),
-        ),
         const VerifyEmailBanner(),
-        SizedBox(height: height * 0.02),
+        SizedBox(height: height * 0.03),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -185,12 +156,7 @@ class _MyProfileState extends State<MyProfile> {
             ProfileButton(
               imagePath: 'assets/icons/user_profile.png',
               title: 'User Profile',
-              onTap: () {
-                setState(() {
-                  _showUserProfile = true;
-                  widget.toggleBottomBar(false);
-                });
-              },
+              onTap: () => _open(() => _showUserProfile = true),
             ),
           ],
         ),

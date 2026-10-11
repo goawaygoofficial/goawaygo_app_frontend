@@ -55,14 +55,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ],
                   ),
                   const Spacer(),
-                  IconButton(
-                    icon: Icon(
-                      Icons.notifications,
-                      size: width * 0.075,
-                      color: ColorsUtil.secondaryLight,
-                    ),
-                    onPressed: () {},
-                  ),
+                  // Balances the logo so the title stays centred (notifications are on Home only).
+                  SizedBox(width: width * 0.2),
                 ],
               ),
               LayoutBuilder(
