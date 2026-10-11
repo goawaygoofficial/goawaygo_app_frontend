@@ -146,4 +146,27 @@ class AuthService {
       fallbackError: 'Failed to request password reset',
     );
   }
+
+  /// Emails the signed-in user a new link to verify their email. The link opens the website.
+  static Future<void> resendVerificationEmail() async {
+    await Backend.api.request(
+      'POST',
+      '/api/auth/resend-verification',
+      expectedStatus: 202,
+      fallbackError: 'Failed to send verification email',
+    );
+  }
+
+  /// The signed-in user, fresh from the server (e.g. after the email was verified on the website).
+  static Future<UserModel> fetchCurrentUser() async {
+    final data = await Backend.api.request(
+      'GET',
+      '/api/users/me',
+      fallbackError: 'Failed to load profile',
+    );
+    if (data is! Map<String, dynamic>) {
+      throw const ApiException('Unexpected response from server.', 200);
+    }
+    return UserModel.fromJson(data);
+  }
 }

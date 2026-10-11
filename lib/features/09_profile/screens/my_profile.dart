@@ -4,6 +4,7 @@ import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/features/09_profile/widgets/auth_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_button.dart';
+import 'package:app_frontend/features/09_profile/widgets/verify_email_banner.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
@@ -145,7 +146,8 @@ class _MyProfileState extends State<MyProfile> {
             size: width * 0.075,
           ),
         ),
-        SizedBox(height: height * 0.01),
+        const VerifyEmailBanner(),
+        SizedBox(height: height * 0.02),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

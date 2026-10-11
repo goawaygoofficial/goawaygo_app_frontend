@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/models/user_model.dart';
@@ -42,6 +43,21 @@ class UserProvider extends ChangeNotifier {
     await AuthService.signOut();
     _user = null;
     notifyListeners();
+  }
+
+  /// Re-reads the signed-in user from the server, e.g. when the app comes back to the foreground after the
+  /// email was verified in the browser. Does nothing when signed out; keeps the current user if it fails.
+  Future<void> reloadUser() async {
+    if (_user == null) return;
+    try {
+      final fresh = await AuthService.fetchCurrentUser();
+      // Ignore the answer if the user signed out while it was loading.
+      if (_user == null) return;
+      _user = fresh;
+      notifyListeners();
+    } on ApiException {
+      // Offline or session ended (the session listener handles sign-out).
+    }
   }
 
   static Future<void> _removeLegacyStoredUser() async {
