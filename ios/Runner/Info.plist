@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Google Sign-In: Google returns to the app through this URL scheme, the reversed iOS client ID
+	     (GOOGLE_IOS_CLIENT_ID in .env). Update both together if the iOS client changes. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1018541563002-ss0dur7e8d4l9c2lb2o89edgouqrd2fv</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
