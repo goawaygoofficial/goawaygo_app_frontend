@@ -14,11 +14,6 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
-    ignore:
-      # google_sign_in 7 has a breaking API change (no GoogleSignIn() constructor, no signIn()).
-      # It will be adopted in Phase 2 together with the backend auth work; remove this rule then.
-      - dependency-name: google_sign_in
-        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /

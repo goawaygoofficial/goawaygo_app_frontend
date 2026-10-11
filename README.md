@@ -19,32 +19,57 @@ Backend: [goawayofficial/goaway_backend](https://github.com/goawayofficial/goawa
 
 ## Tech stack
 
-- Flutter (Dart SDK `^3.7.0`)
+- Flutter 3.47 (Dart SDK `^3.13.0`)
 - State management: [`provider`](https://pub.dev/packages/provider)
 - HTTP: [`http`](https://pub.dev/packages/http)
-- Auth: [`google_sign_in`](https://pub.dev/packages/google_sign_in)
+- Auth: [`google_sign_in`](https://pub.dev/packages/google_sign_in) 7,
+  [`flutter_secure_storage`](https://pub.dev/packages/flutter_secure_storage) for the refresh token
 - Config: [`flutter_dotenv`](https://pub.dev/packages/flutter_dotenv)
-- Local storage: [`shared_preferences`](https://pub.dev/packages/shared_preferences)
 
 ## Project structure
 
 ```
 lib/
-├── main.dart              # App entry: loads .env, restores user, starts app
+├── main.dart              # App entry: loads .env, configures the backend client, restores the session
 ├── splash_screen.dart
+├── core/
+│   ├── backend.dart       # Wires AuthSession + ApiClient (tests inject fakes)
+│   ├── api/               # ApiClient (Bearer token, refresh-on-401), ApiException
+│   └── auth/              # AuthSession (tokens), RefreshTokenStore (secure storage)
 ├── features/              # One folder per feature (screens / widgets / services / utils)
 ├── global_utils/          # Colors, bottom navigation bar
-├── global_widgets/        # Shared widgets (dialogs, animations, backgrounds)
+├── global_widgets/        # Shared widgets (dialogs incl. confirm, animations, backgrounds)
 ├── models/                # Data models (User)
-├── providers/             # ChangeNotifier providers (UserProvider)
-└── services/              # API clients (UserService)
+└── providers/             # ChangeNotifier providers (UserProvider)
 ```
+
+## Authentication
+
+- **Access token** (20 min): kept **in memory only**, sent as `Authorization: Bearer` by `ApiClient`.
+- **Refresh token** (30 days): stored in the platform's **encrypted storage** (Android Keystore / iOS Keychain,
+  `first_unlock_this_device`, never backed up). Requests send `X-Client-Type: mobile`, so the backend returns it
+  in the response body.
+- **Startup:** the session is restored with one `POST /api/auth/refresh`. Nothing about the user is stored on the
+  device (an old SharedPreferences `user` key from earlier versions is removed). Offline at startup → shown as
+  signed out, but the token is kept for next time.
+- **Expiry:** a 401 on an authenticated request triggers one refresh and a retry; if the refresh is rejected the
+  session ends.
+- **No overlapping refreshes:** the backend treats reuse of a rotated refresh token as theft, so concurrent
+  callers share one refresh request.
+- **Google:** `google_sign_in` 7 with the **Web** client as `serverClientId` (the ID token's audience the backend
+  accepts). The ID token goes to `POST /api/auth/google-signin`.
+- **Sign out** (Profile header icon or User Profile → Sign Out) asks for confirmation, revokes the session on the
+  server, clears the device and returns to the sign-in screen.
+- **Forgot password** only asks for the email; the reset link arrives by email (backend: email-provider work).
+
+Android **debug** builds may use plain HTTP to `10.0.2.2` / `localhost` only
+(`android/app/src/debug/res/xml/network_security_config.xml`); release builds are HTTPS-only.
 
 ## Getting started
 
 ### Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (Dart 3.7+)
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.47+ (Dart 3.13+)
 - Android Studio / Xcode for emulators, or a physical device
 - The [backend](https://github.com/goawayofficial/goaway_backend) running locally or deployed
 
