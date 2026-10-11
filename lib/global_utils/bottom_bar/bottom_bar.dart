@@ -2,6 +2,7 @@ import 'package:app_frontend/features/02_home/screens/home_screen.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/wanderbook_home.dart';
 import 'package:app_frontend/features/09_profile/screens/my_profile.dart';
 import 'package:app_frontend/global_utils/bottom_bar/custom_nav_item.dart';
+import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
 
@@ -62,8 +63,23 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  /// Android Back: an open panel closes itself first (see [SlideFadeTransition]); otherwise another tab goes back
+  /// to Home, and Back on Home leaves the app.
+  void _onBack(bool didPop, Object? result) {
+    if (didPop || SlideFadeTransition.anyOpen || _page == 0) return;
+    _updatePage(0);
+  }
+
   @override
   Widget build(BuildContext context) {
+    return PopScope(
+      canPop: _page == 0,
+      onPopInvokedWithResult: _onBack,
+      child: _buildScaffold(),
+    );
+  }
+
+  Widget _buildScaffold() {
     return Scaffold(
       body: _pages[_page],
       bottomNavigationBar: AnimatedBuilder(
