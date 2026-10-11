@@ -91,7 +91,7 @@ cp .env.example .env
 
 | Variable               | Description                                                                                             |
 | ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| `BASE_URL`             | Backend URL, no trailing slash. Android emulator → your PC's localhost: `http://10.0.2.2:8080`          |
+| `BASE_URL`             | Backend URL, no trailing slash. Default `http://localhost:8080` with `adb reverse` (see _Run_).         |
 | `GOOGLE_WEB_CLIENT_ID` | Google **Web** OAuth client. The app requests ID tokens for this audience; the backend only accepts it. |
 | `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawayofficial.app`                                      |
 
@@ -112,11 +112,24 @@ keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias and
 (PowerShell. On macOS/Linux use `~/.android/debug.keystore`.) Release builds signed by Google Play need their
 own Android client with the SHA-1 from Play Console → _App integrity_.
 
+Google Sign-In needs a device with a Google account and an up-to-date Google Play services: a real phone, or an
+emulator built from a **Google Play** system image (the plain "Google APIs" images can't update Play services and
+fail with "No credential available").
+
 ### 4. Run
+
+Start the backend, connect a phone (USB debugging on) or start an emulator, then forward the backend port so
+`localhost:8080` on the device reaches your PC:
+
+```bash
+adb reverse tcp:8080 tcp:8080
+```
 
 ```bash
 flutter run
 ```
+
+`adb reverse` lasts until the device disconnects; run it again after reconnecting.
 
 ## Useful commands
 
