@@ -1,3 +1,4 @@
+import 'package:app_frontend/features/01_auth_register/sign_out.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/models/user_model.dart';
@@ -13,6 +14,8 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
+  static const _notSet = 'Not set';
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -71,9 +74,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     child: Column(
                       children: [
+                        // Real data where the backend has it; "Not set" for fields it doesn't have yet.
                         ProfileField(
                           label: 'Email',
-                          value: 'tripkaro@gmail.com',
+                          value: widget.user?.email ?? _notSet,
                         ),
                         ProfileField(
                           label: 'Password',
@@ -82,24 +86,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         ),
                         ProfileField(
                           label: 'Phone Number',
-                          value: '+XX XXXXXXXXXX',
+                          value: widget.user?.phone ?? _notSet,
                         ),
-                        ProfileField(
-                          label: 'Country / Region',
-                          value: 'United Kingdom',
-                        ),
-                        ProfileField(label: 'Currency', value: 'GBP'),
+                        ProfileField(label: 'Country / Region', value: _notSet),
+                        ProfileField(label: 'Currency', value: _notSet),
                         ProfileField(
                           label: 'Display Name',
-                          value: 'Sikandar Rajaji',
+                          value: widget.user?.name ?? _notSet,
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Sign out logic
-                            },
+                            onPressed: () => confirmAndSignOut(context),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF57C2A),
                               padding: const EdgeInsets.symmetric(vertical: 14),
