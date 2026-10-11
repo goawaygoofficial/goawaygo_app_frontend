@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:app_frontend/splash_screen.dart';
@@ -8,9 +9,10 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  Backend.configure();
 
   final userProvider = UserProvider();
-  await userProvider.loadUserFromPrefs();
+  await userProvider.restoreSession();
 
   runApp(
     ChangeNotifierProvider(create: (_) => userProvider, child: const MyApp()),
