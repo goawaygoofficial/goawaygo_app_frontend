@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:app_frontend/features/08_wanderbook/data/mock_wanderbook.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/wanderbook_grid.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/wanderbook_search_bar.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/wanderbook_sliver_delegates.dart';
@@ -21,6 +22,27 @@ class WanderbookHome extends StatefulWidget {
 class _WanderbookHomeState extends State<WanderbookHome> {
   final _searchController = TextEditingController();
   int selectedTab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // The search bar filters the posts by destination, like the website.
+    _searchController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<WanderPost> get _visiblePosts {
+    final query = _searchController.text.trim().toLowerCase();
+    final posts = selectedTab == 0 ? mockMyPosts : mockFeedPosts;
+    return posts
+        .where((post) => post.location.toLowerCase().contains(query))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +101,22 @@ class _WanderbookHomeState extends State<WanderbookHome> {
                 ),
               ),
 
-              /// Grid
-              const WanderbookGrid(),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(top: height * 0.015),
+                  child: Text(
+                    'Sample posts — Wanderbook isn’t connected to the backend yet.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ),
+
+              /// Posts
+              WanderbookGrid(posts: _visiblePosts),
             ],
           ),
         ),

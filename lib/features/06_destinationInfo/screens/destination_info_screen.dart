@@ -51,6 +51,21 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
               ),
               SizedBox(height: height * 0.0075),
 
+              // Place name, as on the website.
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.placeName.toUpperCase(),
+                  style: const TextStyle(
+                    color: ColorsUtil.whiteColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              SizedBox(height: height * 0.015),
+
               // Header
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.05)),

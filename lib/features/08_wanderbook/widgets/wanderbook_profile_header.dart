@@ -1,6 +1,8 @@
 import 'package:app_frontend/features/08_wanderbook/widgets/stat_item.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WanderbookProfileHeader extends StatelessWidget {
   final double shrinkOffset;
@@ -97,7 +99,10 @@ class WanderbookProfileHeader extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "SIKANDAR RAJAJI",
+                        // The signed-in user's name; the sample profile's otherwise.
+                        (context.watch<UserProvider>().user?.name ??
+                                'Sikandar Rajaji')
+                            .toUpperCase(),
                         style: TextStyle(
                           color: ColorsUtil.whiteColor,
                           fontSize: 18,
