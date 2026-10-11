@@ -7,6 +7,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+/// What to tell the user when Google Sign-In fails on the device (before anything reaches our backend).
+@visibleForTesting
+String googleSignInErrorMessage(
+  GoogleSignInExceptionCode code,
+  String? description,
+) {
+  // Android's Credential Manager reports "no credential" when the device has no Google account, or when
+  // Google Play services is too old to offer Sign in with Google.
+  if (description != null &&
+      description.toLowerCase().contains('no credential')) {
+    return 'No Google account is available on this device. Add one in Settings (and update Google Play '
+        'services), or sign in with email.';
+  }
+  return switch (code) {
+    GoogleSignInExceptionCode.clientConfigurationError ||
+    GoogleSignInExceptionCode.providerConfigurationError => 'Google sign-in is not set up for this version of the app. Please sign in with email.',
+    GoogleSignInExceptionCode.uiUnavailable =>
+      'Google sign-in could not open. Please try again.',
+    _ => 'Google sign-in failed. Please try again.',
+  };
+}
+
 /// Sign-up, sign-in (email and Google), session restore, sign-out and password reset.
 class AuthService {
   AuthService._();
@@ -47,8 +69,8 @@ class AuthService {
     } on GoogleSignInException catch (e) {
       if (e.code == GoogleSignInExceptionCode.canceled) return null;
       debugPrint('Google Sign-In failed: ${e.code} ${e.description}');
-      throw const ApiException(
-        'Google sign-in failed. Please try again.',
+      throw ApiException(
+        googleSignInErrorMessage(e.code, e.description),
         0,
         'google_sign_in_failed',
       );
