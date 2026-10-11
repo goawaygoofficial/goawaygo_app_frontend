@@ -1,3 +1,4 @@
+import 'package:app_frontend/features/02_home/data/trip_ideas.dart';
 import 'package:flutter/material.dart';
 
 class StackedCardCarousel extends StatefulWidget {
@@ -14,13 +15,7 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
     initialPage: 1000,
   );
 
-  final List<Color> colors = [
-    Colors.orange,
-    Colors.deepOrange,
-    Colors.orangeAccent,
-    Colors.redAccent,
-    Colors.deepOrangeAccent,
-  ];
+  final List<TripIdea> ideas = placeholderTripIdeas;
 
   double currentPageValue = 1000.0;
 
@@ -59,7 +54,7 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
       child: PageView.builder(
         controller: _pageController,
         itemBuilder: (context, index) {
-          final actualIndex = index % colors.length;
+          final idea = ideas[index % ideas.length];
 
           double scale = (1 - ((currentPageValue - index).abs() * 0.3)).clamp(
             0.0,
@@ -73,10 +68,15 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
               opacity: opacity,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: width * 0.02),
+                padding: EdgeInsets.all(width * 0.05),
                 decoration: BoxDecoration(
-                  color: colors[actualIndex],
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: idea.colors,
+                  ),
                   borderRadius: BorderRadius.circular(width * 0.08),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       blurRadius: 10,
@@ -84,15 +84,38 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    'Card ${actualIndex + 1}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                // Bottom-left text, as on the website: place, title, tagline.
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${idea.destination}, ${idea.country}'.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.7,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      idea.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      idea.tagline,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
                 ),
               ),
             ),

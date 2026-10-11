@@ -94,7 +94,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           child: ElevatedButton(
                             onPressed: () => confirmAndSignOut(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF57C2A),
+                              backgroundColor: ColorsUtil.secondary,
+                              foregroundColor: ColorsUtil.whiteColor,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),

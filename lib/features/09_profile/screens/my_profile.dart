@@ -16,7 +16,14 @@ import 'package:provider/provider.dart';
 class MyProfile extends StatefulWidget {
   final void Function(bool) toggleBottomBar;
 
-  const MyProfile({super.key, required this.toggleBottomBar});
+  /// Opens the My Trips tab.
+  final VoidCallback onOpenTrips;
+
+  const MyProfile({
+    super.key,
+    required this.toggleBottomBar,
+    required this.onOpenTrips,
+  });
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -63,7 +70,7 @@ class _MyProfileState extends State<MyProfile> {
                   horizontal: size.width * 0.06,
                 ),
                 child: user != null
-                    ? _buildProfileContent(height)
+                    ? _buildProfileContent(user.name, height)
                     : _buildGuestContent(width, height),
               ),
             ),
@@ -113,45 +120,53 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   /// --- Signed in: profile tiles ---
-  Widget _buildProfileContent(double height) {
+  Widget _buildProfileContent(String name, double height) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Logo header, as on the other tabs and the website.
+        Image.asset('assets/images/logo.png', height: height * 0.12),
         const VerifyEmailBanner(),
+        SizedBox(height: height * 0.02),
+        Text(
+          'Hi, $name',
+          style: const TextStyle(
+            color: ColorsUtil.whiteColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         SizedBox(height: height * 0.03),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Tiles line up at the top even when one says "Coming soon".
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileButton(
               imagePath: 'assets/icons/mytrips_white.png',
               title: 'My Trips',
-              onTap: () {},
+              onTap: widget.onOpenTrips,
             ),
             ProfileButton(
               imagePath: 'assets/icons/recently_viewed.png',
               title: 'Recently Viewed',
-              onTap: () {},
             ),
-            ProfileButton(
-              imagePath: 'assets/icons/saved.png',
-              title: 'Saved',
-              onTap: () {},
-            ),
+            ProfileButton(imagePath: 'assets/icons/saved.png', title: 'Saved'),
           ],
         ),
         SizedBox(height: height * 0.03),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Tiles line up at the top even when one says "Coming soon".
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileButton(
               imagePath: 'assets/icons/review.png',
               title: 'Reviews',
-              onTap: () {},
             ),
             ProfileButton(
               imagePath: 'assets/icons/rewards.png',
               title: 'Rewards',
-              onTap: () {},
             ),
             ProfileButton(
               imagePath: 'assets/icons/user_profile.png',
