@@ -35,3 +35,28 @@ class FeatureItem extends StatelessWidget {
     );
   }
 }
+
+/// The three selling points shown above the sign-in panel (sign-in screen and signed-out Profile).
+class FeatureList extends StatelessWidget {
+  const FeatureList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        FeatureItem(
+          icon: 'assets/images/auth_image_01.png',
+          text: 'Travel the World in Your Terms',
+        ),
+        FeatureItem(
+          icon: 'assets/images/auth_image_02.png',
+          text: 'Personalised Travel Plans',
+        ),
+        FeatureItem(
+          icon: 'assets/images/auth_image_03.png',
+          text: 'Your Own WanderBook',
+        ),
+      ],
+    );
+  }
+}

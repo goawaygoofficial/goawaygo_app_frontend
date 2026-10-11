@@ -1,197 +1,54 @@
-// ignore_for_file: unused_field, use_build_context_synchronously
-
-import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/screens/forgot_password_screen.dart';
 import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
-import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
-import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
+import 'package:app_frontend/features/01_auth_register/widgets/sign_in_panel.dart';
 import 'package:app_frontend/global_utils/bottom_bar/bottom_bar.dart';
 import 'package:app_frontend/global_utils/colors.dart';
-import 'package:app_frontend/global_widgets/custom_dialog.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
-import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+/// The sign-in screen: logo + SKIP, the feature list and the [SignInPanel]. After signing in it opens the app.
 class AuthScreen extends StatefulWidget {
-  final VoidCallback? onClose;
-  const AuthScreen({super.key, this.onClose});
+  const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen>
-    with SingleTickerProviderStateMixin {
-  bool _showForm = false;
+class _AuthScreenState extends State<AuthScreen> {
   bool showRegister = false;
   bool showForgotPassword = false;
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  late AnimationController _controller;
-  late Animation<Offset> _logoOffset;
-  late Animation<Offset> _featureOffset;
-  late Animation<double> _formOpacity;
-
-  UserModel? _loggedInUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 700),
-      vsync: this,
+  /// Replaces this screen with the app (bottom bar), sliding in from the right.
+  void _openApp({UserModel? user, bool replace = true}) {
+    final route = PageRouteBuilder<void>(
+      transitionDuration: const Duration(milliseconds: 750),
+      pageBuilder: (_, _, _) => BottomBar(user: user),
+      transitionsBuilder: (_, animation, _, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeInOut,
+        );
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1.0, 0.0),
+            end: Offset.zero,
+          ).animate(curved),
+          child: FadeTransition(opacity: curved, child: child),
+        );
+      },
     );
-
-    _logoOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, -0.8),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    _featureOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, -0.6),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    _formOpacity = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    final navigator = Navigator.of(context);
+    replace ? navigator.pushReplacement(route) : navigator.push(route);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onSignInTap() {
+  void _closeOverlays() {
     setState(() {
-      _showForm = true;
+      showRegister = false;
+      showForgotPassword = false;
+      FocusManager.instance.primaryFocus?.unfocus();
     });
-    _controller.forward();
-  }
-
-  void _onBackTap() {
-    _controller.reverse().then((_) {
-      setState(() {
-        _showForm = false;
-      });
-    });
-  }
-
-  Future<void> _handleGoogleSignIn() async {
-    try {
-      final user = await AuthService.googleSignin();
-      if (user == null) return; // The user closed Google's dialog.
-
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.signIn(user);
-
-      await CustomDialogs.showSuccessDialog(
-        context: context,
-        message: 'Welcome, ${user.name}!',
-        onDismiss: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, _, _) => BottomBar(user: user),
-              transitionsBuilder: (_, animation, _, child) {
-                final slide =
-                    Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                    );
-                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-                return SlideTransition(
-                  position: slide,
-                  child: FadeTransition(opacity: fade, child: child),
-                );
-              },
-            ),
-          );
-        },
-      );
-    } on ApiException catch (e) {
-      await CustomDialogs.showErrorDialog(context: context, message: e.message);
-    }
-  }
-
-  void _handleSignIn() async {
-    FocusScope.of(context).unfocus();
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      await CustomDialogs.showErrorDialog(
-        context: context,
-        message: 'Please enter both email and password.',
-      );
-      return;
-    }
-
-    try {
-      final user = await AuthService.signin(email, password);
-
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.signIn(user);
-
-      await CustomDialogs.showSuccessDialog(
-        context: context,
-        message: 'Welcome back, ${user.name}!',
-        onDismiss: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, _, _) => BottomBar(user: user),
-              transitionsBuilder: (_, animation, _, child) {
-                final slide =
-                    Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                    );
-                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-
-                return SlideTransition(
-                  position: slide,
-                  child: FadeTransition(opacity: fade, child: child),
-                );
-              },
-            ),
-          );
-        },
-      );
-    } on ApiException catch (e) {
-      await CustomDialogs.showErrorDialog(
-        context: context,
-        message: e.message,
-        onDismiss: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-          _emailController.clear();
-          _passwordController.clear();
-        },
-      );
-    }
   }
 
   @override
@@ -209,240 +66,60 @@ class _AuthScreenState extends State<AuthScreen>
           ),
           child: Stack(
             children: [
-              AnimatedBuilder(
-                animation: _controller,
-                builder: (context, _) {
-                  return SizedBox.expand(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+              SizedBox.expand(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /// --- Logo and Skip Row ---
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /// --- Logo and Skip Row ---
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/images/logo.png',
-                                width: width * 0.4,
-                                height: height * 0.2,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    PageRouteBuilder(
-                                      transitionDuration: const Duration(
-                                        milliseconds: 750,
-                                      ),
-                                      pageBuilder: (_, _, _) =>
-                                          const BottomBar(),
-                                      transitionsBuilder:
-                                          (_, animation, _, child) {
-                                            final offsetAnimation =
-                                                Tween<Offset>(
-                                                  begin: const Offset(1.0, 0.0),
-                                                  end: Offset.zero,
-                                                ).animate(
-                                                  CurvedAnimation(
-                                                    parent: animation,
-                                                    curve: Curves.easeInOut,
-                                                  ),
-                                                );
-                                            return SlideTransition(
-                                              position: offsetAnimation,
-                                              child: child,
-                                            );
-                                          },
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  "SKIP",
-                                  style: TextStyle(
-                                    color: ColorsUtil.whiteColor,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Image.asset(
+                            'assets/images/logo.png',
+                            width: width * 0.4,
+                            height: height * 0.2,
                           ),
-
-                          /// --- Feature Items ---
-                          Column(
-                            children: const [
-                              FeatureItem(
-                                icon: 'assets/images/auth_image_01.png',
-                                text: 'Travel the World in Your Terms',
+                          TextButton(
+                            onPressed: () => _openApp(replace: false),
+                            child: const Text(
+                              "SKIP",
+                              style: TextStyle(
+                                color: ColorsUtil.whiteColor,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                                fontSize: 18,
                               ),
-                              FeatureItem(
-                                icon: 'assets/images/auth_image_02.png',
-                                text: 'Personalised Travel Plans',
-                              ),
-                              FeatureItem(
-                                icon: 'assets/images/auth_image_03.png',
-                                text: 'Your Own WanderBook',
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: height * 0.01),
-                          AnimatedCrossFade(
-                            duration: const Duration(milliseconds: 500),
-                            firstChild: Column(
-                              children: [
-                                AuthButton(
-                                  icon: 'assets/icons/google_icon.png',
-                                  text: 'Continue with Google',
-                                  bgColor: ColorsUtil.whiteColor,
-                                  textColor: ColorsUtil.secondary,
-                                  onTap: _handleGoogleSignIn,
-                                ),
-                                SizedBox(height: height * 0.02),
-                                AuthButton(
-                                  icon: 'assets/icons/email.png',
-                                  text: 'SIGN IN',
-                                  bgColor: ColorsUtil.secondary,
-                                  textColor: ColorsUtil.whiteColor,
-                                  onTap: _onSignInTap,
-                                ),
-                                SizedBox(height: height * 0.02),
-                              ],
                             ),
-                            secondChild: Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.close_rounded,
-                                      size: width * 0.075,
-                                      color: ColorsUtil.whiteColor,
-                                    ),
-                                    onPressed: _onBackTap,
-                                  ),
-                                ),
-                                TextField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    hintText: "Enter your Email address...",
-                                    filled: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: height * 0.02,
-                                      horizontal: width * 0.05,
-                                    ),
-                                    fillColor: ColorsUtil.whiteColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.02),
-                                TextField(
-                                  controller: _passwordController,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Password...",
-                                    filled: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: height * 0.02,
-                                      horizontal: width * 0.05,
-                                    ),
-                                    fillColor: ColorsUtil.whiteColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.01),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    onPressed: () => setState(
-                                      () => showForgotPassword = true,
-                                    ),
-                                    child: const Text(
-                                      "Forgot Password?",
-                                      style: TextStyle(
-                                        color: ColorsUtil.whiteColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: height * 0.01),
-                                AuthButton(
-                                  icon: 'assets/icons/email.png',
-                                  text: 'SIGN IN',
-                                  bgColor: ColorsUtil.secondary,
-                                  textColor: ColorsUtil.whiteColor,
-                                  onTap: _handleSignIn,
-                                ),
-                                SizedBox(height: height * 0.01),
-
-                                /// --- Not Registered? Register ---
-                                TextButton(
-                                  onPressed: () =>
-                                      setState(() => showRegister = true),
-                                  child: const Text(
-                                    "Not Registered? Register",
-                                    style: TextStyle(
-                                      color: ColorsUtil.secondary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            crossFadeState: _showForm
-                                ? CrossFadeState.showSecond
-                                : CrossFadeState.showFirst,
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
+
+                      /// --- Feature Items ---
+                      const FeatureList(),
+
+                      SizedBox(height: height * 0.01),
+                      SignInPanel(
+                        onSignedIn: (user) => _openApp(user: user),
+                        onRegister: () => setState(() => showRegister = true),
+                        onForgotPassword: () =>
+                            setState(() => showForgotPassword = true),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               SlideFadeTransition(
                 visible: showRegister,
-                onClose: () {
-                  setState(() {
-                    showRegister = false;
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  });
-                },
-                child: RegisterScreen(
-                  onBack: () {
-                    setState(() {
-                      showRegister = false;
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    });
-                  },
-                ),
+                onClose: _closeOverlays,
+                child: RegisterScreen(onBack: _closeOverlays),
               ),
               SlideFadeTransition(
                 visible: showForgotPassword,
-                onClose: () {
-                  setState(() {
-                    showForgotPassword = false;
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  });
-                },
-                child: ForgotPasswordScreen(
-                  onBack: () {
-                    setState(() {
-                      showForgotPassword = false;
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    });
-                  },
-                ),
+                onClose: _closeOverlays,
+                child: ForgotPasswordScreen(onBack: _closeOverlays),
               ),
             ],
           ),
