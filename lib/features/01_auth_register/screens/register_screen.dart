@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
+import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
@@ -31,7 +31,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool isStrongPassword(String password) {
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    final regex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,72}$',
+    ); // 72: backend/BCrypt limit
     return regex.hasMatch(password);
   }
 
@@ -52,48 +54,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!isStrongPassword(password)) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+        message: 'Password must be 8 to 72 characters long and include uppercase, lowercase, number, and special character.',
       );
       return;
     }
 
-    final error = await AuthService.signup(name, email, password);
-
-    if (error == null) {
+    try {
+      await AuthService.signup(name, email, password);
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message: 'Verification email sent! Please check your inbox.',
-        onDismiss: () {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, _, _) => const AuthScreen(),
-              transitionsBuilder: (_, animation, _, child) {
-                final slide =
-                    Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                    );
-                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-
-                return SlideTransition(
-                  position: slide,
-                  child: FadeTransition(opacity: fade, child: child),
-                );
-              },
-            ),
-          );
-        },
+        message: 'Account created! You can now sign in.',
+        onDismiss: widget.onBack,
       );
-    } else {
-      await CustomDialogs.showErrorDialog(context: context, message: error);
+    } on ApiException catch (e) {
+      await CustomDialogs.showErrorDialog(context: context, message: e.message);
     }
   }
 

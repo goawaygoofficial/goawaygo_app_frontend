@@ -1,4 +1,5 @@
 import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
+import 'package:app_frontend/features/01_auth_register/sign_out.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/features/09_profile/widgets/auth_button.dart';
@@ -132,10 +133,19 @@ class _MyProfileState extends State<MyProfile> {
 
   /// --- Logged In Content (Profile Buttons) ---
   Widget _buildProfileContent(double height) {
+    final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: height * 0.02),
+        // Sign out, top-right, styled like the header's notification bell.
+        Align(
+          alignment: Alignment.centerRight,
+          child: SignOutIconButton(
+            color: ColorsUtil.secondaryLight,
+            size: width * 0.075,
+          ),
+        ),
+        SizedBox(height: height * 0.01),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

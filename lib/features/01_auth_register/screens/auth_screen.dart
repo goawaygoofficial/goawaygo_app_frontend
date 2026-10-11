@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field, use_build_context_synchronously
 
+import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/screens/forgot_password_screen.dart';
 import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
@@ -12,7 +13,6 @@ import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -85,19 +85,11 @@ class _AuthScreenState extends State<AuthScreen>
 
   Future<void> _handleGoogleSignIn() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User cancelled
-
-      final googleAuth = await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-
-      if (idToken == null) throw Exception("Google ID token is null");
-
-      final result = await AuthService.googleSignin(idToken);
-      final user = result['user'];
+      final user = await AuthService.googleSignin();
+      if (user == null) return; // The user closed Google's dialog.
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(user);
+      userProvider.signIn(user);
 
       await CustomDialogs.showSuccessDialog(
         context: context,
@@ -131,11 +123,8 @@ class _AuthScreenState extends State<AuthScreen>
           );
         },
       );
-    } catch (e) {
-      await CustomDialogs.showErrorDialog(
-        context: context,
-        message: e.toString().replaceAll("Exception: ", ""),
-      );
+    } on ApiException catch (e) {
+      await CustomDialogs.showErrorDialog(context: context, message: e.message);
     }
   }
 
@@ -153,11 +142,10 @@ class _AuthScreenState extends State<AuthScreen>
     }
 
     try {
-      final result = await AuthService.signin(email, password);
-      final user = result['user'];
+      final user = await AuthService.signin(email, password);
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(user);
+      userProvider.signIn(user);
 
       await CustomDialogs.showSuccessDialog(
         context: context,
@@ -193,10 +181,10 @@ class _AuthScreenState extends State<AuthScreen>
           );
         },
       );
-    } catch (e) {
+    } on ApiException catch (e) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: e.toString().replaceAll('Exception: ', ''),
+        message: e.message,
         onDismiss: () {
           FocusManager.instance.primaryFocus?.unfocus();
           _emailController.clear();
