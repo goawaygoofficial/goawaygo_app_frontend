@@ -34,6 +34,14 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // The 64-bit-only build (flutter build apk --target-platform android-arm64, scripts/release-android.sh)
+        // must contain no other ABI folders: plugins ship libraries for every ABI, and a 32-bit phone would install
+        // the APK and then crash for lack of the Flutter engine. With only arm64-v8a, those phones refuse it cleanly.
+        if (project.findProperty("target-platform") == "android-arm64") {
+            logger.lifecycle("Goaway: 64-bit-only build, other ABIs excluded")
+            packaging { jniLibs { excludes += listOf("lib/armeabi-v7a/**", "lib/x86_64/**", "lib/x86/**") } }
+        }
     }
 
     signingConfigs {

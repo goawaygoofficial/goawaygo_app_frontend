@@ -35,8 +35,11 @@ NAME="goaway-${VERSION}-${BUILD}"
 common=(--release "--dart-define=ENV_FILE=$ENV_FILE" "--build-name=$VERSION" "--build-number=$BUILD")
 
 echo "==> Building $NAME (64-bit phones)"
-flutter build apk "${common[@]}" --split-per-abi --target-platform android-arm64
-cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "$OUT/$NAME-arm64.apk"
+# --target-platform without --split-per-abi: only the 64-bit native code, and the plain build number as Android's
+# version code. (--split-per-abi would make it 2000 + build, and phones with that installed would refuse every
+# later universal or Firebase build as a "downgrade".)
+flutter build apk "${common[@]}" --target-platform android-arm64
+cp build/app/outputs/flutter-apk/app-release.apk "$OUT/$NAME-arm64.apk"
 
 echo "==> Building $NAME (all phones)"
 flutter build apk "${common[@]}"
