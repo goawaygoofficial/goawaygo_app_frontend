@@ -8,7 +8,11 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  // Local development reads .env; release builds pick their environment's file, e.g.
+  // --dart-define=ENV_FILE=env/staging.env (see docs/release-android.md).
+  await dotenv.load(
+    fileName: const String.fromEnvironment('ENV_FILE', defaultValue: '.env'),
+  );
   Backend.configure();
 
   final userProvider = UserProvider();
