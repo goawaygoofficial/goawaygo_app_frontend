@@ -40,4 +40,10 @@ Future<void> runWithMonitoring(FutureOr<void> Function() appRunner) async {
       return breadcrumb;
     };
   }, appRunner: appRunner);
+  // Proves a build reports to Sentry: only in builds made with --dart-define=SENTRY_SELF_TEST=true.
+  if (const bool.fromEnvironment('SENTRY_SELF_TEST')) {
+    await Sentry.captureMessage(
+      'Goaway app Sentry self-test (safe to resolve)',
+    );
+  }
 }
