@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- The app talks to the Goaway backend. (Flutter only adds this to debug/profile builds.) -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Lets crash reports (Sentry) wait while offline and send once the phone is back online. No prompt. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:label="Goaway"
