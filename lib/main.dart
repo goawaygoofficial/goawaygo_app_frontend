@@ -1,4 +1,5 @@
 import 'package:app_frontend/core/backend.dart';
+import 'package:app_frontend/core/monitoring/monitoring.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:app_frontend/splash_screen.dart';
@@ -13,14 +14,17 @@ void main() async {
   await dotenv.load(
     fileName: const String.fromEnvironment('ENV_FILE', defaultValue: '.env'),
   );
-  Backend.configure();
+  // Error tracking first, so crashes during start-up are reported too.
+  await runWithMonitoring(() async {
+    Backend.configure();
 
-  final userProvider = UserProvider();
-  await userProvider.restoreSession();
+    final userProvider = UserProvider();
+    await userProvider.restoreSession();
 
-  runApp(
-    ChangeNotifierProvider(create: (_) => userProvider, child: const MyApp()),
-  );
+    runApp(
+      ChangeNotifierProvider(create: (_) => userProvider, child: const MyApp()),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
