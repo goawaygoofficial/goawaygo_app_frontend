@@ -30,21 +30,28 @@ Google Sign-In on Android checks the signing certificate: the upload key's **SHA
 Cloud (project `goaway-483709`) → Google Auth Platform → Clients → an **Android** client for package
 `com.goawayofficial.app`. The debug key has its own client for development.
 
-## Build a staging release
+## Release a staging build
+
+One command builds both APKs, writes `latest.json` and (with `--upload`) publishes them:
 
 ```bash
-flutter build apk --release --dart-define=ENV_FILE=env/staging.env
+bash scripts/release-android.sh 1.0.0 3 "What's new in this build" --upload
 ```
 
-Output: `build/app/outputs/flutter-apk/app-release.apk`. Bump `version:` in `pubspec.yaml` (`1.0.0+2`, …: the number
-after `+` must increase) for every build you send to testers, or phones won't install it as an update.
+- The build number (`3`) must be higher than every earlier release, or phones won't install it as an update.
+- Output in `build/release/`: `goaway-<version>-<build>-arm64.apk` (64-bit phones, ~20 MB),
+  `goaway-<version>-<build>-universal.apk` (all phones) and `latest.json`.
+- `--upload` puts them in the Cloudflare R2 bucket `goaway-downloads` → `https://downloads.goawaygo.com/android/`
+  (APKs first, then `latest.json`). The website's `/download` page reads `latest.json`, so it shows the new version
+  without a website change. First time only: `npx wrangler login` (Cloudflare sign-in in the browser).
+- The script refuses to run without the upload key, so a debug-signed build can never be published.
 
-## Send it to testers (Firebase App Distribution)
+## Send it to beta testers (Firebase App Distribution)
 
-1. Firebase console → project **goaway-483709** → Release & Monitor → **App Distribution**.
-2. Drag the APK in, add release notes (what changed, what to test).
-3. Add testers by email (or a tester group). They get an email with an install link; first time, they install the
-   Firebase App Tester app and allow installs from it.
+1. Firebase console → project **goaway-483709** → App Distribution.
+2. Drag in `build/release/goaway-<version>-<build>-universal.apk`, add the release notes.
+3. Pick the **beta** group (people who signed up through the website's "Join the beta" invite link) and distribute.
+   They get notified and update through the Firebase App Tester app.
 
 ## At launch (Play Store)
 
