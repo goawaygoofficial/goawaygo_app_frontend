@@ -28,9 +28,9 @@ android {
         // Permanent once published on Google Play. Must match the package name of the Android OAuth client
         // in Google Cloud (project goaway-483709) and the iOS bundle ID.
         applicationId = "com.goawayofficial.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Android 8.0 (API 26) or newer: required by sentry_flutter 10 (crash reporting). Phones on Android 7 can't
+        // install the app; the website's /download page says so. iOS: 15.0 (ios/, same reason).
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
