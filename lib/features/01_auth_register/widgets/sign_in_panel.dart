@@ -3,6 +3,7 @@ import 'package:app_frontend/features/01_auth_register/services/auth_service.dar
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
+import 'package:app_frontend/global_widgets/legal_links.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -131,6 +132,8 @@ class _SignInPanelState extends State<SignInPanel> {
             onTap: () => setState(() => _showForm = true),
           ),
           SizedBox(height: height * 0.02),
+          const SignUpNotice(),
+          SizedBox(height: height * 0.01),
         ],
       ),
       secondChild: Column(

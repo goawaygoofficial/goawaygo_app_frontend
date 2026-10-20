@@ -6,6 +6,7 @@ import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart'
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
+import 'package:app_frontend/global_widgets/legal_links.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -165,7 +166,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: height * 0.04),
+                SizedBox(height: height * 0.02),
+                const SignUpNotice(),
+                SizedBox(height: height * 0.02),
 
                 AuthButton(
                   icon: 'assets/icons/email.png',
