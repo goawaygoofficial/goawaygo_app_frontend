@@ -6,7 +6,7 @@
 #
 # Builds, signed with the upload key (android/key.properties; refuses to run without it):
 #   build/release/goaway-<version>-<build>-arm64.apk       64-bit phones (nearly all), smaller
-#   build/release/goaway-<version>-<build>-universal.apk   every phone; also the file for Firebase App Distribution
+#   build/release/goaway-<version>-<build>-universal.apk   every phone (Android 8.0+); also the file for Firebase App Distribution
 #   build/release/latest.json                              what the website's /download page reads
 # With --upload, puts them in the Cloudflare R2 bucket behind https://downloads.goawaygo.com (APKs first, then
 # latest.json, so the website never points at a file that isn't there yet). Needs `npx wrangler login` once.
@@ -41,7 +41,7 @@ echo "==> Building $NAME (64-bit phones)"
 flutter build apk "${common[@]}" --target-platform android-arm64
 cp build/app/outputs/flutter-apk/app-release.apk "$OUT/$NAME-arm64.apk"
 
-echo "==> Building $NAME (all phones)"
+echo "==> Building $NAME (all phones: 32- and 64-bit, Android 8.0+)"
 flutter build apk "${common[@]}"
 cp build/app/outputs/flutter-apk/app-release.apk "$OUT/$NAME-universal.apk"
 
