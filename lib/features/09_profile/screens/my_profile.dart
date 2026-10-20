@@ -6,6 +6,7 @@ import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/verify_email_banner.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/legal_links.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +116,7 @@ class _MyProfileState extends State<MyProfile> {
           onRegister: () => _open(() => _showRegister = true),
           onForgotPassword: () => _open(() => _showForgotPassword = true),
         ),
+        const LegalFooter(),
       ],
     );
   }
@@ -175,6 +177,8 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ],
         ),
+        SizedBox(height: height * 0.03),
+        const Center(child: LegalFooter()),
       ],
     );
   }
