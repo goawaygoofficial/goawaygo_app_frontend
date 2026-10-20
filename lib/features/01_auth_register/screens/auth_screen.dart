@@ -4,6 +4,7 @@ import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart
 import 'package:app_frontend/features/01_auth_register/widgets/sign_in_panel.dart';
 import 'package:app_frontend/global_utils/bottom_bar/bottom_bar.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/legal_links.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -107,6 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         onForgotPassword: () =>
                             setState(() => showForgotPassword = true),
                       ),
+                      const LegalFooter(),
                     ],
                   ),
                 ),

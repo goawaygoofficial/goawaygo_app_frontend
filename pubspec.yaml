@@ -42,6 +42,7 @@ dependencies:
   intl: ^0.20.3
   flutter_secure_storage: ^11.2.0
   sentry_flutter: 9.30.1
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:
