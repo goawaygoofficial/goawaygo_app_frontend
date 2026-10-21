@@ -1,0 +1,8 @@
+# Secret scanning config (pre-commit hook and the Gitleaks CI job). All of gitleaks' default rules apply; the
+# allowlist below names only values that are public by design, each one exactly, so anything else is still caught.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "PostHog project API key (phc_): public by design, shipped in every web page and app that uses PostHog; it can only send events, not read data"
+regexes = ['''^phc_rvyFybyXHyGNrDa5yaWLkPEwSDn8JoPYU9CBnUZDrRL3$''']
