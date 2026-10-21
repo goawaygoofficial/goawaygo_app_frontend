@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
@@ -62,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       await AuthService.signup(name, email, password);
+      Analytics.track(const SignUpCompleted());
       await CustomDialogs.showSuccessDialog(
         context: context,
         message: 'Account created! You can now sign in.',

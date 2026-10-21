@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
@@ -55,6 +56,7 @@ class _SignInPanelState extends State<SignInPanel> {
     try {
       final user = await AuthService.googleSignin();
       if (user == null || !mounted) return; // The user closed Google's dialog.
+      Analytics.track(SignInCompleted(google: true));
       await _welcome(user, 'Welcome');
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -77,6 +79,7 @@ class _SignInPanelState extends State<SignInPanel> {
 
     try {
       final user = await AuthService.signin(email, password);
+      Analytics.track(SignInCompleted(google: false));
       if (!mounted) return;
       await _welcome(user, 'Welcome back');
     } on ApiException catch (e) {

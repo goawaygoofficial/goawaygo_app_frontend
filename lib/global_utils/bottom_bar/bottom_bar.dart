@@ -3,6 +3,7 @@ import 'package:app_frontend/features/07_trips/screens/my_trips_screen.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/wanderbook_home.dart';
 import 'package:app_frontend/features/09_profile/screens/my_profile.dart';
 import 'package:app_frontend/global_utils/bottom_bar/custom_nav_item.dart';
+import 'package:app_frontend/global_widgets/analytics_consent_sheet.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,10 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
     if (_showBottomBar) {
       _animationController.forward();
     }
+    // Ask about usage statistics once the app is open (only builds with analytics, only until answered).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) askForAnalyticsConsentIfNeeded(context);
+    });
   }
 
   void _updatePage(int index) {

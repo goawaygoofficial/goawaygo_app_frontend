@@ -1,28 +1,33 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/legal/legal_pages.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/analytics_consent_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-/// "Privacy Policy · Terms of Use · Delete my data", at the bottom of the sign-in screen and Profile (as on the
-/// website).
+/// "Privacy Policy · Terms of Use · Delete my data · Privacy choices", at the bottom of the sign-in screen and
+/// Profile (as on the website). "Privacy choices" reopens the analytics consent sheet.
 class LegalFooter extends StatelessWidget {
   const LegalFooter({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final style = TextStyle(
+      color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
+      fontSize: 13,
+    );
     return Wrap(
       alignment: WrapAlignment.center,
       children: [
         for (final page in LegalPage.values)
           TextButton(
             onPressed: () => openLegalPage(context, page),
-            child: Text(
-              page.title,
-              style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                fontSize: 13,
-              ),
-            ),
+            child: Text(page.title, style: style),
+          ),
+        if (Analytics.available)
+          TextButton(
+            onPressed: () => showAnalyticsConsentSheet(context),
+            child: Text('Privacy choices', style: style),
           ),
       ],
     );
