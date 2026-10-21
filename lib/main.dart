@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/monitoring/monitoring.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -17,6 +18,7 @@ void main() async {
   // Error tracking first, so crashes during start-up are reported too.
   await runWithMonitoring(() async {
     Backend.configure();
+    await Analytics.init();
 
     final userProvider = UserProvider();
     await userProvider.restoreSession();

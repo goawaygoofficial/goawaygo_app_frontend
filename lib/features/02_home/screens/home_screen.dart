@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/features/02_home/widgets/category_button.dart';
 import 'package:app_frontend/features/02_home/widgets/stacked_card_carousel.dart';
 import 'package:app_frontend/features/03_flights/screens/flight_search_screen.dart';
@@ -83,6 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Flights',
                           imagePath: 'assets/images/flights.png',
                           onTap: () {
+                            Analytics.track(
+                              TravelCategoryOpened(TravelCategory.flights),
+                            );
                             setState(() {
                               _showFlightSearch = true;
                               widget.toggleBottomBar(false);
@@ -93,6 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Stays',
                           imagePath: 'assets/images/stays.png',
                           onTap: () {
+                            Analytics.track(
+                              TravelCategoryOpened(TravelCategory.stays),
+                            );
                             setState(() {
                               _showHotelsSearch = true;
                               widget.toggleBottomBar(false);
@@ -103,6 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Rentals',
                           imagePath: 'assets/images/rentals.png',
                           onTap: () {
+                            Analytics.track(
+                              TravelCategoryOpened(TravelCategory.rentals),
+                            );
                             setState(() {
                               _showRentalSearch = true;
                               widget.toggleBottomBar(false);
@@ -166,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           final place = _searchController.text.trim();
                           if (place.isNotEmpty) {
+                            Analytics.track(const DestinationSearched());
                             setState(() {
                               _searchedPlace = place;
                               _showDestinationInfo = true;
