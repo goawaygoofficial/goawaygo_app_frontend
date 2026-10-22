@@ -15,7 +15,7 @@ val keystoreProperties = Properties().apply {
 val hasUploadKey = keystoreProperties.getProperty("storeFile") != null
 
 android {
-    namespace = "com.goawayofficial.app"
+    namespace = "com.goawaygo.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -27,7 +27,7 @@ android {
     defaultConfig {
         // Permanent once published on Google Play. Must match the package name of the Android OAuth client
         // in Google Cloud (project goaway-483709) and the iOS bundle ID.
-        applicationId = "com.goawayofficial.app"
+        applicationId = "com.goawaygo.app"
         // Android 8.0 (API 26) or newer: required by sentry_flutter 10 (crash reporting). Phones on Android 7 can't
         // install the app; the website's /download page says so. iOS: 15.0 (ios/, same reason).
         minSdk = 26

@@ -1,4 +1,4 @@
-package com.goawayofficial.app
+package com.goawaygo.app
 
 import io.flutter.embedding.android.FlutterActivity
 

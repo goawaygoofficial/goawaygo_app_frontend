@@ -93,17 +93,17 @@ cp .env.example .env
 | ---------------------- | ------------------------------------------------------------------------------------------------------- |
 | `BASE_URL`             | Backend URL, no trailing slash. Default `http://localhost:8080` with `adb reverse` (see _Run_).         |
 | `GOOGLE_WEB_CLIENT_ID` | Google **Web** OAuth client. The app requests ID tokens for this audience; the backend only accepts it. |
-| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawayofficial.app`                                      |
+| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawaygo.app`                                      |
 
 > `.env` is bundled into the app as an asset, so anyone with the app can read it. Only put **public** config here — never real secrets.
 
 ### 3. Google Sign-In on your machine (Android)
 
-App ID (Android package and iOS bundle ID): **`com.goawayofficial.app`**. Google Cloud project: `goaway-483709`.
+App ID (Android package and iOS bundle ID): **`com.goawaygo.app`**. Google Cloud project: `goaway-483709`.
 
 Android has no client ID in the app: Google recognises it by the package name **and the SHA-1 of the signing
 key**. Each developer's debug key is different, so ask the project owner to add yours as an Android OAuth client
-(package `com.goawayofficial.app`). Get your SHA-1 with:
+(package `com.goawaygo.app`). Get your SHA-1 with:
 
 ```bash
 keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
