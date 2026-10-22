@@ -34,7 +34,7 @@ them. Without them, release builds fall back to the debug key (fine for CI, not 
 
 Google Sign-In on Android checks the signing certificate: the upload key's **SHA-1** must be registered in Google
 Cloud (project `goaway-483709`) → Google Auth Platform → Clients → an **Android** client for package
-`com.goawayofficial.app`. The debug key has its own client for development.
+`com.goawaygo.app`. The debug key has its own client for development.
 
 ## Release a staging build
 
