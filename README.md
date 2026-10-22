@@ -1,8 +1,8 @@
-# Goaway — App Frontend
+# GoAwayGo — App Frontend
 
-Flutter app for **Goaway**, a travel app: search flights, hotels and rentals, explore destinations, and share trips in the Wanderbook.
+Flutter app for **GoAwayGo**, a travel app: search flights, hotels and rentals, explore destinations, and share trips in the Wanderbook.
 
-Backend: [goawayofficial/goaway_backend](https://github.com/goawayofficial/goaway_backend) (Spring Boot).
+Backend: [goawaygoofficial/goawaygo_backend](https://github.com/goawaygoofficial/goawaygo_backend) (Spring Boot).
 
 ## Features
 
@@ -71,13 +71,13 @@ Android **debug** builds may use plain HTTP to `10.0.2.2` / `localhost` only
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.47+ (Dart 3.13+)
 - Android Studio / Xcode for emulators, or a physical device
-- The [backend](https://github.com/goawayofficial/goaway_backend) running locally or deployed
+- The [backend](https://github.com/goawaygoofficial/goawaygo_backend) running locally or deployed
 
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/goawayofficial/goaway_app_frontend.git
-cd goaway_app_frontend
+git clone https://github.com/goawaygoofficial/goawaygo_app_frontend.git
+cd goawaygo_app_frontend
 flutter pub get
 ```
 

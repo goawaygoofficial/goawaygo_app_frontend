@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Creates the Android upload key that signs Goaway release builds (see docs/release-android.md). Run once.
+# Creates the Android upload key that signs GoAwayGo release builds (see docs/release-android.md). Run once.
 #
 #   Usage:  bash scripts/create-upload-key.sh
 #   Needs:  keytool (part of the JDK), openssl (Git Bash has it).
@@ -32,7 +32,7 @@ export GOAWAY_KEY_PASSWORD
 
 keytool -genkeypair -keystore "$KEYSTORE" -storetype PKCS12 -alias "$ALIAS" \
   -keyalg RSA -keysize 2048 -validity 10000 \
-  -dname "CN=Goaway, O=Goaway, C=IN" \
+  -dname "CN=GoAwayGo, O=GoAwayGo, C=IN" \
   -storepass:env GOAWAY_KEY_PASSWORD -keypass:env GOAWAY_KEY_PASSWORD >/dev/null 2>&1
 
 # Forward slashes work in Gradle on Windows too.

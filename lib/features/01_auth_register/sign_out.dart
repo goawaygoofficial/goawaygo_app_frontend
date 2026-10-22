@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 Future<void> confirmAndSignOut(BuildContext context) async {
   final confirmed = await CustomDialogs.showConfirmDialog(
     context: context,
-    message: 'Sign out of Goaway?',
+    message: 'Sign out of GoAwayGo?',
     confirmLabel: 'Sign out',
   );
   if (!confirmed || !context.mounted) return;

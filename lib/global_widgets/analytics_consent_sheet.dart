@@ -61,7 +61,7 @@ class _ConsentSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Help us improve Goaway?',
+              'Help us improve GoAwayGo?',
               style: TextStyle(
                 color: ColorsUtil.whiteColor,
                 fontSize: 18,

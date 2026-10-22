@@ -19,7 +19,7 @@ class InMemoryRefreshTokenStore implements RefreshTokenStore {
   Future<void> clear() async => token = null;
 }
 
-/// A scriptable stand-in for the Goaway backend that records every request.
+/// A scriptable stand-in for the GoAwayGo backend that records every request.
 class FakeBackend {
   FakeBackend() {
     Backend.configure(
