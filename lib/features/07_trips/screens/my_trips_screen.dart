@@ -55,7 +55,7 @@ class MyTripsScreen extends StatelessWidget {
               SizedBox(
                 width: width * 0.7,
                 child: Text(
-                  'Trips you book with Goaway will show up here. Start by finding a flight, a stay or a car.',
+                  'Trips you book with GoAwayGo will show up here. Start by finding a flight, a stay or a car.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
