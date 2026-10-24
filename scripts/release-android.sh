@@ -17,7 +17,7 @@ BUILD="${2:?Usage: release-android.sh <version> <build-number> \"<notes>\" [--up
 NOTES="${3:-}"
 UPLOAD="${4:-}"
 ENV_FILE=env/staging.env
-BUCKET=goaway-downloads
+BUCKET=goawaygo-downloads
 BASE_URL=https://downloads.goawaygo.com/android
 WRANGLER="npx --yes wrangler@4.145.0"
 
@@ -31,7 +31,7 @@ cd "$(dirname "$0")/.."
 
 OUT=build/release
 mkdir -p "$OUT"
-NAME="goaway-${VERSION}-${BUILD}"
+NAME="goawaygo-${VERSION}-${BUILD}"
 common=(--release "--dart-define=ENV_FILE=$ENV_FILE" "--build-name=$VERSION" "--build-number=$BUILD")
 
 echo "==> Building $NAME (64-bit phones)"

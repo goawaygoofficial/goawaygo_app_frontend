@@ -45,9 +45,9 @@ bash scripts/release-android.sh 1.0.0 3 "What's new in this build" --upload
 ```
 
 - The build number (`3`) must be higher than every earlier release, or phones won't install it as an update.
-- Output in `build/release/`: `goaway-<version>-<build>-arm64.apk` (64-bit phones, ~20 MB),
-  `goaway-<version>-<build>-universal.apk` (all Android 8.0+ phones, 32- and 64-bit) and `latest.json`.
-- `--upload` puts them in the Cloudflare R2 bucket `goaway-downloads` → `https://downloads.goawaygo.com/android/`
+- Output in `build/release/`: `goawaygo-<version>-<build>-arm64.apk` (64-bit phones, ~20 MB),
+  `goawaygo-<version>-<build>-universal.apk` (all Android 8.0+ phones, 32- and 64-bit) and `latest.json`.
+- `--upload` puts them in the Cloudflare R2 bucket `goawaygo-downloads` → `https://downloads.goawaygo.com/android/`
   (APKs first, then `latest.json`). The website's `/download` page reads `latest.json`, so it shows the new version
   without a website change. First time only: `npx wrangler login` (Cloudflare sign-in in the browser).
 - The script refuses to run without the upload key, so a debug-signed build can never be published.
