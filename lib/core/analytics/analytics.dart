@@ -42,7 +42,10 @@ enum AnalyticsConsent { granted, denied }
 class Analytics {
   Analytics._();
 
-  static const _consentKey = 'goaway.analyticsConsent';
+  static const _consentKey = 'goawaygo.analyticsConsent';
+
+  /// Where the choice was kept before the GoAwayGo rename; moved to [_consentKey] on first start.
+  static const _legacyConsentKey = 'goaway.analyticsConsent';
   static const _host = 'https://eu.i.posthog.com';
 
   /// The user's answer; null until they choose. Widgets listen to it ("Privacy choices").
@@ -59,6 +62,13 @@ class Analytics {
   static Future<void> init() async {
     if (!available) return;
     final prefs = await SharedPreferences.getInstance();
+    final legacy = prefs.getString(_legacyConsentKey);
+    if (legacy != null) {
+      if (prefs.getString(_consentKey) == null) {
+        await prefs.setString(_consentKey, legacy);
+      }
+      await prefs.remove(_legacyConsentKey);
+    }
     consent.value = switch (prefs.getString(_consentKey)) {
       'granted' => AnalyticsConsent.granted,
       'denied' => AnalyticsConsent.denied,

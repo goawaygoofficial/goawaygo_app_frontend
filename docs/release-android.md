@@ -28,7 +28,7 @@ Release builds are signed with the **upload key**, created once per machine that
 bash scripts/create-upload-key.sh
 ```
 
-It writes `~/.goaway/goaway-upload.jks` and `android/key.properties` (gitignored, random password) and prints the
+It writes `~/.goawaygo/goawaygo-upload.jks` and `android/key.properties` (gitignored, random password) and prints the
 key's SHA-1 / SHA-256 fingerprints (public). **Back up both** (password manager or encrypted drive) and never commit
 them. Without them, release builds fall back to the debug key (fine for CI, not for testers).
 
@@ -55,7 +55,7 @@ bash scripts/release-android.sh 1.0.0 3 "What's new in this build" --upload
 ## Send it to beta testers (Firebase App Distribution)
 
 1. Firebase console → project **goaway-483709** → App Distribution.
-2. Drag in `build/release/goaway-<version>-<build>-universal.apk`, add the release notes.
+2. Drag in `build/release/goawaygo-<version>-<build>-universal.apk`, add the release notes.
 3. Pick the **beta** group (people who signed up through the website's "Join the beta" invite link) and distribute.
    They get notified and update through the Firebase App Tester app.
 
