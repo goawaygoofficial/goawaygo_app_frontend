@@ -29,7 +29,7 @@ Breadcrumb? scrubBreadcrumb(Breadcrumb? breadcrumb, [Hint? hint]) {
 }
 
 /// Error tracking for builds that set SENTRY_DSN in their env file (staging, production). Local runs (`.env`
-/// without it) send nothing. Crashes, including native Android ones, go to Sentry project goaway-app with the
+/// without it) send nothing. Crashes, including native Android ones, go to Sentry project goawaygo-app with the
 /// environment and release (package@version+build). No personal data: no user details, IPs or screenshots (view
 /// hierarchy is off by default too), and tokens are cut out of URLs.
 ///

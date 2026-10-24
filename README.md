@@ -4,6 +4,23 @@ Flutter app for **GoAwayGo**, a travel app: search flights, hotels and rentals, 
 
 Backend: [goawaygoofficial/goawaygo_backend](https://github.com/goawaygoofficial/goawaygo_backend) (Spring Boot).
 
+## Documentation
+
+New here? Read these in order:
+
+| File | What it's for |
+| --- | --- |
+| `README.md` (this file) | What this part does and how to run it locally |
+| `CONTRIBUTING.md` | Branches, commits, PRs and checks |
+| `FOUNDATIONS.md` | Every service and tool GoAwayGo uses, what it's for, free limits, where it's configured |
+| `LINKS.md` | Every dashboard and console, a weekly checklist, and how to give a new developer access |
+| `CLAUDE.md` | Project facts and conventions (also read by Claude Code) |
+| `RELEASING.md` | What happens after a merge, how to release, version numbers, rollbacks |
+| `ROADMAP.md` | What's done and what's next |
+| `docs/` | Details for this repo (Android releases) |
+
+`CLAUDE.md`, `FOUNDATIONS.md`, `LINKS.md`, `RELEASING.md` and `ROADMAP.md` are the same in all three repos.
+
 ## Features
 
 | Module           | Folder                            | What it does                                             |
