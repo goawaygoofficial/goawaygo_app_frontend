@@ -84,13 +84,13 @@ class Analytics {
     await prefs.setString(_consentKey, value.name);
     if (value == AnalyticsConsent.granted) {
       if (_started) {
-        await Posthog().enable();
+        await Posthog().optIn();
       } else {
         await _start();
       }
     } else if (_started) {
       // Stop sending and forget the random ID this device had.
-      await Posthog().disable();
+      await Posthog().optOut();
       await Posthog().reset();
     }
   }
@@ -103,7 +103,7 @@ class Analytics {
       ..sessionReplay = false
       ..surveys = false
       ..preloadFeatureFlags = false
-      ..sendFeatureFlagEvents = false
+      ..sendFeatureFlagEvent = false
       ..capturePushNotificationSubscriptions = false
       ..capturePushNotificationOpened = false;
     try {
