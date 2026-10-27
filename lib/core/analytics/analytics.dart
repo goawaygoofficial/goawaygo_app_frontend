@@ -32,6 +32,11 @@ class DestinationSearched extends AnalyticsEvent {
   const DestinationSearched() : super('destination_searched');
 }
 
+class TripIdeaSaved extends AnalyticsEvent {
+  TripIdeaSaved({required bool hiddenGem})
+    : super('trip_idea_saved', {'kind': hiddenGem ? 'hidden gem' : 'popular'});
+}
+
 enum AnalyticsConsent { granted, denied }
 
 /// Product analytics (PostHog, EU cloud), only after the user agrees. Until then the SDK isn't even started

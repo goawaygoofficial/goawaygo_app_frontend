@@ -29,8 +29,16 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
     super.initState();
 
     _pages.addAll([
-      HomeScreen(user: widget.user, toggleBottomBar: _toggleBottomBar),
-      MyTripsScreen(onPlanTrip: () => _updatePage(0)),
+      HomeScreen(
+        user: widget.user,
+        toggleBottomBar: _toggleBottomBar,
+        onOpenProfile: () => _updatePage(3),
+      ),
+      MyTripsScreen(
+        onPlanTrip: () => _updatePage(0),
+        onSignIn: () => _updatePage(3),
+        toggleBottomBar: _toggleBottomBar,
+      ),
       WanderbookHome(user: widget.user),
       MyProfile(
         toggleBottomBar: _toggleBottomBar,
