@@ -22,20 +22,28 @@ class ApiClient {
   /// Sends a JSON request and returns the decoded body (`null` for an empty body).
   ///
   /// Throws [ApiException] with the backend's message on failure, or [ApiException.unreachable] when offline.
+  /// [timeout] is for the rare slow call (a destination page waits for the AI); the default suits the rest.
   Future<Object?> request(
     String method,
     String path, {
     Object? body,
     int? expectedStatus,
     required String fallbackError,
+    Duration timeout = requestTimeout,
   }) async {
     final token = _session.accessToken;
-    var response = await _send(method, path, body, token);
+    var response = await _send(method, path, body, token, timeout);
 
     if (response.statusCode == 401 && token != null) {
       final refreshed = await _session.refresh().catchError((Object _) => null);
       if (refreshed != null) {
-        response = await _send(method, path, body, _session.accessToken);
+        response = await _send(
+          method,
+          path,
+          body,
+          _session.accessToken,
+          timeout,
+        );
       } else {
         await _session.end();
       }
@@ -60,6 +68,7 @@ class ApiClient {
     String path,
     Object? body,
     String? token,
+    Duration timeout,
   ) async {
     final request = http.Request(method, Uri.parse('$_baseUrl$path'))
       ..headers.addAll({
@@ -70,7 +79,7 @@ class ApiClient {
     if (body != null) request.body = jsonEncode(body);
     try {
       return await http.Response.fromStream(
-        await _client.send(request).timeout(requestTimeout),
+        await _client.send(request).timeout(timeout),
       );
     } on Exception {
       throw ApiException.unreachable;

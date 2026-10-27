@@ -8,31 +8,33 @@ Backend: [goawaygoofficial/goawaygo_backend](https://github.com/goawaygoofficial
 
 New here? Read these in order:
 
-| File | What it's for |
-| --- | --- |
-| `README.md` (this file) | What this part does and how to run it locally |
-| `CONTRIBUTING.md` | Branches, commits, PRs and checks |
-| `FOUNDATIONS.md` | Every service and tool GoAwayGo uses, what it's for, free limits, where it's configured |
-| `LINKS.md` | Every dashboard and console, a weekly checklist, and how to give a new developer access |
-| `CLAUDE.md` | Project facts and conventions (also read by Claude Code) |
-| `RELEASING.md` | What happens after a merge, how to release, version numbers, rollbacks |
-| `ROADMAP.md` | What's done and what's next |
-| `docs/` | Details for this repo (Android releases) |
+| File                    | What it's for                                                                           |
+| ----------------------- | --------------------------------------------------------------------------------------- |
+| `README.md` (this file) | What this part does and how to run it locally                                           |
+| `CONTRIBUTING.md`       | Branches, commits, PRs and checks                                                       |
+| `FOUNDATIONS.md`        | Every service and tool GoAwayGo uses, what it's for, free limits, where it's configured |
+| `LINKS.md`              | Every dashboard and console, a weekly checklist, and how to give a new developer access |
+| `CLAUDE.md`             | Project facts and conventions (also read by Claude Code)                                |
+| `RELEASING.md`          | What happens after a merge, how to release, version numbers, rollbacks                  |
+| `ROADMAP.md`            | What's done and what's next                                                             |
+| `docs/`                 | Details for this repo (Android releases)                                                |
 
 `CLAUDE.md`, `FOUNDATIONS.md`, `LINKS.md`, `RELEASING.md` and `ROADMAP.md` are the same in all three repos.
 
 ## Features
 
-| Module           | Folder                            | What it does                                             |
-| ---------------- | --------------------------------- | -------------------------------------------------------- |
-| Auth             | `lib/features/01_auth_register`   | Email sign up / sign in, Google Sign-In, forgot password |
-| Home             | `lib/features/02_home`            | Category buttons and card carousel                       |
-| Flights          | `lib/features/03_flights`         | Flight search form                                       |
-| Hotels           | `lib/features/04_hotels`          | Hotel search form                                        |
-| Rentals          | `lib/features/05_rentals`         | Rental search form                                       |
-| Destination info | `lib/features/06_destinationInfo` | Destination details                                      |
-| Wanderbook       | `lib/features/08_wanderbook`      | Travel profile, tabs and photo grid                      |
-| Profile          | `lib/features/09_profile`         | My profile and other users' profiles                     |
+| Module            | Folder                            | What it does                                                                         |
+| ----------------- | --------------------------------- | ------------------------------------------------------------------------------------ |
+| Auth              | `lib/features/01_auth_register`   | Email sign up / sign in, Google Sign-In, forgot password                             |
+| Home              | `lib/features/02_home`            | Categories, place search with suggestions, recent searches, ideas (new every minute) |
+| Flights           | `lib/features/03_flights`         | Flight search form                                                                   |
+| Hotels            | `lib/features/04_hotels`          | Hotel search form                                                                    |
+| Rentals           | `lib/features/05_rentals`         | Rental search form                                                                   |
+| Destination info  | `lib/features/06_destinationInfo` | Travel animation, spot photos, the 9 AI cards                                        |
+| My Trips          | `lib/features/07_trips`           | Places saved from the ideas (sign-in needed)                                         |
+| Discover (shared) | `lib/core/discover`               | Discover API calls, models, recent searches on the device                            |
+| Wanderbook        | `lib/features/08_wanderbook`      | Travel profile, tabs and photo grid                                                  |
+| Profile           | `lib/features/09_profile`         | My profile and other users' profiles                                                 |
 
 ## Tech stack
 
@@ -110,7 +112,7 @@ cp .env.example .env
 | ---------------------- | ------------------------------------------------------------------------------------------------------- |
 | `BASE_URL`             | Backend URL, no trailing slash. Default `http://localhost:8080` with `adb reverse` (see _Run_).         |
 | `GOOGLE_WEB_CLIENT_ID` | Google **Web** OAuth client. The app requests ID tokens for this audience; the backend only accepts it. |
-| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawaygo.app`                                      |
+| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** OAuth client for bundle ID `com.goawaygo.app`                                            |
 
 > `.env` is bundled into the app as an asset, so anyone with the app can read it. Only put **public** config here — never real secrets.
 

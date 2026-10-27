@@ -1,8 +1,18 @@
-import 'package:app_frontend/features/02_home/data/trip_ideas.dart';
 import 'package:flutter/material.dart';
 
+/// Horizontally swiping, endless carousel: the centred card is full size; neighbours shrink and fade with
+/// distance (the website's `TripIdeaCarousel`).
 class StackedCardCarousel extends StatefulWidget {
-  const StackedCardCarousel({super.key});
+  const StackedCardCarousel({
+    super.key,
+    required this.itemCount,
+    required this.itemBuilder,
+    required this.height,
+  });
+
+  final int itemCount;
+  final Widget Function(BuildContext context, int index) itemBuilder;
+  final double height;
 
   @override
   State<StackedCardCarousel> createState() => _StackedCardCarouselState();
@@ -14,8 +24,6 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
     viewportFraction: 0.6,
     initialPage: 1000,
   );
-
-  final List<TripIdea> ideas = placeholderTripIdeas;
 
   double currentPageValue = 1000.0;
 
@@ -46,77 +54,24 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: height * 0.28,
+      height: widget.height,
       child: PageView.builder(
         controller: _pageController,
         itemBuilder: (context, index) {
-          final idea = ideas[index % ideas.length];
-
-          double scale = (1 - ((currentPageValue - index).abs() * 0.3)).clamp(
+          final scale = (1 - ((currentPageValue - index).abs() * 0.3)).clamp(
             0.0,
             1.0,
           );
-          double opacity = scale;
-
           return Transform.scale(
             scale: Curves.easeOut.transform(scale),
             child: Opacity(
-              opacity: opacity,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: width * 0.02),
-                padding: EdgeInsets.all(width * 0.05),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: idea.colors,
-                  ),
-                  borderRadius: BorderRadius.circular(width * 0.08),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                // Bottom-left text, as on the website: place, title, tagline.
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${idea.destination}, ${idea.country}'.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.7,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      idea.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      idea.tagline,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
-                ),
+              opacity: scale,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                child: widget.itemBuilder(context, index % widget.itemCount),
               ),
             ),
           );
