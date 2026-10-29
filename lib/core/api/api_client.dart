@@ -30,20 +30,55 @@ class ApiClient {
     int? expectedStatus,
     required String fallbackError,
     Duration timeout = requestTimeout,
+  }) {
+    return _call(
+      () {
+        final request = http.Request(method, Uri.parse('$_baseUrl$path'));
+        if (body != null) {
+          request.headers['Content-Type'] = 'application/json';
+          request.body = jsonEncode(body);
+        }
+        return request;
+      },
+      expectedStatus: expectedStatus,
+      fallbackError: fallbackError,
+      timeout: timeout,
+    );
+  }
+
+  /// Uploads one file as multipart form field [field] (Wanderbook photos) and returns the decoded answer.
+  Future<Object?> upload(
+    String path, {
+    required String field,
+    required List<int> bytes,
+    required String filename,
+    required String fallbackError,
+  }) {
+    return _call(
+      () => http.MultipartRequest('POST', Uri.parse('$_baseUrl$path'))
+        ..files.add(
+          http.MultipartFile.fromBytes(field, bytes, filename: filename),
+        ),
+      fallbackError: fallbackError,
+      // Original photos can be large.
+      timeout: const Duration(seconds: 120),
+    );
+  }
+
+  /// Sends a request made by [build] (built again for the retry: a request can only be sent once).
+  Future<Object?> _call(
+    http.BaseRequest Function() build, {
+    int? expectedStatus,
+    required String fallbackError,
+    required Duration timeout,
   }) async {
     final token = _session.accessToken;
-    var response = await _send(method, path, body, token, timeout);
+    var response = await _send(build(), token, timeout);
 
     if (response.statusCode == 401 && token != null) {
       final refreshed = await _session.refresh().catchError((Object _) => null);
       if (refreshed != null) {
-        response = await _send(
-          method,
-          path,
-          body,
-          _session.accessToken,
-          timeout,
-        );
+        response = await _send(build(), _session.accessToken, timeout);
       } else {
         await _session.end();
       }
@@ -64,19 +99,14 @@ class ApiClient {
   }
 
   Future<http.Response> _send(
-    String method,
-    String path,
-    Object? body,
+    http.BaseRequest request,
     String? token,
     Duration timeout,
   ) async {
-    final request = http.Request(method, Uri.parse('$_baseUrl$path'))
-      ..headers.addAll({
-        ...clientTypeHeader,
-        if (body != null) 'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      });
-    if (body != null) request.body = jsonEncode(body);
+    request.headers.addAll({
+      ...clientTypeHeader,
+      if (token != null) 'Authorization': 'Bearer $token',
+    });
     try {
       return await http.Response.fromStream(
         await _client.send(request).timeout(timeout),

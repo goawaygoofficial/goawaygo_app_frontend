@@ -8,7 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 enum LegalPage {
   privacy('Privacy Policy', '/privacy'),
   terms('Terms of Use', '/terms'),
-  deleteMyData('Delete my data', '/delete-my-data');
+  deleteMyData('Delete my data', '/delete-my-data'),
+  communityGuidelines('Community Guidelines', '/community-guidelines');
 
   const LegalPage(this.title, this.path);
 

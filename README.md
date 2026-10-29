@@ -23,18 +23,19 @@ New here? Read these in order:
 
 ## Features
 
-| Module            | Folder                            | What it does                                                                         |
-| ----------------- | --------------------------------- | ------------------------------------------------------------------------------------ |
-| Auth              | `lib/features/01_auth_register`   | Email sign up / sign in, Google Sign-In, forgot password                             |
-| Home              | `lib/features/02_home`            | Categories, place search with suggestions, recent searches, ideas (new every minute) |
-| Flights           | `lib/features/03_flights`         | Flight search form                                                                   |
-| Hotels            | `lib/features/04_hotels`          | Hotel search form                                                                    |
-| Rentals           | `lib/features/05_rentals`         | Rental search form                                                                   |
-| Destination info  | `lib/features/06_destinationInfo` | Travel animation, spot photos, the 9 AI cards                                        |
-| My Trips          | `lib/features/07_trips`           | Places saved from the ideas (sign-in needed)                                         |
-| Discover (shared) | `lib/core/discover`               | Discover API calls, models, recent searches on the device                            |
-| Wanderbook        | `lib/features/08_wanderbook`      | Travel profile, tabs and photo grid                                                  |
-| Profile           | `lib/features/09_profile`         | My profile and other users' profiles                                                 |
+| Module              | Folder                            | What it does                                                                         |
+| ------------------- | --------------------------------- | ------------------------------------------------------------------------------------ |
+| Auth                | `lib/features/01_auth_register`   | Email sign up / sign in, Google Sign-In, forgot password                             |
+| Home                | `lib/features/02_home`            | Categories, place search with suggestions, recent searches, ideas (new every minute) |
+| Flights             | `lib/features/03_flights`         | Flight search form                                                                   |
+| Hotels              | `lib/features/04_hotels`          | Hotel search form                                                                    |
+| Rentals             | `lib/features/05_rentals`         | Rental search form                                                                   |
+| Destination info    | `lib/features/06_destinationInfo` | Travel animation, spot photos, the 9 AI cards                                        |
+| My Trips            | `lib/features/07_trips`           | Places saved from the ideas (sign-in needed)                                         |
+| Discover (shared)   | `lib/core/discover`               | Discover API calls, models, recent searches on the device                            |
+| Wanderbook          | `lib/features/08_wanderbook`      | Feed, profiles, follow requests, posting original photos, likes, comments, reports   |
+| Wanderbook (shared) | `lib/core/wanderbook`             | Wanderbook API calls and models                                                      |
+| Profile             | `lib/features/09_profile`         | My profile and other users' profiles                                                 |
 
 ## Tech stack
 
