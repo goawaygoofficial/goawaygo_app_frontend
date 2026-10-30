@@ -3,6 +3,7 @@ import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
 import 'package:app_frontend/features/06_destinationInfo/screens/destination_info_screen.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/pill_button.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -354,24 +355,7 @@ class _EmptyState extends StatelessWidget {
             ),
           ),
           SizedBox(height: height * 0.03),
-          ElevatedButton(
-            onPressed: onAction,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsUtil.secondary,
-              foregroundColor: ColorsUtil.whiteColor,
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.1,
-                vertical: height * 0.018,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            child: Text(
-              action,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
+          PillButton(label: action, onPressed: onAction, large: true),
         ],
       ),
     );

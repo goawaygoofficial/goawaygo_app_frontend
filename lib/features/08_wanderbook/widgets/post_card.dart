@@ -100,7 +100,11 @@ class PostCard extends StatelessWidget {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: () => openProfile(context, post.author.publicId),
+                  onTap: () => openProfile(
+                    context,
+                    post.author.publicId,
+                    preview: post.author,
+                  ),
                   child: Row(
                     children: [
                       Avatar(url: post.author.photoUrl, size: 38),
@@ -170,7 +174,10 @@ class PostCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          PhotoCarousel(photos: post.photos),
+          PhotoCarousel(
+            photos: post.photos,
+            heroTag: postHeroTag(post.publicId),
+          ),
           Row(
             children: [
               IconButton(
@@ -188,7 +195,8 @@ class PostCard extends StatelessWidget {
                     Icons.chat_bubble_outline,
                     color: Colors.white,
                   ),
-                  onPressed: () => openPost(context, post.publicId),
+                  onPressed: () =>
+                      openPost(context, post.publicId, preview: post),
                 ),
             ],
           ),
@@ -259,13 +267,17 @@ class PostGrid extends StatelessWidget {
           button: true,
           label: post.place == null ? 'Post' : 'Post at ${post.place!.name}',
           child: GestureDetector(
-            onTap: () => openPost(context, post.publicId),
+            onTap: () => openPost(context, post.publicId, preview: post),
             child: Stack(
               fit: StackFit.expand,
               children: [
                 ColoredBox(color: Colors.white.withValues(alpha: 0.08)),
                 // The grid shows the centre; the post shows the whole original.
-                if (cover != null) Image.network(cover.url, fit: BoxFit.cover),
+                if (cover != null)
+                  Hero(
+                    tag: postHeroTag(post.publicId),
+                    child: Image.network(cover.url, fit: BoxFit.cover),
+                  ),
                 if (post.photos.length > 1)
                   const Positioned(
                     top: 4,

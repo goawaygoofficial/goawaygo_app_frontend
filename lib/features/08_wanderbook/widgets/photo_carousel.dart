@@ -6,9 +6,12 @@ import 'package:url_launcher/url_launcher.dart';
 /// A post's photos, swiped sideways. They are the originals and are never cropped: each fits the frame whole
 /// (frame shape from the first photo, between 4:5 and 1.91:1, like Instagram); "Full size" opens the file.
 class PhotoCarousel extends StatefulWidget {
-  const PhotoCarousel({super.key, required this.photos});
+  const PhotoCarousel({super.key, required this.photos, this.heroTag});
 
   final List<Photo> photos;
+
+  /// Hero tag of the first photo, so it flies to and from the grid tile or feed.
+  final String? heroTag;
 
   @override
   State<PhotoCarousel> createState() => _PhotoCarouselState();
@@ -37,21 +40,27 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
               child: PageView.builder(
                 itemCount: photos.length,
                 onPageChanged: (page) => setState(() => _page = page),
-                itemBuilder: (context, index) => Image.network(
-                  photos[index].url,
-                  fit: BoxFit.contain,
-                  semanticLabel: 'Photo ${index + 1} of ${photos.length}',
-                  loadingBuilder: (context, child, progress) => progress == null
-                      ? child
-                      : const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white54,
+                itemBuilder: (context, index) {
+                  final image = Image.network(
+                    photos[index].url,
+                    fit: BoxFit.contain,
+                    semanticLabel: 'Photo ${index + 1} of ${photos.length}',
+                    loadingBuilder: (context, child, progress) =>
+                        progress == null
+                        ? child
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white54,
+                            ),
                           ),
-                        ),
-                  errorBuilder: (context, error, stack) => const Center(
-                    child: Icon(Icons.broken_image, color: Colors.white54),
-                  ),
-                ),
+                    errorBuilder: (context, error, stack) => const Center(
+                      child: Icon(Icons.broken_image, color: Colors.white54),
+                    ),
+                  );
+                  return index == 0 && widget.heroTag != null
+                      ? Hero(tag: widget.heroTag!, child: image)
+                      : image;
+                },
               ),
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:app_frontend/features/06_destinationInfo/widgets/info_card_tile.
 import 'package:app_frontend/features/06_destinationInfo/widgets/travel_loader.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/photo_slider.dart';
+import 'package:app_frontend/global_widgets/pill_button.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -205,7 +206,7 @@ class _Busy extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          _PillButton(label: 'Try again', onPressed: onRetry),
+          PillButton(label: 'Try again', onPressed: onRetry, large: true),
         ],
       ),
     );
@@ -256,33 +257,9 @@ class _Message extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            _PillButton(label: action, onPressed: onAction),
+            PillButton(label: action, onPressed: onAction, large: true),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _PillButton extends StatelessWidget {
-  const _PillButton({required this.label, required this.onPressed});
-
-  final String label;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: ColorsUtil.secondary,
-        foregroundColor: ColorsUtil.whiteColor,
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
     );
   }
