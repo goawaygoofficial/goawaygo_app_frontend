@@ -13,9 +13,13 @@ import 'package:provider/provider.dart';
 
 /// Another traveller's profile: Follow (or request), their posts if you may see them, block and report.
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key, required this.publicId});
+  const ProfileScreen({super.key, required this.publicId, this.preview});
 
   final String publicId;
+
+  /// The person as the previous screen showed them: their cover, photo and name appear at once while the profile
+  /// loads (see [openProfile]).
+  final Person? preview;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -145,10 +149,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             if (_error != null) StatusText(_error!),
-            if (profile == null && _error == null) const StatusText('Loading…'),
+            if (profile == null && _error == null)
+              if (widget.preview case final person?)
+                ProfileHeader(
+                  profile: Profile(
+                    publicId: person.publicId,
+                    name: person.name,
+                    photoUrl: person.photoUrl,
+                    bio: '',
+                    homeTown: person.homeTown,
+                    isPrivate: person.isPrivate,
+                    posts: 0,
+                    followers: 0,
+                    following: 0,
+                    relationship: Relationship.none,
+                    followsYou: false,
+                    blockedByYou: false,
+                    canSeePosts: false,
+                  ),
+                  heroAvatar: true,
+                  placeholder: true,
+                )
+              else
+                const StatusText('Loading…'),
             if (profile != null) ...[
               ProfileHeader(
                 profile: profile,
+                heroAvatar: true,
                 actions: [
                   if (!profile.blockedByYou &&
                       profile.relationship != Relationship.self)

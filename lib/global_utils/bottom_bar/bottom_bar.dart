@@ -18,6 +18,9 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
   int _page = 0;
+
+  /// 1 when the tab opened is to the right of the previous one, -1 to the left: the new tab glides in from there.
+  int _direction = 1;
   bool _showBottomBar = true;
 
   late AnimationController _animationController;
@@ -60,7 +63,11 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
   }
 
   void _updatePage(int index) {
-    setState(() => _page = index);
+    if (index == _page) return;
+    setState(() {
+      _direction = index > _page ? 1 : -1;
+      _page = index;
+    });
   }
 
   void _toggleBottomBar(bool show) {
@@ -98,7 +105,30 @@ class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
 
   Widget _buildScaffold() {
     return Scaffold(
-      body: _pages[_page],
+      // Switching tabs: the new tab glides in from the side of the tab you came from (the website's tab motion).
+      body: AnimatedSwitcher(
+        duration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 300),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeIn,
+        transitionBuilder: (child, animation) {
+          final incoming = child.key == ValueKey(_page);
+          return FadeTransition(
+            opacity: animation,
+            child: incoming
+                ? SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset(0.08 * _direction, 0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  )
+                : child,
+          );
+        },
+        child: KeyedSubtree(key: ValueKey(_page), child: _pages[_page]),
+      ),
       bottomNavigationBar: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {

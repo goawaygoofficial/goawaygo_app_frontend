@@ -63,6 +63,24 @@ lib/
 └── providers/             # ChangeNotifier providers (UserProvider)
 ```
 
+## Motion and shared widgets
+
+Navigation moves the same way as on the website, and nothing moves when the system asks for less motion
+(`MediaQuery.disableAnimationsOf`):
+
+- **Pages pushed on top** slide in a little from the right and fade in while the page under them drifts left;
+  Back plays it in reverse (`global_utils/page_transitions.dart`, set in `main.dart`; iOS keeps its own swipe-back
+  transition).
+- **Tabs** glide towards the tab you picked; the selected icon pops and an indicator grows under it
+  (`global_utils/bottom_bar/`).
+- **Photo flights** (Wanderbook): a post's photo flies from the grid or feed into the post, and a person's photo
+  from a list into their profile header. Use `Hero` with `postHeroTag` / `avatarHeroTag`, and pass what the screen
+  already shows as `preview` to `openPost` / `openProfile` so the next screen can draw it at once. A tag must be
+  unique on its screen (no Hero on feed author photos or on your own profile header).
+
+Buttons are `PillButton` (`global_widgets/pill_button.dart`): `quiet` for secondary actions, `large` for a
+screen's main action. Don't style a new ElevatedButton per screen.
+
 ## Authentication
 
 - **Access token** (20 min): kept **in memory only**, sent as `Authorization: Bearer` by `ApiClient`.

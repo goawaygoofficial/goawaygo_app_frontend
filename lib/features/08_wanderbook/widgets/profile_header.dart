@@ -10,10 +10,18 @@ class ProfileHeader extends StatelessWidget {
     super.key,
     required this.profile,
     this.actions = const [],
+    this.heroAvatar = false,
+    this.placeholder = false,
   });
 
   final Profile profile;
   final List<Widget> actions;
+
+  /// The photo is where a person's photo in a list flies to (not on your own tab, where it could appear twice).
+  final bool heroAvatar;
+
+  /// Only the cover, photo and name (drawn at once from a preview while the profile loads).
+  final bool placeholder;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,12 @@ class ProfileHeader extends StatelessWidget {
                     color: ColorsUtil.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: Avatar(url: profile.photoUrl, size: 90),
+                  child: heroAvatar
+                      ? Hero(
+                          tag: avatarHeroTag(profile.publicId),
+                          child: Avatar(url: profile.photoUrl, size: 90),
+                        )
+                      : Avatar(url: profile.photoUrl, size: 90),
                 ),
               ),
             ],
@@ -85,47 +98,49 @@ class ProfileHeader extends StatelessWidget {
             profile.homeTown.toUpperCase(),
             style: const TextStyle(color: Colors.white, fontSize: 13),
           ),
-        const SizedBox(height: 14),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _Stat(label: 'Posts', count: profile.posts),
-            _Stat(
-              label: 'Followers',
-              count: profile.followers,
-              onTap: profile.canSeePosts
-                  ? () => _openList(context, 'followers')
-                  : null,
-            ),
-            _Stat(
-              label: 'Following',
-              count: profile.following,
-              onTap: profile.canSeePosts
-                  ? () => _openList(context, 'following')
-                  : null,
-            ),
-          ],
-        ),
-        if (profile.bio.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              profile.bio,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white),
-            ),
+        if (!placeholder) ...[
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _Stat(label: 'Posts', count: profile.posts),
+              _Stat(
+                label: 'Followers',
+                count: profile.followers,
+                onTap: profile.canSeePosts
+                    ? () => _openList(context, 'followers')
+                    : null,
+              ),
+              _Stat(
+                label: 'Following',
+                count: profile.following,
+                onTap: profile.canSeePosts
+                    ? () => _openList(context, 'following')
+                    : null,
+              ),
+            ],
           ),
-        if (actions.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 14),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 8,
-              runSpacing: 8,
-              children: actions,
+          if (profile.bio.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                profile.bio,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-          ),
+          if (actions.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 14),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: actions,
+              ),
+            ),
+        ],
       ],
     );
   }

@@ -17,10 +17,14 @@ class PostScreen extends StatefulWidget {
     super.key,
     required this.publicId,
     this.startEditing = false,
+    this.preview,
   });
 
   final String publicId;
   final bool startEditing;
+
+  /// The post as the previous screen showed it, drawn at once (its photo flies in) until the fresh copy arrives.
+  final Post? preview;
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -34,7 +38,7 @@ class _PostScreenState extends State<PostScreen> {
     },
   );
   final _newComment = TextEditingController();
-  Post? _post;
+  late Post? _post = widget.preview;
   String? _error;
   late bool _editing = widget.startEditing;
   List<Person>? _likers;
@@ -234,7 +238,11 @@ class _CommentTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () => openProfile(context, comment.author.publicId),
+            onTap: () => openProfile(
+              context,
+              comment.author.publicId,
+              preview: comment.author,
+            ),
             child: Avatar(url: comment.author.photoUrl, size: 32),
           ),
           const SizedBox(width: 10),

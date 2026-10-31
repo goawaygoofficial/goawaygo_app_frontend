@@ -2,8 +2,10 @@ import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/monitoring/monitoring.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_utils/page_transitions.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:app_frontend/splash_screen.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +41,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: ColorsUtil.primary),
+        // Pushed pages slide and fade in from the right (iOS keeps its own swipe-back transition).
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: SharedAxisPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: SharedAxisPageTransitionsBuilder(),
+            TargetPlatform.linux: SharedAxisPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
       ),
       home: SplashScreen(),
     );
