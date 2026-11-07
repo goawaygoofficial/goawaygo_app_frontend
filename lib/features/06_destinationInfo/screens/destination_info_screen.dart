@@ -2,8 +2,10 @@ import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
 import 'package:app_frontend/core/discover/recent_searches_store.dart';
+import 'package:app_frontend/core/plans/plan_models.dart';
 import 'package:app_frontend/features/06_destinationInfo/widgets/info_card_tile.dart';
 import 'package:app_frontend/features/06_destinationInfo/widgets/travel_loader.dart';
+import 'package:app_frontend/features/10_plans/screens/plan_form_screen.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/photo_slider.dart';
 import 'package:app_frontend/global_widgets/pill_button.dart';
@@ -161,6 +163,20 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
               fontSize: 15,
             ),
           ),
+        const SizedBox(height: 10),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: PillButton(
+            label: 'Plan a trip here',
+            icon: Icons.travel_explore,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) =>
+                    PlanFormScreen(place: PlanPlace.fromPlace(page.place)),
+              ),
+            ),
+          ),
+        ),
         const SizedBox(height: 12),
         PhotoSlider(slides: slides, height: height * 0.28),
         const SizedBox(height: 16),

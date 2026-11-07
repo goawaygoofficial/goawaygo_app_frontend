@@ -23,20 +23,21 @@ New here? Read these in order:
 
 ## Features
 
-| Module              | Folder                                 | What it does                                                                         |
-| ------------------- | -------------------------------------- | ------------------------------------------------------------------------------------ |
-| Auth                | `lib/features/01_auth_register`        | Email sign up / sign in, Google Sign-In, forgot password                             |
-| Home                | `lib/features/02_home`                 | Categories, place search with suggestions, recent searches, ideas (new every minute) |
-| Flights             | `lib/features/03_flights`              | Flight search (airport suggestions), recent fares, "See all flights" on Aviasales    |
-| Hotels              | `lib/features/04_hotels`               | Hotel search, partner cards opened on the place and dates (app-allowed partners)     |
-| Rentals             | `lib/features/05_rentals`              | Car rental search (city or airport), rental partner cards                            |
-| Book (shared)       | `lib/core/book`, `global_widgets/book` | Book API calls (`channel=app`), models, formatting; results layout and cards         |
-| Destination info    | `lib/features/06_destinationInfo`      | Travel animation, spot photos, the 9 AI cards                                        |
-| My Trips            | `lib/features/07_trips`                | Places saved from the ideas (sign-in needed)                                         |
-| Discover (shared)   | `lib/core/discover`                    | Discover API calls, models, recent searches on the device                            |
-| Wanderbook          | `lib/features/08_wanderbook`           | Feed, profiles, follow requests, posting original photos, likes, comments, reports   |
-| Wanderbook (shared) | `lib/core/wanderbook`                  | Wanderbook API calls and models                                                      |
-| Profile             | `lib/features/09_profile`              | My profile and other users' profiles                                                 |
+| Module              | Folder                                    | What it does                                                                         |
+| ------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| Auth                | `lib/features/01_auth_register`           | Email sign up / sign in, Google Sign-In, forgot password                             |
+| Home                | `lib/features/02_home`                    | Categories, place search with suggestions, recent searches, ideas (new every minute) |
+| Flights             | `lib/features/03_flights`                 | Flight search (airport suggestions), recent fares, "See all flights" on Aviasales    |
+| Hotels              | `lib/features/04_hotels`                  | Hotel search, partner cards opened on the place and dates (app-allowed partners)     |
+| Rentals             | `lib/features/05_rentals`                 | Car rental search (city or airport), rental partner cards                            |
+| Book (shared)       | `lib/core/book`, `global_widgets/book`    | Book API calls (`channel=app`), models, formatting; results layout and cards         |
+| Destination info    | `lib/features/06_destinationInfo`         | Travel animation, spot photos, the 9 AI cards                                        |
+| My Trips            | `lib/features/07_trips`                   | Trip plans and places saved from the ideas (sign-in needed)                          |
+| Trip planner (4.4)  | `lib/features/10_plans`, `lib/core/plans` | Plan form, plan with day cards, change a day, share by link (website page), delete   |
+| Discover (shared)   | `lib/core/discover`                       | Discover API calls, models, recent searches on the device                            |
+| Wanderbook          | `lib/features/08_wanderbook`              | Feed, profiles, follow requests, posting original photos, likes, comments, reports   |
+| Wanderbook (shared) | `lib/core/wanderbook`                     | Wanderbook API calls and models                                                      |
+| Profile             | `lib/features/09_profile`                 | My profile and other users' profiles                                                 |
 
 ## Tech stack
 
