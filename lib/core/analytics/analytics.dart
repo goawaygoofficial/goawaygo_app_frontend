@@ -28,6 +28,17 @@ class TravelCategoryOpened extends AnalyticsEvent {
     : super('travel_category_opened', {'category': category.name});
 }
 
+class BookSearched extends AnalyticsEvent {
+  BookSearched(TravelCategory category)
+    : super('book_searched', {'category': category.name});
+}
+
+/// A partner opened from Book results; [partner] is the partner's short id (`aviasales`, `tripcom`, ...).
+class PartnerOpened extends AnalyticsEvent {
+  PartnerOpened(TravelCategory category, String partner)
+    : super('partner_opened', {'category': category.name, 'partner': partner});
+}
+
 class DestinationSearched extends AnalyticsEvent {
   const DestinationSearched() : super('destination_searched');
 }

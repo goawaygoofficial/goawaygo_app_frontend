@@ -1,9 +1,17 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
+import 'package:app_frontend/core/book/book_models.dart';
+import 'package:app_frontend/core/book/book_service.dart';
+import 'package:app_frontend/features/05_rentals/screens/rental_results_screen.dart';
 import 'package:app_frontend/features/05_rentals/utils/rentals_date_picker_util.dart';
 import 'package:app_frontend/features/05_rentals/utils/rentals_form_controllers_utils.dart';
-import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/book/form_error.dart';
+import 'package:app_frontend/global_widgets/book/suggest_field.dart';
+import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:flutter/material.dart';
 
+/// Rent a car: where and when. Partners compare every rental company there (car type, drop-off elsewhere and
+/// driver age are chosen on the partner's site).
 class RentalsSearchScreen extends StatefulWidget {
   final VoidCallback onClose;
   const RentalsSearchScreen({super.key, required this.onClose});
@@ -13,35 +21,66 @@ class RentalsSearchScreen extends StatefulWidget {
 }
 
 class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
-  final TextEditingController pickupController = TextEditingController();
-  final TextEditingController dropController = TextEditingController();
-  final TextEditingController departureController = TextEditingController();
-  final TextEditingController returnController = TextEditingController();
-  final TextEditingController carTypeController = TextEditingController();
+  static const _maxDays = 30;
 
-  bool isRoundTrip = true;
+  final TextEditingController pickupController = TextEditingController();
+  final TextEditingController pickupDateController = TextEditingController();
+  final TextEditingController dropOffDateController = TextEditingController();
+
+  /// The picked suggestion (null until one is picked, and again when the text is edited).
+  Airport? _pickup;
+  String? _error;
 
   @override
   void dispose() {
     pickupController.dispose();
-    dropController.dispose();
-    departureController.dispose();
-    returnController.dispose();
-    carTypeController.dispose();
+    pickupDateController.dispose();
+    dropOffDateController.dispose();
     super.dispose();
-  }
-
-  void _swapLocations() {
-    RentalsFormControllersUtils.swapControllers(
-      pickupController,
-      dropController,
-    );
   }
 
   void _swapDates() {
     RentalsFormControllersUtils.swapControllers(
-      departureController,
-      returnController,
+      pickupDateController,
+      dropOffDateController,
+    );
+  }
+
+  /// What stops the search, or null when it can run.
+  String? _problem() {
+    final pickup = DateTime.tryParse(pickupDateController.text);
+    final dropOff = DateTime.tryParse(dropOffDateController.text);
+    if (pickupController.text.trim().length < 2) {
+      return 'Type where you pick up the car.';
+    }
+    if (pickup == null || dropOff == null) {
+      return 'Choose your pick-up and drop-off dates.';
+    }
+    final days = dropOff.difference(pickup).inDays;
+    if (days < 1) return 'Drop-off must be after pick-up.';
+    if (days > _maxDays) return 'Choose a rental of up to $_maxDays days.';
+    return null;
+  }
+
+  void _search() {
+    final problem = _problem();
+    setState(() => _error = problem);
+    if (problem != null) return;
+    Analytics.track(BookSearched(TravelCategory.rentals));
+    final airport = _pickup != null && _pickup!.isAirport ? _pickup : null;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => RentalResultsScreen(
+          search: CarSearch(
+            place: airport != null
+                ? (airport.city.isNotEmpty ? airport.city : airport.name)
+                : pickupController.text.trim(),
+            airport: airport?.code,
+            pickup: pickupDateController.text,
+            dropoff: dropOffDateController.text,
+          ),
+        ),
+      ),
     );
   }
 
@@ -106,26 +145,72 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                 ),
                 SizedBox(height: height * 0.01),
 
-                //Locations
+                // Pick-up: a city or an airport (an airport opens some partners right on it)
+                SuggestField<Airport>(
+                  icon: Icons.my_location_sharp,
+                  hint: 'Pick-up (city or airport)',
+                  controller: pickupController,
+                  suggest: BookService.suggestAirports,
+                  describe: (place) => Suggestion(
+                    title: place.isAirport
+                        ? '${place.name} (${place.code})'
+                        : place.name,
+                    context: place.isAirport
+                        ? 'Airport · ${place.city.isEmpty ? '' : '${place.city}, '}${place.country}'
+                        : 'City · ${place.country}',
+                    icon: place.isAirport
+                        ? Icons.flight
+                        : Icons.location_on_outlined,
+                  ),
+                  onTextChanged: () => setState(() {
+                    _pickup = null;
+                    _error = null;
+                  }),
+                  onPick: (place) => setState(() {
+                    _pickup = place;
+                    pickupController.text = place.isAirport
+                        ? '${place.name} (${place.code})'
+                        : place.name;
+                  }),
+                ),
+                SizedBox(height: height * 0.005),
+
+                // Dates
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SearchInputField(
-                          icon: Icons.my_location_sharp,
-                          hint: 'Pickup',
-                          controller: pickupController,
+                        Expanded(
+                          child: SearchInputField(
+                            icon: Icons.calendar_today,
+                            hint: 'Pick-up',
+                            controller: pickupDateController,
+                            onTap: () => RentalsDatePickerUtils.selectDate(
+                              context,
+                              pickupDateController,
+                              () => setState(() => _error = null),
+                            ),
+                          ),
                         ),
-                        SearchInputField(
-                          icon: Icons.location_on_sharp,
-                          hint: 'Drop-off',
-                          controller: dropController,
+                        SizedBox(width: width * 0.025),
+                        Expanded(
+                          child: SearchInputField(
+                            icon: Icons.calendar_today,
+                            hint: 'Drop-off',
+                            controller: dropOffDateController,
+                            onTap: () => RentalsDatePickerUtils.selectDate(
+                              context,
+                              dropOffDateController,
+                              () => setState(() => _error = null),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     Positioned(
-                      top: height * 0.085,
+                      top: height * 0.03,
                       child: Container(
                         decoration: BoxDecoration(
                           color: ColorsUtil.primary,
@@ -137,12 +222,12 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                         ),
                         padding: EdgeInsets.all(width * 0.015),
                         child: InkWell(
-                          onTap: _swapLocations,
+                          onTap: _swapDates,
                           borderRadius: BorderRadius.circular(width * 0.1),
                           child: Icon(
-                            Icons.swap_vert,
+                            Icons.swap_horiz,
                             color: ColorsUtil.whiteColor,
-                            size: height * 0.035,
+                            size: height * 0.03,
                           ),
                         ),
                       ),
@@ -150,138 +235,12 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                   ],
                 ),
                 SizedBox(height: height * 0.025),
-
-                // Trip Type Toggle
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ChoiceChip(
-                      label: Text('One Way'),
-                      selected: !isRoundTrip,
-                      onSelected: (selected) {
-                        setState(() {
-                          isRoundTrip = !selected;
-                          if (!isRoundTrip) {
-                            returnController.clear(); // Clear return date
-                          }
-                        });
-                      },
-                      selectedColor: ColorsUtil.secondaryLight,
-                      backgroundColor: ColorsUtil.primaryLight,
-                      labelStyle: TextStyle(
-                        color: ColorsUtil.whiteColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ChoiceChip(
-                      label: Text('Round Trip'),
-                      selected: isRoundTrip,
-                      onSelected: (selected) {
-                        setState(() {
-                          isRoundTrip = selected;
-                        });
-                      },
-                      selectedColor: ColorsUtil.secondaryLight,
-                      backgroundColor: ColorsUtil.primaryLight,
-                      labelStyle: TextStyle(
-                        color: ColorsUtil.whiteColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: height * 0.005),
-
-                // Dates
-                // Dates
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: SearchInputField(
-                            icon: Icons.calendar_today,
-                            hint: 'Departure',
-                            controller: departureController,
-                            onTap: () => RentalsDatePickerUtils.selectDate(
-                              context,
-                              departureController,
-                              () => setState(() {}),
-                            ),
-                          ),
-                        ),
-                        if (isRoundTrip) ...[
-                          SizedBox(width: width * 0.025),
-                          Expanded(
-                            child: SearchInputField(
-                              icon: Icons.calendar_today,
-                              hint: 'Return',
-                              controller: returnController,
-                              onTap: () => RentalsDatePickerUtils.selectDate(
-                                context,
-                                returnController,
-                                () => setState(() {}),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    if (isRoundTrip)
-                      Positioned(
-                        top: height * 0.03,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: ColorsUtil.primary,
-                            borderRadius: BorderRadius.circular(width * 0.1),
-                            border: Border.all(
-                              color: ColorsUtil.whiteColor.withValues(
-                                alpha: 0.3,
-                              ),
-                              width: width * 0.003,
-                            ),
-                          ),
-                          padding: EdgeInsets.all(width * 0.015),
-                          child: InkWell(
-                            onTap: _swapDates,
-                            borderRadius: BorderRadius.circular(width * 0.1),
-                            child: Icon(
-                              Icons.swap_horiz,
-                              color: ColorsUtil.whiteColor,
-                              size: height * 0.03,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: height * 0.005),
-
-                // Car type
-                SearchInputField(
-                  icon: Icons.directions_car,
-                  caption: 'Car type',
-                  hint: 'Select a car type',
-                  controller: carTypeController,
-                  dropdownItems: [
-                    'Sedan',
-                    'SUV',
-                    'Hatchback',
-                    'Convertible',
-                    'Van',
-                  ],
-                ),
-                SizedBox(height: height * 0.025),
+                if (_error != null) FormError(_error!),
 
                 // Search button
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement search functionality
-                    },
+                    onPressed: _search,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorsUtil.secondary,
                       shape: RoundedRectangleBorder(
