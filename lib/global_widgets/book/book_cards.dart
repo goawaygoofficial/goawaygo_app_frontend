@@ -10,17 +10,18 @@ Future<void> openPartner(String link) async {
   if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 
-/// The founder's result card: two orange halves, the lighter one on the left.
-class _TwoToneCard extends StatelessWidget {
-  const _TwoToneCard({
+/// The founder's result card: two orange halves, the lighter one on the left (also the trip plan's cards).
+class TwoToneCard extends StatelessWidget {
+  const TwoToneCard({
+    super.key,
     required this.left,
     required this.right,
-    required this.onTap,
+    this.onTap,
   });
 
   final List<Widget> left;
   final List<Widget> right;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,7 @@ class FareCard extends StatelessWidget {
         : '';
     return Semantics(
       link: true,
-      child: _TwoToneCard(
+      child: TwoToneCard(
         onTap: onOpen,
         left: [
           Text(BookFormat.price(fare.price, currency), style: _big),
@@ -209,7 +210,7 @@ class PartnerCardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       link: true,
-      child: _TwoToneCard(
+      child: TwoToneCard(
         onTap: onOpen,
         left: [
           // Long names ("EconomyBookings") shrink to fit the light half on one line.

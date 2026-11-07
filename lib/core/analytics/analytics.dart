@@ -48,6 +48,16 @@ class TripIdeaSaved extends AnalyticsEvent {
     : super('trip_idea_saved', {'kind': hiddenGem ? 'hidden gem' : 'popular'});
 }
 
+/// A trip plan was made; [days] is how long the trip is.
+class TripPlanCreated extends AnalyticsEvent {
+  TripPlanCreated({required int days})
+    : super('trip_plan_created', {'days': days});
+}
+
+class TripPlanShared extends AnalyticsEvent {
+  const TripPlanShared() : super('trip_plan_shared');
+}
+
 enum AnalyticsConsent { granted, denied }
 
 /// Product analytics (PostHog, EU cloud), only after the user agrees. Until then the SDK isn't even started

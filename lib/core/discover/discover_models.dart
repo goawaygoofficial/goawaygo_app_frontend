@@ -293,10 +293,13 @@ class SavedPlace {
     required this.area,
     required this.country,
     required this.category,
+    this.lat = 0,
+    this.lon = 0,
   });
 
   final int id;
   final String key, name, area, country, category;
+  final double lat, lon;
 
   static SavedPlace? fromJson(Object? json) {
     if (json is! Map<String, dynamic> ||
@@ -312,6 +315,8 @@ class SavedPlace {
       area: _string(json['area']),
       country: _string(json['country']),
       category: _string(json['category']),
+      lat: _double(json['lat']),
+      lon: _double(json['lon']),
     );
   }
 

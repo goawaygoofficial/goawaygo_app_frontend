@@ -1,15 +1,23 @@
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
+import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
+import 'package:app_frontend/core/plans/plan_models.dart';
+import 'package:app_frontend/core/plans/plan_service.dart';
 import 'package:app_frontend/features/06_destinationInfo/screens/destination_info_screen.dart';
+import 'package:app_frontend/features/10_plans/screens/plan_form_screen.dart';
+import 'package:app_frontend/features/10_plans/screens/plan_screen.dart';
+import 'package:app_frontend/features/10_plans/widgets/plan_widgets.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/book/book_cards.dart';
 import 'package:app_frontend/global_widgets/pill_button.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// My Trips: the places saved from "Ideas for your next trip" (sign-in needed), the same as the website's.
+/// My Trips: trip plans and the places saved from "Ideas for your next trip" (sign-in needed), the same as the
+/// website's.
 class MyTripsScreen extends StatefulWidget {
   const MyTripsScreen({
     super.key,
@@ -38,6 +46,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
   ];
 
   List<SavedPlace>? _places;
+  List<PlanSummary>? _plans;
   String? _error;
   int? _loadedFor;
   DestinationRequest? _destination;
@@ -47,14 +56,48 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
     if (userId == _loadedFor) return;
     _loadedFor = userId;
     _places = null;
+    _plans = null;
     _error = null;
     if (userId != null) _load(userId);
   }
 
+  @override
+  void initState() {
+    super.initState();
+    PlanService.changes.addListener(_reloadPlans);
+  }
+
+  @override
+  void dispose() {
+    PlanService.changes.removeListener(_reloadPlans);
+    super.dispose();
+  }
+
+  /// A plan was made, changed or deleted (here or from a destination on Home).
+  Future<void> _reloadPlans() async {
+    final userId = _loadedFor;
+    if (userId == null) return;
+    try {
+      final plans = await PlanService.list();
+      if (mounted && _loadedFor == userId) setState(() => _plans = plans);
+    } on ApiException {
+      // Keep the list shown; it reloads with the next change or visit.
+    }
+  }
+
   Future<void> _load(int userId) async {
     try {
-      final places = await DiscoverService.listSavedPlaces();
-      if (mounted && _loadedFor == userId) setState(() => _places = places);
+      // Both at once; a failure of either shows its error.
+      final results = await Future.wait<Object>([
+        DiscoverService.listSavedPlaces(),
+        PlanService.list(),
+      ]);
+      if (mounted && _loadedFor == userId) {
+        setState(() {
+          _places = results[0] as List<SavedPlace>;
+          _plans = results[1] as List<PlanSummary>;
+        });
+      }
     } on ApiException catch (error) {
       if (mounted && _loadedFor == userId) {
         setState(() => _error = error.message);
@@ -88,6 +131,15 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
       widget.toggleBottomBar(false);
     });
   }
+
+  void _openPlan(PlanSummary plan) => Navigator.of(context)
+      .push(MaterialPageRoute<void>(builder: (_) => PlanScreen(id: plan.id)));
+
+  void _planTrip(SavedPlace place) => Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => PlanFormScreen(place: PlanPlace.fromSaved(place)),
+    ),
+  );
 
   /// Called by Back (starts the slide out) and again by the panel when the slide out has finished.
   void _close() {
@@ -126,11 +178,11 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
 
   Widget _body(BuildContext context, {required bool signedIn}) {
     final places = _places;
+    final plans = _plans;
     if (!signedIn) {
       return _EmptyState(
         title: 'SAVE PLACES YOU LOVE',
-        text:
-            'Sign in to keep places from Ideas for your next trip in My Trips.',
+        text: 'Sign in to keep places from Ideas for your next trip and trip plans in My Trips.',
         action: 'Sign in',
         onAction: widget.onSignIn,
       );
@@ -146,15 +198,17 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
         },
       );
     }
-    if (places == null) {
+    if (places == null || plans == null) {
       return const Center(
         child: CircularProgressIndicator(color: ColorsUtil.whiteColor),
       );
     }
-    if (places.isEmpty) {
+    if (places.isEmpty && plans.isEmpty) {
       return _EmptyState(
         title: 'NO TRIPS YET',
-        text: "Save places from Ideas for your next trip on Home, and they'll show up here.",
+        text:
+            'Save places from Ideas for your next trip on Home, or plan a trip from any destination, and '
+            "they'll show up here.",
         action: 'Find ideas',
         onAction: widget.onPlanTrip,
       );
@@ -178,15 +232,100 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
             letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(height: 12),
-        for (var i = 0; i < places.length; i++)
-          _SavedPlaceCard(
-            place: places[i],
-            colors: _tones[i % _tones.length],
-            onOpen: () => _open(places[i]),
-            onRemove: () => _remove(places[i]),
-          ),
+        if (plans.isNotEmpty) ...[
+          const _Subheading('Trip plans'),
+          for (final plan in plans)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _PlanCard(plan: plan, onOpen: () => _openPlan(plan)),
+            ),
+        ],
+        if (places.isNotEmpty) ...[
+          const _Subheading('Saved places'),
+          for (var i = 0; i < places.length; i++)
+            _SavedPlaceCard(
+              place: places[i],
+              colors: _tones[i % _tones.length],
+              onOpen: () => _open(places[i]),
+              onPlan: () => _planTrip(places[i]),
+              onRemove: () => _remove(places[i]),
+            ),
+        ],
       ],
+    );
+  }
+}
+
+class _Subheading extends StatelessWidget {
+  const _Subheading(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 10),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: ColorsUtil.whiteColor,
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+/// A trip plan, on the founder's two-tone card: the place on the left, the plan's title and dates on the right.
+class _PlanCard extends StatelessWidget {
+  const _PlanCard({required this.plan, required this.onOpen});
+
+  final PlanSummary plan;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final end = PlanService.endDate(plan.startDate, plan.days);
+    final small = TextStyle(
+      color: ColorsUtil.whiteColor.withValues(alpha: 0.85),
+      fontSize: 13,
+    );
+    return Semantics(
+      button: true,
+      child: TwoToneCard(
+        onTap: onOpen,
+        left: [
+          Text(
+            plan.placeName,
+            style: const TextStyle(
+              color: ColorsUtil.whiteColor,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (plan.country.isNotEmpty) Text(plan.country, style: small),
+        ],
+        right: [
+          Text(
+            plan.title,
+            style: const TextStyle(
+              color: ColorsUtil.whiteColor,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            [
+              planDates(plan.startDate, end),
+              BookFormat.plural(plan.days, 'day'),
+              if (plan.shared) 'Shared',
+            ].join(' · '),
+            style: small,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -196,12 +335,14 @@ class _SavedPlaceCard extends StatelessWidget {
     required this.place,
     required this.colors,
     required this.onOpen,
+    required this.onPlan,
     required this.onRemove,
   });
 
   final SavedPlace place;
   final List<Color> colors;
   final VoidCallback onOpen;
+  final VoidCallback onPlan;
   final VoidCallback onRemove;
 
   @override
@@ -276,6 +417,8 @@ class _SavedPlaceCard extends StatelessWidget {
                           ),
                         ),
                       ],
+                      const SizedBox(height: 10),
+                      _PlanTripButton(onPressed: onPlan),
                     ],
                   ),
                 ),
@@ -288,6 +431,30 @@ class _SavedPlaceCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The small white pill on a saved place that opens the plan form for it.
+class _PlanTripButton extends StatelessWidget {
+  const _PlanTripButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      icon: const Icon(Icons.travel_explore, size: 18),
+      label: const Text('Plan a trip'),
+      style: TextButton.styleFrom(
+        backgroundColor: ColorsUtil.whiteColor,
+        foregroundColor: ColorsUtil.primary,
+        shape: const StadiumBorder(),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        minimumSize: const Size(0, 36),
+        textStyle: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }

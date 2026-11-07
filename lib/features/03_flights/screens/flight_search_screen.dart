@@ -12,7 +12,19 @@ import 'package:flutter/material.dart';
 
 class FlightSearchScreen extends StatefulWidget {
   final VoidCallback onClose;
-  const FlightSearchScreen({super.key, required this.onClose});
+
+  /// Filled in when opened from a trip plan: the destination and the trip's dates (`YYYY-MM-DD`).
+  final Airport? to;
+  final String? depart;
+  final String? returnDate;
+
+  const FlightSearchScreen({
+    super.key,
+    required this.onClose,
+    this.to,
+    this.depart,
+    this.returnDate,
+  });
 
   @override
   State<FlightSearchScreen> createState() => _FlightSearchScreenState();
@@ -33,6 +45,18 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   Airport? _from;
   Airport? _to;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    final to = widget.to;
+    if (to != null) {
+      _to = to;
+      toController.text = to.label;
+    }
+    departureController.text = widget.depart ?? '';
+    returnController.text = widget.returnDate ?? '';
+  }
 
   @override
   void dispose() {
