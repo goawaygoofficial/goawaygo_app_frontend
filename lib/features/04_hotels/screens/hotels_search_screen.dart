@@ -1,4 +1,11 @@
+import 'package:app_frontend/core/analytics/analytics.dart';
+import 'package:app_frontend/core/book/book_models.dart';
+import 'package:app_frontend/core/discover/discover_models.dart';
+import 'package:app_frontend/core/discover/discover_service.dart';
+import 'package:app_frontend/features/04_hotels/screens/stay_results_screen.dart';
 import 'package:app_frontend/features/04_hotels/utils/hotel_date_picker_util.dart';
+import 'package:app_frontend/global_widgets/book/form_error.dart';
+import 'package:app_frontend/global_widgets/book/suggest_field.dart';
 import 'package:app_frontend/features/04_hotels/utils/hotel_form_controllers_utils.dart';
 import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -20,8 +27,12 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
     text: '1',
   );
   final TextEditingController adultsController = TextEditingController(
-    text: '1',
+    text: '2',
   );
+
+  String? _error;
+
+  static const _maxNights = 30;
 
   @override
   void dispose() {
@@ -37,6 +48,47 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
     HotelFormControllersUtils.swapControllers(
       checkinController,
       checkoutController,
+    );
+  }
+
+  /// What stops the search, or null when it can run.
+  String? _problem() {
+    final checkin = DateTime.tryParse(checkinController.text);
+    final checkout = DateTime.tryParse(checkoutController.text);
+    if (locationController.text.trim().length < 2) {
+      return 'Type where you want to stay.';
+    }
+    if (checkin == null || checkout == null) {
+      return 'Choose your check-in and check-out dates.';
+    }
+    final nights = checkout.difference(checkin).inDays;
+    if (nights < 1) return 'Check-out must be after check-in.';
+    if (nights > _maxNights) {
+      return 'Choose a stay of up to $_maxNights nights.';
+    }
+    final rooms = int.tryParse(roomsController.text) ?? 1;
+    final guests = int.tryParse(adultsController.text) ?? 1;
+    if (rooms > guests) return 'Choose at least one guest per room.';
+    return null;
+  }
+
+  void _search() {
+    final problem = _problem();
+    setState(() => _error = problem);
+    if (problem != null) return;
+    Analytics.track(BookSearched(TravelCategory.stays));
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => StayResultsScreen(
+          search: StaySearch(
+            place: locationController.text.trim(),
+            checkin: checkinController.text,
+            checkout: checkoutController.text,
+            adults: (int.tryParse(adultsController.text) ?? 2).clamp(1, 30),
+            rooms: (int.tryParse(roomsController.text) ?? 1).clamp(1, 8),
+          ),
+        ),
+      ),
     );
   }
 
@@ -102,10 +154,21 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                 SizedBox(height: height * 0.01),
 
                 // Location
-                SearchInputField(
+                SuggestField<Place>(
                   icon: Icons.public,
-                  hint: 'Where?',
+                  hint: 'Where? (city or area)',
                   controller: locationController,
+                  suggest: DiscoverService.suggestPlaces,
+                  describe: (place) => Suggestion(
+                    title: place.name,
+                    context: place.context,
+                    icon: place.type == 'country'
+                        ? Icons.public
+                        : Icons.location_on_outlined,
+                  ),
+                  onTextChanged: () => setState(() => _error = null),
+                  onPick: (place) =>
+                      setState(() => locationController.text = place.name),
                 ),
                 SizedBox(height: height * 0.005),
 
@@ -185,7 +248,7 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                     Expanded(
                       child: SearchInputField(
                         icon: Icons.person,
-                        caption: 'Adults',
+                        caption: 'Guests',
                         min: 1,
                         controller: adultsController,
                         isCounter: true,
@@ -194,13 +257,12 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                   ],
                 ),
                 SizedBox(height: height * 0.025),
+                if (_error != null) FormError(_error!),
 
                 // Search button
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement search functionality
-                    },
+                    onPressed: _search,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorsUtil.secondary,
                       shape: RoundedRectangleBorder(
