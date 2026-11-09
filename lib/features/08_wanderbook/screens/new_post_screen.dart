@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:typed_data';
 
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -57,7 +59,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     );
     if (files.isEmpty) return;
     if (files.length > room && mounted) {
-      showError(context, 'A post has up to $_maxPhotos photos.');
+      showError(context, tr('A post has up to {0} photos.', [_maxPhotos]));
     }
     final batch = <_Selected>[];
     for (final file in files.take(room)) {
@@ -67,7 +69,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     // One at a time: originals can be large.
     for (final item in batch) {
       if (item.bytes.length > _maxPhotoBytes) {
-        setState(() => item.error = 'Photos can be up to 20 MB.');
+        setState(() => item.error = tr('Photos can be up to 20 MB.'));
         continue;
       }
       try {
@@ -104,7 +106,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       if (!mounted) return;
       await PushNotifications.askAtUsefulMoment(
         context,
-        'Know when people like or comment on your post.',
+        tr('Know when people like or comment on your post.'),
       );
       if (mounted) Navigator.of(context).pop();
     } on ApiException catch (error) {
@@ -124,7 +126,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       appBar: AppBar(
         backgroundColor: ColorsUtil.primary,
         foregroundColor: Colors.white,
-        title: const Text('New post'),
+        title: Text(tr('New post')),
       ),
       body: SafeArea(
         child: ListView(
@@ -153,7 +155,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                             color: Colors.black54,
                             padding: const EdgeInsets.all(4),
                             child: Text(
-                              item.error ?? 'Uploading…',
+                              item.error ?? tr('Uploading…'),
                               textAlign: TextAlign.center,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
@@ -168,7 +170,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                         top: 2,
                         right: 2,
                         child: IconButton.filled(
-                          tooltip: 'Remove ${item.name}',
+                          tooltip: tr('Remove {0}', [item.name]),
                           iconSize: 16,
                           style: IconButton.styleFrom(
                             backgroundColor: Colors.black54,
@@ -194,7 +196,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.add_a_photo),
-                        Text(_selected.isEmpty ? 'Add photos' : 'Add more'),
+                        Text(
+                          _selected.isEmpty ? tr('Add photos') : tr('Add more'),
+                        ),
                       ],
                     ),
                   ),
@@ -202,8 +206,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Photos are kept exactly as they are. Their hidden location data is removed; only the place name '
-              'below is shown.',
+              tr(
+                tr(
+                  'Photos are kept exactly as they are. Their hidden location data is removed; only the place name below is shown.',
+                ),
+              ),
               style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
             ),
             const SizedBox(height: 16),
@@ -212,8 +219,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
               maxLength: 2200,
               maxLines: 6,
               minLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'Write about this trip…',
+              decoration: InputDecoration(
+                hintText: tr('Write about this trip…'),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(),
@@ -231,10 +238,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
             const SizedBox(height: 16),
             PillButton(
               label: _posting
-                  ? 'Posting…'
+                  ? tr('Posting…')
                   : busy
-                  ? 'Uploading photos…'
-                  : 'Share',
+                  ? tr('Uploading photos…')
+                  : tr('Share'),
               onPressed: ready == 0 || busy || _posting ? null : _share,
             ),
           ],

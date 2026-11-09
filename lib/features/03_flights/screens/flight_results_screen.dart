@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/book/book_models.dart';
@@ -39,41 +40,46 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
         final results = snapshot.data;
         return ResultsLayout(
           icon: Icons.flight,
-          title: 'Flights',
+          title: tr('Flights'),
           heading: '${search.from.name} to ${search.to.name}',
           dates: roundTrip
               ? '${BookFormat.day(search.depart)} – ${BookFormat.day(search.returnDate!)}'
               : BookFormat.day(search.depart),
           travellers: BookFormat.plural(search.adults, 'passenger'),
-          note:
-              'Recent prices travellers found · they may change until you book',
+          note: tr(
+            'Recent prices travellers found · they may change until you book',
+          ),
           floating: results == null
               ? null
               : FloatingPill(
-                  label: 'See all flights',
+                  label: tr('See all flights'),
                   onPressed: () => _open(results.searchLink),
                 ),
           children: [
             if (snapshot.connectionState != ConnectionState.done)
-              const ResultsMessage(title: 'Finding fares…')
+              ResultsMessage(title: tr('Finding fares…'))
             else if (snapshot.hasError || results == null)
               ResultsMessage(
-                title: 'No fares right now',
+                title: tr('No fares right now'),
                 text:
                     snapshot.error?.toString() ??
-                    'Could not find flight prices.',
+                    tr('Could not find flight prices.'),
                 onRetry: () => setState(
                   () => _results = BookService.searchFlights(search),
                 ),
               )
             else ...[
-              _Section('On ${BookFormat.day(search.depart)}'),
+              _Section(tr('On {0}', [BookFormat.day(search.depart)])),
               if (results.onDate.isEmpty)
                 ResultsMessage(
-                  title: 'No recent price for this date',
-                  text: 'Nobody searched this trip lately. See live prices for it on Aviasales.',
+                  title: tr('No recent price for this date'),
+                  text: tr(
+                    tr(
+                      'Nobody searched this trip lately. See live prices for it on Aviasales.',
+                    ),
+                  ),
                   action: FloatingPill(
-                    label: 'See live prices',
+                    label: tr('See live prices'),
                     onPressed: () => _open(results.searchLink),
                   ),
                 )
@@ -86,7 +92,9 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
                     onOpen: () => _open(fare.link),
                   ),
               if (results.nearby.isNotEmpty) ...[
-                _Section('Other dates in ${BookFormat.month(search.depart)}'),
+                _Section(
+                  tr('Other dates in {0}', [BookFormat.month(search.depart)]),
+                ),
                 for (final fare in results.nearby)
                   FareCard(
                     fare: fare,

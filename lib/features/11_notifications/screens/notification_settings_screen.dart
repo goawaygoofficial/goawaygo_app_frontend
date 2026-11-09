@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/notifications/notification_models.dart';
 import 'package:app_frontend/core/notifications/notification_service.dart';
@@ -140,7 +141,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 Image.asset('assets/images/logo.png', height: height * 0.1),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Back',
+                  tooltip: tr('Back'),
                   icon: const Icon(
                     Icons.arrow_back_ios_rounded,
                     color: ColorsUtil.whiteColor,
@@ -149,8 +150,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 ),
               ],
             ),
-            const Text(
-              'Notification settings',
+            Text(
+              tr('Notification settings'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: ColorsUtil.whiteColor,
@@ -162,8 +163,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             _Card(
               child: !PushNotifications.available
                   ? Text(
-                      "Push notifications aren't available in this build of the app. The bell on Home still "
-                      'lists everything.',
+                      tr(
+                        tr(
+                          'Push notifications aren\'t available in this build of the app. The bell on Home still lists everything.',
+                        ),
+                      ),
                       style: muted,
                     )
                   : Row(
@@ -172,8 +176,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Push on this phone',
+                              Text(
+                                tr('Push on this phone'),
                                 style: TextStyle(
                                   color: ColorsUtil.whiteColor,
                                   fontSize: 16,
@@ -183,8 +187,12 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                               const SizedBox(height: 2),
                               Text(
                                 _allowed == true
-                                    ? 'On. Choose below what you hear about.'
-                                    : 'Off. Turn it on to hear about likes, comments and your trips.',
+                                    ? tr(
+                                        'On. Choose below what you hear about.',
+                                      )
+                                    : tr(
+                                        'Off. Turn it on to hear about likes, comments and your trips.',
+                                      ),
                                 style: muted,
                               ),
                             ],
@@ -192,7 +200,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                         ),
                         if (_allowed == false) ...[
                           const SizedBox(width: 8),
-                          PillButton(label: 'Turn on', onPressed: _turnOn),
+                          PillButton(label: tr('Turn on'), onPressed: _turnOn),
                         ],
                       ],
                     ),
@@ -204,7 +212,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                   children: [
                     Text(_error!, style: muted, textAlign: TextAlign.center),
                     const SizedBox(height: 12),
-                    PillButton(label: 'Try again', onPressed: _load),
+                    PillButton(label: tr('Try again'), onPressed: _load),
                   ],
                 ),
               )
@@ -234,13 +242,13 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                       activeThumbColor: ColorsUtil.whiteColor,
                       activeTrackColor: ColorsUtil.secondary,
                       title: Text(
-                        title,
+                        tr(title),
                         style: const TextStyle(
                           color: ColorsUtil.whiteColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(text, style: muted),
+                      subtitle: Text(tr(text), style: muted),
                     ),
                   ),
                 ),

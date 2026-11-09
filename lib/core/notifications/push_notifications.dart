@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:io' show Platform;
 
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -175,8 +177,8 @@ class PushNotifications {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: ColorsUtil.primary,
-        title: const Text(
-          'Turn on notifications?',
+        title: Text(
+          tr('Turn on notifications?'),
           style: TextStyle(color: ColorsUtil.whiteColor),
         ),
         content: Text(
@@ -186,15 +188,15 @@ class PushNotifications {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
-              'Not now',
+            child: Text(
+              tr('Not now'),
               style: TextStyle(color: ColorsUtil.whiteColor),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(
-              'Allow',
+            child: Text(
+              tr('Allow'),
               style: TextStyle(
                 color: ColorsUtil.secondaryLighter,
                 fontWeight: FontWeight.bold,

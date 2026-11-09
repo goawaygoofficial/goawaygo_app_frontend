@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/features/01_auth_register/screens/forgot_password_screen.dart';
 import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
@@ -85,8 +86,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           TextButton(
                             onPressed: () => _openApp(replace: false),
-                            child: const Text(
-                              "SKIP",
+                            child: Text(
+                              tr('SKIP'),
                               style: TextStyle(
                                 color: ColorsUtil.whiteColor,
                                 fontWeight: FontWeight.bold,

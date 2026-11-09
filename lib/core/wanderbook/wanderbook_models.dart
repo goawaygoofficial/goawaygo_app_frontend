@@ -2,6 +2,9 @@
 /// `features/wanderbook/types.ts`. Decided for 4.2 (see ROADMAP.md).
 library;
 
+import 'package:app_frontend/core/i18n/i18n.dart';
+import 'package:intl/intl.dart';
+
 String _string(Object? value) => value is String ? value : '';
 
 int _int(Object? value) => value is num ? value.toInt() : 0;
@@ -295,9 +298,9 @@ const reportReasons = <String, String>{
 /// "3 min", "5 h", "2 d", or the date for older things.
 String timeAgo(DateTime time) {
   final seconds = DateTime.now().difference(time).inSeconds;
-  if (seconds < 60) return 'now';
-  if (seconds < 3600) return '${seconds ~/ 60} min';
-  if (seconds < 86400) return '${seconds ~/ 3600} h';
-  if (seconds < 7 * 86400) return '${seconds ~/ 86400} d';
-  return '${time.day}/${time.month}/${time.year}';
+  if (seconds < 60) return tr('now');
+  if (seconds < 3600) return tr('{0} min', [seconds ~/ 60]);
+  if (seconds < 86400) return tr('{0} h', [seconds ~/ 3600]);
+  if (seconds < 7 * 86400) return tr('{0} d', [seconds ~/ 86400]);
+  return DateFormat.yMMMd(I18n.locale).format(time);
 }

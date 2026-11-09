@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
@@ -88,7 +89,7 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
                   Image.asset('assets/images/logo.png', height: height * 0.1),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Back',
+                    tooltip: tr('Back'),
                     icon: const Icon(
                       Icons.arrow_back_ios_rounded,
                       color: ColorsUtil.whiteColor,
@@ -109,19 +110,22 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
     final page = _page;
     if (_failure == _Failure.notFound) {
       return _Message(
-        title: "We couldn't find that place",
-        text:
-            'Check the spelling of “${widget.request.name}”, or pick a place from the suggestions while you '
-            'type.',
-        action: 'Search again',
+        title: tr('We couldn\'t find that place'),
+        text: tr(
+          tr(
+            'Check the spelling of “{0}”, or pick a place from the suggestions while you type.',
+          ),
+          [widget.request.name],
+        ),
+        action: tr('Search again'),
         onAction: widget.onClose,
       );
     }
     if (_failure == _Failure.error) {
       return _Message(
-        title: 'Something went wrong',
+        title: tr('Something went wrong'),
         text: _errorMessage,
-        action: 'Try again',
+        action: tr('Try again'),
         onAction: _load,
       );
     }
@@ -130,9 +134,9 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
     }
     if (page.status == DestinationStatus.unknown) {
       return _Message(
-        title: "We don't know ${page.place.name} well enough yet",
-        text: 'Try the nearest city or a better-known place nearby.',
-        action: 'Search again',
+        title: tr('We don\'t know {0} well enough yet', [page.place.name]),
+        text: tr('Try the nearest city or a better-known place nearby.'),
+        action: tr('Search again'),
         onAction: widget.onClose,
       );
     }
@@ -167,7 +171,7 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
         Align(
           alignment: Alignment.centerLeft,
           child: PillButton(
-            label: 'Plan a trip here',
+            label: tr('Plan a trip here'),
             icon: Icons.travel_explore,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -204,8 +208,8 @@ class _Busy extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
-            'Our travel guide is busy right now',
+          Text(
+            tr('Our travel guide is busy right now'),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: ColorsUtil.whiteColor,
@@ -215,14 +219,18 @@ class _Busy extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Lots of people are exploring at the moment. Please try again in a minute.',
+            tr(
+              tr(
+                'Lots of people are exploring at the moment. Please try again in a minute.',
+              ),
+            ),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: ColorsUtil.whiteColor.withValues(alpha: 0.85),
             ),
           ),
           const SizedBox(height: 14),
-          PillButton(label: 'Try again', onPressed: onRetry, large: true),
+          PillButton(label: tr('Try again'), onPressed: onRetry, large: true),
         ],
       ),
     );

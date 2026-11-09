@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
@@ -87,8 +88,8 @@ class _RecentSearchesBannerState extends State<RecentSearchesBanner> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'No recent searches',
+            Text(
+              tr('No recent searches'),
               style: TextStyle(
                 color: ColorsUtil.whiteColor,
                 fontSize: 18,
@@ -97,7 +98,7 @@ class _RecentSearchesBannerState extends State<RecentSearchesBanner> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Places you search for will show here.',
+              tr('Places you search for will show here.'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: ColorsUtil.whiteColor.withValues(alpha: 0.75),

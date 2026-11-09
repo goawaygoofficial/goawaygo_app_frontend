@@ -10,14 +10,17 @@ import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   final UserModel? user;
-  const BottomBar({super.key, this.user});
+
+  /// The tab to open on: 0 Home ... 3 Profile.
+  final int initialPage;
+  const BottomBar({super.key, this.user, this.initialPage = 0});
 
   @override
   State<BottomBar> createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> with TickerProviderStateMixin {
-  int _page = 0;
+  late int _page = widget.initialPage;
 
   /// 1 when the tab opened is to the right of the previous one, -1 to the left: the new tab glides in from there.
   int _direction = 1;

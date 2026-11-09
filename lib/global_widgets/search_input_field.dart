@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -96,7 +97,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
       return Row(
         children: [
           IconButton(
-            tooltip: 'Decrease',
+            tooltip: tr('Decrease'),
             visualDensity: VisualDensity.compact,
             onPressed: canDecrement ? () => _step(-1) : null,
             icon: Icon(
@@ -114,7 +115,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
             ),
           ),
           IconButton(
-            tooltip: 'Increase',
+            tooltip: tr('Increase'),
             visualDensity: VisualDensity.compact,
             onPressed: () => _step(1),
             icon: const Icon(Icons.add, color: ColorsUtil.whiteColor),

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/legal/legal_pages.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
@@ -83,7 +84,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (!mounted) return;
       setState(() => _profile = profile);
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Saved.')));
+          .showSnackBar(SnackBar(content: Text(tr('Saved.'))));
     } on ApiException catch (error) {
       if (mounted) showError(context, error);
     } finally {
@@ -112,7 +113,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         backgroundColor: ColorsUtil.primary,
         foregroundColor: Colors.white,
-        title: const Text('Edit profile'),
+        title: Text(tr('Edit profile')),
       ),
       body: profile == null
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
@@ -125,8 +126,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(width: 12),
                     PillButton(
                       label: _busy == 'avatar'
-                          ? 'Uploading…'
-                          : 'Change profile photo',
+                          ? tr('Uploading…')
+                          : tr('Change profile photo'),
                       quiet: true,
                       onPressed: _busy == null
                           ? () => _changePhoto('avatar')
@@ -137,8 +138,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: _busy == null
                             ? () => _changePhoto('avatar', remove: true)
                             : null,
-                        child: const Text(
-                          'Remove',
+                        child: Text(
+                          tr('Remove'),
                           style: TextStyle(color: Colors.white70),
                         ),
                       ),
@@ -162,7 +163,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     const SizedBox(width: 12),
                     PillButton(
-                      label: _busy == 'cover' ? 'Uploading…' : 'Change cover',
+                      label: _busy == 'cover'
+                          ? tr('Uploading…')
+                          : tr('Change cover'),
                       quiet: true,
                       onPressed: _busy == null
                           ? () => _changePhoto('cover')
@@ -173,8 +176,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: _busy == null
                             ? () => _changePhoto('cover', remove: true)
                             : null,
-                        child: const Text(
-                          'Remove',
+                        child: Text(
+                          tr('Remove'),
                           style: TextStyle(color: Colors.white70),
                         ),
                       ),
@@ -185,28 +188,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   controller: _bio,
                   maxLength: 150,
                   maxLines: 3,
-                  decoration: _decoration('Bio'),
+                  decoration: _decoration(tr('Bio')),
                 ),
                 TextField(
                   controller: _homeTown,
                   maxLength: 100,
-                  decoration: _decoration('Home town'),
+                  decoration: _decoration(tr('Home town')),
                 ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   activeThumbColor: ColorsUtil.secondary,
                   value: _isPrivate,
                   onChanged: (value) => setState(() => _isPrivate = value),
-                  title: const Text(
-                    'Private profile',
+                  title: Text(
+                    tr('Private profile'),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   subtitle: Text(
-                    'Only followers you approve see your posts and lists. Turning it off approves waiting '
-                    'requests.',
+                    tr(
+                      tr(
+                        'Only followers you approve see your posts and lists. Turning it off approves waiting requests.',
+                      ),
+                    ),
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.75),
                     ),
@@ -214,7 +220,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 12),
                 PillButton(
-                  label: _busy == 'save' ? 'Saving…' : 'Save',
+                  label: _busy == 'save' ? tr('Saving…') : tr('Save'),
                   onPressed: _busy == null ? _save : null,
                 ),
                 const SizedBox(height: 16),
@@ -223,16 +229,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     TextButton(
                       onPressed: () => _open(PeopleMode.requests),
-                      child: const Text('Follow requests'),
+                      child: Text(tr('Follow requests')),
                     ),
                     TextButton(
                       onPressed: () => _open(PeopleMode.blocked),
-                      child: const Text('Blocked people'),
+                      child: Text(tr('Blocked people')),
                     ),
                     TextButton(
                       onPressed: () =>
                           openLegalPage(context, LegalPage.communityGuidelines),
-                      child: const Text('Community Guidelines'),
+                      child: Text(tr('Community Guidelines')),
                     ),
                   ],
                 ),

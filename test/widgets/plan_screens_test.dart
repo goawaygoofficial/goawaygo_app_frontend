@@ -46,7 +46,7 @@ void main() {
     expect(find.text('Stays ≈ ₹5,000 a night'), findsOneWidget);
     expect(find.text('Flights'), findsOneWidget);
     expect(find.text('Car rentals'), findsOneWidget);
-    expect(find.textContaining('10–12 Dec · 3 days'), findsOneWidget);
+    expect(find.textContaining('Dec 10 – Dec 12 · 3 days'), findsOneWidget);
     await scrollTo(tester, find.text('Share by link'));
     expect(find.text('Delete plan'), findsOneWidget);
   });

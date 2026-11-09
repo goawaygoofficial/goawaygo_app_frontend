@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
 import 'package:app_frontend/providers/user_provider.dart';
@@ -9,8 +10,8 @@ import 'package:provider/provider.dart';
 Future<void> confirmAndSignOut(BuildContext context) async {
   final confirmed = await CustomDialogs.showConfirmDialog(
     context: context,
-    message: 'Sign out of GoAwayGo?',
-    confirmLabel: 'Sign out',
+    message: tr('Sign out of GoAwayGo?'),
+    confirmLabel: tr('Sign out'),
   );
   if (!confirmed || !context.mounted) return;
 

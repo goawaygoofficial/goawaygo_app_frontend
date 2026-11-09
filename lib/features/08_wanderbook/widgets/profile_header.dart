@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/people_screen.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/common.dart';
@@ -82,13 +83,13 @@ class ProfileHeader extends StatelessWidget {
               ),
             ),
             if (profile.isPrivate)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 6),
                 child: Icon(
                   Icons.lock,
                   color: Colors.white,
                   size: 18,
-                  semanticLabel: 'Private profile',
+                  semanticLabel: tr('Private profile'),
                 ),
               ),
           ],
@@ -103,16 +104,16 @@ class ProfileHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _Stat(label: 'Posts', count: profile.posts),
+              _Stat(label: tr('Posts'), count: profile.posts),
               _Stat(
-                label: 'Followers',
+                label: tr('Followers'),
                 count: profile.followers,
                 onTap: profile.canSeePosts
                     ? () => _openList(context, 'followers')
                     : null,
               ),
               _Stat(
-                label: 'Following',
+                label: tr('Following'),
                 count: profile.following,
                 onTap: profile.canSeePosts
                     ? () => _openList(context, 'following')

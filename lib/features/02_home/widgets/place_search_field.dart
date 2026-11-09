@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -108,8 +110,8 @@ class _PlaceSearchFieldState extends State<PlaceSearchField> {
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
-                  decoration: const InputDecoration(
-                    hintText: 'Where do you want to be?',
+                  decoration: InputDecoration(
+                    hintText: tr('Where do you want to be?'),
                     hintStyle: TextStyle(
                       color: ColorsUtil.whiteColor,
                       fontSize: 16,

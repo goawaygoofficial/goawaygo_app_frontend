@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -53,8 +54,8 @@ class _ProfileButtonState extends State<ProfileButton> {
           ),
         ),
         if (comingSoon)
-          const Text(
-            'COMING SOON',
+          Text(
+            tr('COMING SOON'),
             style: TextStyle(
               color: ColorsUtil.whiteColor,
               fontSize: 12,
@@ -67,7 +68,7 @@ class _ProfileButtonState extends State<ProfileButton> {
 
     if (comingSoon) {
       return Semantics(
-        label: '${widget.title}, coming soon',
+        label: tr('{0}, coming soon', [widget.title]),
         excludeSemantics: true,
         child: Opacity(opacity: 0.55, child: tile),
       );

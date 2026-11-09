@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/legal/legal_pages.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -22,12 +23,12 @@ class LegalFooter extends StatelessWidget {
         for (final page in LegalPage.values)
           TextButton(
             onPressed: () => openLegalPage(context, page),
-            child: Text(page.title, style: style),
+            child: Text(tr(page.title), style: style),
           ),
         if (Analytics.available)
           TextButton(
             onPressed: () => showAnalyticsConsentSheet(context),
-            child: Text('Privacy choices', style: style),
+            child: Text(tr('Privacy choices'), style: style),
           ),
       ],
     );
@@ -71,11 +72,15 @@ class _SignUpNoticeState extends State<SignUpNotice> {
           height: 1.4,
         ),
         children: [
-          const TextSpan(text: 'By continuing, you agree to our '),
-          TextSpan(text: 'Terms of Use', style: link, recognizer: _terms),
-          const TextSpan(text: ' and confirm you have read our '),
-          TextSpan(text: 'Privacy Policy', style: link, recognizer: _privacy),
-          const TextSpan(text: '. You must be 18 or older.'),
+          TextSpan(text: tr('By continuing, you agree to our ')),
+          TextSpan(text: tr('Terms of Use'), style: link, recognizer: _terms),
+          TextSpan(text: tr(' and confirm you have read our ')),
+          TextSpan(
+            text: tr('Privacy Policy'),
+            style: link,
+            recognizer: _privacy,
+          ),
+          TextSpan(text: tr('. You must be 18 or older.')),
         ],
       ),
       textAlign: TextAlign.center,

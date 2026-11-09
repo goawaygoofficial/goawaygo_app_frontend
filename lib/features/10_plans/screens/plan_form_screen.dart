@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/plans/plan_models.dart';
@@ -62,7 +63,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
 
   Future<void> _submit() async {
     if (_start.text.isEmpty) {
-      setState(() => _error = 'Choose when your trip starts.');
+      setState(() => _error = tr('Choose when your trip starts.'));
       return;
     }
     final days = _dayCount;
@@ -86,7 +87,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
       if (!mounted) return;
       await PushNotifications.askAtUsefulMoment(
         context,
-        'Get a reminder three days before your trip, and the day before.',
+        tr('Get a reminder three days before your trip, and the day before.'),
       );
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(
@@ -121,7 +122,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                 Image.asset('assets/images/logo.png', height: height * 0.1),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Back',
+                  tooltip: tr('Back'),
                   icon: const Icon(
                     Icons.arrow_back_ios_rounded,
                     color: ColorsUtil.whiteColor,
@@ -130,7 +131,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                 ),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -140,7 +141,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Plan a trip',
+                  tr('Plan a trip'),
                   style: TextStyle(
                     color: ColorsUtil.whiteColor,
                     fontSize: 24,
@@ -170,8 +171,12 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
             if (!signedIn)
               PlanPanel(
                 children: [
-                  const Text(
-                    'Sign in from the Profile tab to plan a trip. Your plans are saved in My Trips.',
+                  Text(
+                    tr(
+                      tr(
+                        'Sign in from the Profile tab to plan a trip. Your plans are saved in My Trips.',
+                      ),
+                    ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: ColorsUtil.whiteColor,
@@ -180,7 +185,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                   ),
                   const SizedBox(height: 14),
                   PillButton(
-                    label: 'Back',
+                    label: tr('Back'),
                     onPressed: () => Navigator.of(context).maybePop(),
                   ),
                 ],
@@ -193,7 +198,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Planning your trip to ${place.name}…',
+                    tr('Planning your trip to {0}…', [place.name]),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: ColorsUtil.whiteColor,
@@ -203,7 +208,11 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Our AI is writing it day by day. This can take up to a minute.',
+                    tr(
+                      tr(
+                        'Our AI is writing it day by day. This can take up to a minute.',
+                      ),
+                    ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: ColorsUtil.whiteColor.withValues(alpha: 0.8),
@@ -227,7 +236,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
           Expanded(
             child: SearchInputField(
               icon: Icons.calendar_today,
-              hint: 'Start date',
+              hint: tr('Start date'),
               controller: _start,
               onTap: () => HotelDatePickerUtils.selectDate(
                 context,
@@ -240,7 +249,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
           Expanded(
             child: SearchInputField(
               icon: Icons.calendar_month,
-              caption: 'Days',
+              caption: tr('Days'),
               min: 1,
               controller: _days,
               isCounter: true,
@@ -248,25 +257,25 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
           ),
         ],
       ),
-      const _Label("Who's going?"),
+      _Label(tr('Who\'s going?')),
       OptionChips(
         options: PlanOptions.travellers,
         selected: [_travellers],
         onChanged: (value) => setState(() => _travellers = value.first),
       ),
-      const _Label('Pace'),
+      _Label(tr('Pace')),
       OptionChips(
         options: PlanOptions.paces,
         selected: [_pace],
         onChanged: (value) => setState(() => _pace = value.first),
       ),
-      const _Label('Budget'),
+      _Label(tr('Budget')),
       OptionChips(
         options: PlanOptions.budgets,
         selected: [_budget],
         onChanged: (value) => setState(() => _budget = value.first),
       ),
-      const _Label('Interests (up to ${PlanOptions.maxInterests})'),
+      _Label(tr('Interests (up to {0})', [PlanOptions.maxInterests])),
       OptionChips(
         options: PlanOptions.interests,
         selected: _interests,
@@ -277,7 +286,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
       if (_error != null) FormError(_error!),
       Center(
         child: PillButton(
-          label: 'Plan my trip',
+          label: tr('Plan my trip'),
           large: true,
           onPressed: _submit,
         ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/plans/plan_models.dart';
@@ -77,7 +78,11 @@ const jaipur = PlanPlace(
 void main() {
   late FakeBackend backend;
 
-  setUp(() => backend = FakeBackend());
+  setUp(() {
+    backend = FakeBackend();
+    I18n.accountCurrency = 'INR';
+  });
+  tearDown(I18n.reset);
 
   group('PlanService', () {
     test('create sends the form and returns the plan', () async {
@@ -115,6 +120,7 @@ void main() {
         'pace': 'balanced',
         'budget': 'mid',
         'interests': ['history', 'food'],
+        'currency': 'INR',
       });
       expect(plan.title, 'Jaipur Heritage and Flavors');
       expect(plan.dayPlans, hasLength(3));

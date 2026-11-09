@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
@@ -50,16 +51,16 @@ class PostCard extends StatelessWidget {
     final sure = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete this post?'),
-        content: const Text('Its photos are deleted too.'),
+        title: Text(tr('Delete this post?')),
+        content: Text(tr('Its photos are deleted too.')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(tr('Delete')),
           ),
         ],
       ),
@@ -135,7 +136,7 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               PopupMenuButton<String>(
-                tooltip: 'More',
+                tooltip: tr('More'),
                 icon: const Icon(Icons.more_horiz, color: Colors.white),
                 onSelected: (choice) {
                   switch (choice) {
@@ -153,7 +154,7 @@ class PostCard extends StatelessWidget {
                           context,
                           targetType: 'post',
                           target: post.publicId,
-                          label: 'this post',
+                          label: tr('this post'),
                         );
                       }
                   }
@@ -162,13 +163,13 @@ class PostCard extends StatelessWidget {
                   if (place != null)
                     PopupMenuItem(
                       value: 'place',
-                      child: Text('About ${place.name}'),
+                      child: Text(tr('About {0}', [place.name])),
                     ),
                   if (post.isYours) ...[
-                    const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                    const PopupMenuItem(value: 'delete', child: Text('Delete')),
+                    PopupMenuItem(value: 'edit', child: Text(tr('Edit'))),
+                    PopupMenuItem(value: 'delete', child: Text(tr('Delete'))),
                   ] else
-                    const PopupMenuItem(value: 'report', child: Text('Report')),
+                    PopupMenuItem(value: 'report', child: Text(tr('Report'))),
                 ],
               ),
             ],
@@ -181,7 +182,7 @@ class PostCard extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                tooltip: post.likedByYou ? 'Unlike' : 'Like',
+                tooltip: post.likedByYou ? tr('Unlike') : tr('Like'),
                 icon: Icon(
                   post.likedByYou ? Icons.favorite : Icons.favorite_border,
                   color: post.likedByYou ? ColorsUtil.secondary : Colors.white,
@@ -190,7 +191,7 @@ class PostCard extends StatelessWidget {
               ),
               if (!full)
                 IconButton(
-                  tooltip: 'Comments',
+                  tooltip: tr('Comments'),
                   icon: const Icon(
                     Icons.chat_bubble_outline,
                     color: Colors.white,
@@ -265,7 +266,9 @@ class PostGrid extends StatelessWidget {
         final cover = post.photos.isEmpty ? null : post.photos.first;
         return Semantics(
           button: true,
-          label: post.place == null ? 'Post' : 'Post at ${post.place!.name}',
+          label: post.place == null
+              ? tr('Post')
+              : tr('Post at {0}', [post.place!.name]),
           child: GestureDetector(
             onTap: () => openPost(context, post.publicId, preview: post),
             child: Stack(

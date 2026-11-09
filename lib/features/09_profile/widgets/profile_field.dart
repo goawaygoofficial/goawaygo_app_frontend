@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 
 /// An orange User Profile row: label on the left, value on the right, and an Edit button when it can be changed.
@@ -53,7 +54,7 @@ class ProfileField extends StatelessWidget {
                 Expanded(
                   flex: 6,
                   child: Semantics(
-                    label: isObscured ? 'Hidden' : null,
+                    label: isObscured ? tr('Hidden') : null,
                     excludeSemantics: isObscured,
                     child: Text(
                       value,
@@ -71,7 +72,7 @@ class ProfileField extends StatelessWidget {
                   const SizedBox(width: 8),
                   Semantics(
                     button: true,
-                    label: '$editLabel $label',
+                    label: '${tr(editLabel)} $label',
                     excludeSemantics: true,
                     child: OutlinedButton(
                       key: ValueKey('edit-$label'),
@@ -88,7 +89,7 @@ class ProfileField extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      child: Text(editLabel),
+                      child: Text(tr(editLabel)),
                     ),
                   ),
                 ],

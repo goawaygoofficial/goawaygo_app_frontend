@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_frontend/core/api/api_exception.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/auth/auth_session.dart';
 import 'package:http/http.dart' as http;
 
@@ -105,6 +106,8 @@ class ApiClient {
   ) async {
     request.headers.addAll({
       ...clientTypeHeader,
+      // The backend answers in this language (errors, AI content, the bell).
+      'Accept-Language': I18n.code,
       if (token != null) 'Authorization': 'Bearer $token',
     });
     try {

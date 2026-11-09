@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/common.dart';
@@ -66,7 +67,7 @@ class PagedLoader<T> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: PillButton(
-              label: loadingMore ? 'Loading…' : 'Load more',
+              label: loadingMore ? tr('Loading…') : tr('Load more'),
               quiet: true,
               onPressed: loadingMore ? null : loadMore,
             ),

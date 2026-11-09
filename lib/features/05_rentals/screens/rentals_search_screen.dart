@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_models.dart';
 import 'package:app_frontend/core/book/book_service.dart';
@@ -51,14 +52,16 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
     final pickup = DateTime.tryParse(pickupDateController.text);
     final dropOff = DateTime.tryParse(dropOffDateController.text);
     if (pickupController.text.trim().length < 2) {
-      return 'Type where you pick up the car.';
+      return tr('Type where you pick up the car.');
     }
     if (pickup == null || dropOff == null) {
-      return 'Choose your pick-up and drop-off dates.';
+      return tr('Choose your pick-up and drop-off dates.');
     }
     final days = dropOff.difference(pickup).inDays;
-    if (days < 1) return 'Drop-off must be after pick-up.';
-    if (days > _maxDays) return 'Choose a rental of up to $_maxDays days.';
+    if (days < 1) return tr('Drop-off must be after pick-up.');
+    if (days > _maxDays) {
+      return tr('Choose a rental of up to {0} days.', [_maxDays]);
+    }
     return null;
   }
 
@@ -133,8 +136,8 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                       'assets/images/rentals.png',
                       height: height * 0.1,
                     ),
-                    const Text(
-                      'Rent a Car',
+                    Text(
+                      tr('Rent a Car'),
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontSize: 24,
@@ -148,7 +151,7 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                 // Pick-up: a city or an airport (an airport opens some partners right on it)
                 SuggestField<Airport>(
                   icon: Icons.my_location_sharp,
-                  hint: 'Pick-up (city or airport)',
+                  hint: tr('Pick-up (city or airport)'),
                   controller: pickupController,
                   suggest: BookService.suggestAirports,
                   describe: (place) => Suggestion(
@@ -156,8 +159,11 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                         ? '${place.name} (${place.code})'
                         : place.name,
                     context: place.isAirport
-                        ? 'Airport · ${place.city.isEmpty ? '' : '${place.city}, '}${place.country}'
-                        : 'City · ${place.country}',
+                        ? tr('Airport · {0}{1}', [
+                            place.city.isEmpty ? '' : '${place.city}, ',
+                            place.country,
+                          ])
+                        : tr('City · {0}', [place.country]),
                     icon: place.isAirport
                         ? Icons.flight
                         : Icons.location_on_outlined,
@@ -251,8 +257,8 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                         vertical: height * 0.02,
                       ),
                     ),
-                    child: const Text(
-                      'Search',
+                    child: Text(
+                      tr('Search'),
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontSize: 18,

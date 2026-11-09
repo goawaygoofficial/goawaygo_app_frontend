@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/post_screen.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/profile_screen.dart';
@@ -40,7 +41,7 @@ String avatarHeroTag(String publicId) => 'avatar-$publicId';
 /// Shown when a signed-out user tries something that needs an account.
 void showSignInHint(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Sign in from the Profile tab to do this.')),
+    SnackBar(content: Text(tr('Sign in from the Profile tab to do this.'))),
   );
 }
 
