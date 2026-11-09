@@ -35,6 +35,7 @@ New here? Read these in order:
 | My Trips            | `lib/features/07_trips`                                   | Trip plans and places saved from the ideas (sign-in needed)                                                      |
 | Trip planner (4.4)  | `lib/features/10_plans`, `lib/core/plans`                 | Plan form, plan with day cards, change a day, share by link (website page), delete                               |
 | Notifications (4.5) | `lib/features/11_notifications`, `lib/core/notifications` | Bell with unread badge, list, settings switches; push (Firebase Cloud Messaging), permission asks, tapped pushes |
+| Me (4.6)            | `lib/features/09_profile`, `lib/core/account`             | User Profile: photo, name, email, password, country, currency (sheets); delete account; Recently Viewed          |
 | Discover (shared)   | `lib/core/discover`                                       | Discover API calls, models, recent searches on the device                                                        |
 | Wanderbook          | `lib/features/08_wanderbook`                              | Feed, profiles, follow requests, posting original photos, likes, comments, reports                               |
 | Wanderbook (shared) | `lib/core/wanderbook`                                     | Wanderbook API calls and models                                                                                  |
