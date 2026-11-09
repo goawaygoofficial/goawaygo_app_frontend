@@ -2,12 +2,17 @@ import 'package:app_frontend/core/account/account_models.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/models/user_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// The signed-in user's account (Me, 4.6): details, password, email, deleting it, and Recently viewed.
 class AccountService {
   AccountService._();
 
   static Future<Regions>? _regions;
+
+  /// Forgets the loaded countries (each test has its own fake backend).
+  @visibleForTesting
+  static void resetCache() => _regions = null;
 
   static UserModel _user(Object? data) {
     if (data is! Map<String, dynamic>) {

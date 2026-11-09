@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_frontend/core/account/account_service.dart';
 import 'package:app_frontend/features/09_profile/screens/recently_viewed_screen.dart';
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/providers/user_provider.dart';
@@ -17,6 +18,7 @@ void main() {
 
   setUp(() {
     backend = FakeBackend();
+    AccountService.resetCache();
     SharedPreferences.setMockInitialValues({});
     backend.on('GET', '/api/regions', (_) async {
       return FakeBackend.json({
