@@ -2,6 +2,7 @@ import 'package:app_frontend/features/01_auth_register/screens/forgot_password_s
 import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/sign_in_panel.dart';
+import 'package:app_frontend/features/09_profile/screens/recently_viewed_screen.dart';
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/verify_email_banner.dart';
@@ -152,6 +153,11 @@ class _MyProfileState extends State<MyProfile> {
             ProfileButton(
               imagePath: 'assets/icons/recently_viewed.png',
               title: 'Recently Viewed',
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const RecentlyViewedScreen(),
+                ),
+              ),
             ),
             ProfileButton(imagePath: 'assets/icons/saved.png', title: 'Saved'),
           ],

@@ -1,5 +1,6 @@
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
+import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -46,7 +47,9 @@ class _SignInPanelState extends State<SignInPanel> {
     context.read<UserProvider>().signIn(user);
     await CustomDialogs.showSuccessDialog(
       context: context,
-      message: '$greeting, ${user.name}!',
+      message: Backend.session.restoredOnLastStart
+          ? "Welcome back, ${user.name}! Your account won't be deleted."
+          : '$greeting, ${user.name}!',
     );
     FocusManager.instance.primaryFocus?.unfocus();
     if (mounted) widget.onSignedIn(user);
