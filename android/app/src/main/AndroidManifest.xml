@@ -36,6 +36,18 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Push notifications (Firebase Cloud Messaging): the channel MainActivity creates, the white plane in the
+             status bar and the brand orange. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="goawaygo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_goawaygo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_orange" />
+        <!-- Firebase starts from Dart with the IDs in env/*.env (no google-services.json). -->
         <!-- PostHog starts only from Dart, after the user allows analytics (lib/core/analytics). -->
         <meta-data
             android:name="com.posthog.posthog.AUTO_INIT"

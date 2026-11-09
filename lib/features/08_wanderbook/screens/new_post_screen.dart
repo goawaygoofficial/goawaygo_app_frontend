@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
+import 'package:app_frontend/core/notifications/push_notifications.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/common.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/place_fields.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -99,6 +100,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
         ],
         caption: _caption.text.trim(),
         place: _place,
+      );
+      if (!mounted) return;
+      await PushNotifications.askAtUsefulMoment(
+        context,
+        'Know when people like or comment on your post.',
       );
       if (mounted) Navigator.of(context).pop();
     } on ApiException catch (error) {

@@ -1,6 +1,7 @@
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
+import 'package:app_frontend/core/notifications/push_notifications.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/common.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/paged_loader.dart';
 import 'package:app_frontend/features/08_wanderbook/widgets/post_card.dart';
@@ -184,12 +185,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       quiet: profile.relationship != Relationship.none,
                       onPressed: _busy
                           ? null
-                          : () => _act(
-                              () => WanderbookService.follow(
+                          : () => _act(() async {
+                              final following =
+                                  profile.relationship == Relationship.none;
+                              await WanderbookService.follow(
                                 widget.publicId,
-                                profile.relationship == Relationship.none,
-                              ),
-                            ),
+                                following,
+                              );
+                              if (following && context.mounted) {
+                                await PushNotifications.askAtUsefulMoment(
+                                  context,
+                                  'Know when people accept your request, follow you back, or like and comment on your posts.',
+                                );
+                              }
+                            }),
                     ),
                   if (profile.followsYou &&
                       profile.relationship != Relationship.none)

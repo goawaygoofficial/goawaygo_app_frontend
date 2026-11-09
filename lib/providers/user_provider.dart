@@ -1,5 +1,6 @@
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
+import 'package:app_frontend/core/notifications/push_notifications.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,8 @@ class UserProvider extends ChangeNotifier {
 
   /// Revokes the session on the server and signs out on this device.
   Future<void> signOut() async {
+    // While still signed in: this phone stops getting the account's pushes.
+    await PushNotifications.onSigningOut();
     await AuthService.signOut();
     _user = null;
     notifyListeners();
