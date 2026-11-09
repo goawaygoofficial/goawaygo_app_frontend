@@ -33,6 +33,15 @@ OUT=build/release
 mkdir -p "$OUT"
 NAME="goawaygo-${VERSION}-${BUILD}"
 common=(--release "--dart-define=ENV_FILE=$ENV_FILE" "--build-name=$VERSION" "--build-number=$BUILD")
+# Push notifications: the Firebase Android API key stays on this PC (scripts/firebase-key.sh saves it). It ends up in
+# the app like every Android app's Firebase key; it is only kept out of git.
+FIREBASE_ENV="$HOME/.goawaygo/firebase.env"
+FIREBASE_ANDROID_API_KEY="$( [[ -f "$FIREBASE_ENV" ]] && sed -n 's/^FIREBASE_ANDROID_API_KEY=//p' "$FIREBASE_ENV" || true)"
+if [[ -n "$FIREBASE_ANDROID_API_KEY" ]]; then
+  common+=("--dart-define=FIREBASE_ANDROID_API_KEY=$FIREBASE_ANDROID_API_KEY")
+else
+  echo "Warning: no Firebase key in $FIREBASE_ENV (run scripts/firebase-key.sh): this build has no push." >&2
+fi
 
 echo "==> Building $NAME (64-bit phones)"
 # --target-platform without --split-per-abi: only the 64-bit native code, and the plain build number as Android's

@@ -4,6 +4,8 @@ import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
+import 'package:app_frontend/core/notifications/notification_service.dart';
+import 'package:app_frontend/core/notifications/push_notifications.dart';
 import 'package:app_frontend/features/02_home/widgets/category_button.dart';
 import 'package:app_frontend/features/02_home/widgets/place_search_field.dart';
 import 'package:app_frontend/features/02_home/widgets/recent_searches_banner.dart';
@@ -13,6 +15,9 @@ import 'package:app_frontend/features/03_flights/screens/flight_search_screen.da
 import 'package:app_frontend/features/04_hotels/screens/hotels_search_screen.dart';
 import 'package:app_frontend/features/05_rentals/screens/rentals_search_screen.dart';
 import 'package:app_frontend/features/06_destinationInfo/screens/destination_info_screen.dart';
+import 'package:app_frontend/features/11_notifications/open_notification.dart';
+import 'package:app_frontend/features/11_notifications/screens/notifications_screen.dart';
+import 'package:app_frontend/features/11_notifications/widgets/notification_bell.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/slide_fade_transition.dart';
 import 'package:app_frontend/models/user_model.dart';
@@ -65,19 +70,41 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadIdeas();
+    _refreshBell();
     _ideasTimer = Timer.periodic(const Duration(minutes: 1), (_) {
       // Only while the app is on screen.
       if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
         _loadIdeas();
+        _refreshBell();
       }
     });
+    // A push tapped while the app was closed is waiting already; later taps arrive while Home is up.
+    PushNotifications.opened.addListener(_openTappedPush);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openTappedPush());
   }
 
   @override
   void dispose() {
+    PushNotifications.opened.removeListener(_openTappedPush);
     _ideasTimer?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// The bell's badge (signed in only).
+  void _refreshBell() {
+    if (Provider.of<UserProvider>(context, listen: false).user != null) {
+      NotificationService.refreshUnread();
+    }
+  }
+
+  /// Opens what a tapped push is about, once.
+  void _openTappedPush() {
+    final data = PushNotifications.opened.value;
+    if (data == null || !mounted) return;
+    PushNotifications.opened.value = null;
+    openPushData(context, data);
+    NotificationService.refreshUnread();
   }
 
   Future<void> _loadIdeas() async {
@@ -97,7 +124,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (userId == _savedFor) return;
     _savedFor = userId;
     _savedKeys = const {};
+    // The badge belongs to the account too.
+    NotificationService.unread.value = 0;
     if (userId == null) return;
+    NotificationService.refreshUnread();
     DiscoverService.listSavedPlaces()
         .then((places) {
           if (mounted && _savedFor == userId) {
@@ -174,13 +204,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: height * 0.12,
                         ),
                         const Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            size: width * 0.075,
-                            color: ColorsUtil.secondaryLight,
+                        NotificationBell(
+                          size: width * 0.075,
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const NotificationsScreen(),
+                            ),
                           ),
-                          onPressed: () {},
                         ),
                       ],
                     ),

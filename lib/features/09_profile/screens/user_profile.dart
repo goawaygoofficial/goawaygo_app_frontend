@@ -1,5 +1,6 @@
 import 'package:app_frontend/features/01_auth_register/sign_out.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_field.dart';
+import 'package:app_frontend/features/11_notifications/screens/notification_settings_screen.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,34 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           value: widget.user?.name ?? _notSet,
                         ),
                         const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    const NotificationSettingsScreen(),
+                              ),
+                            ),
+                            icon: const Icon(Icons.notifications_outlined),
+                            label: const Text(
+                              'Notification settings',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: ColorsUtil.whiteColor,
+                              side: const BorderSide(color: Colors.white38),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(

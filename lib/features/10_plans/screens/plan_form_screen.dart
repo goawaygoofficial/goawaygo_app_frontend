@@ -2,6 +2,7 @@ import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/plans/plan_models.dart';
 import 'package:app_frontend/core/plans/plan_service.dart';
+import 'package:app_frontend/core/notifications/push_notifications.dart';
 import 'package:app_frontend/features/04_hotels/utils/hotel_date_picker_util.dart';
 import 'package:app_frontend/features/10_plans/screens/plan_screen.dart';
 import 'package:app_frontend/features/10_plans/widgets/plan_widgets.dart';
@@ -82,6 +83,11 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
         ),
       );
       Analytics.track(TripPlanCreated(days: days));
+      if (!mounted) return;
+      await PushNotifications.askAtUsefulMoment(
+        context,
+        'Get a reminder three days before your trip, and the day before.',
+      );
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(

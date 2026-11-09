@@ -13,10 +13,10 @@ new builds (they keep the version they have).
 
 The app reads its settings from a bundled env file (public values only — never secrets):
 
-| Build                | Env file                     | Backend                         |
-| -------------------- | ---------------------------- | ------------------------------- |
-| `flutter run` (dev)  | `.env` (local, gitignored)   | your PC (`http://localhost:8080`) |
-| Staging (testers)    | `env/staging.env` (committed) | `https://api.goawaygo.com`      |
+| Build               | Env file                      | Backend                           |
+| ------------------- | ----------------------------- | --------------------------------- |
+| `flutter run` (dev) | `.env` (local, gitignored)    | your PC (`http://localhost:8080`) |
+| Staging (testers)   | `env/staging.env` (committed) | `https://api.goawaygo.com`        |
 
 Pick the file with `--dart-define=ENV_FILE=...`; without it the app uses `.env`.
 
@@ -35,6 +35,20 @@ them. Without them, release builds fall back to the debug key (fine for CI, not 
 Google Sign-In on Android checks the signing certificate: the upload key's **SHA-1** must be registered in Google
 Cloud (project `goaway-483709`) → Google Auth Platform → Clients → an **Android** client for package
 `com.goawaygo.app`. The debug key has its own client for development.
+
+## Push notifications
+
+Push (Firebase Cloud Messaging, 4.5) needs the Firebase Android API key in the build. It identifies the app and ships
+inside every APK, but it stays out of git (secret scanning). Once per machine that publishes builds, signed in to
+gcloud as a member of `goaway-483709`:
+
+```bash
+bash scripts/firebase-key.sh
+```
+
+It saves the key to `~/.goawaygo/firebase.env` without showing it; `release-android.sh` passes it with
+`--dart-define=FIREBASE_ANDROID_API_KEY`. The other Firebase IDs are public values in `env/staging.env`. Builds without
+the key (local runs, CI, tests) work normally without push, and the release script warns.
 
 ## Release a staging build
 
