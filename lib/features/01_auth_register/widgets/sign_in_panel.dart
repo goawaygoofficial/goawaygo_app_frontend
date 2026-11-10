@@ -200,7 +200,7 @@ class _SignInPanelState extends State<SignInPanel> {
             child: Text(
               tr('Not Registered? Register'),
               style: TextStyle(
-                color: ColorsUtil.secondary,
+                color: ColorsUtil.secondaryLighter,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),

@@ -102,7 +102,7 @@ class PersonTile extends StatelessWidget {
           ? null
           : Text(
               person.homeTown,
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
       trailing: trailing,
       onTap: () => openProfile(context, person.publicId, preview: person),
@@ -123,7 +123,7 @@ class StatusText extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+        style: TextStyle(color: ColorsUtil.textMuted),
       ),
     );
   }

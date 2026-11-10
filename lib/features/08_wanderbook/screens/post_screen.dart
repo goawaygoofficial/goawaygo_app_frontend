@@ -151,7 +151,7 @@ class _PostScreenState extends State<PostScreen> {
                     _likers == null
                         ? tr('See who liked this')
                         : tr('Hide likes'),
-                    style: const TextStyle(color: Colors.white70),
+                    style: const TextStyle(color: ColorsUtil.textMuted),
                   ),
                 ),
               if (_likers != null)
@@ -231,10 +231,7 @@ class _CommentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final muted = TextStyle(
-      color: Colors.white.withValues(alpha: 0.7),
-      fontSize: 12,
-    );
+    final muted = TextStyle(color: ColorsUtil.textMuted, fontSize: 12);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(

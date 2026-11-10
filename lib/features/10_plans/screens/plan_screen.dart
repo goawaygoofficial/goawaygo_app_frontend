@@ -148,7 +148,7 @@ class _PlanScreenState extends State<PlanScreen> {
       fontSize: 15,
       height: 1.35,
     );
-    const info = TextStyle(color: ColorsUtil.primaryLight, fontSize: 13);
+    const info = TextStyle(color: ColorsUtil.textMuted, fontSize: 13);
     return [
       Text(
         plan.title,
@@ -420,10 +420,7 @@ class _OwnerActionsState extends State<_OwnerActions> {
           SelectableText(
             link ?? tr('The website address is missing in this build.'),
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: ColorsUtil.primaryLight,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: ColorsUtil.textMuted, fontSize: 13),
           ),
           const SizedBox(height: 12),
           Wrap(

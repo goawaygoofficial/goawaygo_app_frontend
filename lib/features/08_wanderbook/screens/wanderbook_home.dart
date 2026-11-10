@@ -264,7 +264,7 @@ class _SignInInvite extends StatelessWidget {
               ),
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+            style: TextStyle(color: ColorsUtil.textMuted),
           ),
         ],
       ),

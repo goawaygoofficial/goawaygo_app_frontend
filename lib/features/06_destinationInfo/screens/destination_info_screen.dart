@@ -162,10 +162,7 @@ class _DestinationInfoScreenState extends State<DestinationInfoScreen> {
         if (page.place.context.isNotEmpty)
           Text(
             page.place.context,
-            style: TextStyle(
-              color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-              fontSize: 15,
-            ),
+            style: TextStyle(color: ColorsUtil.textMuted, fontSize: 15),
           ),
         const SizedBox(height: 10),
         Align(
@@ -259,7 +256,7 @@ class _Message extends StatelessWidget {
             const Icon(
               Icons.travel_explore,
               size: 40,
-              color: ColorsUtil.secondaryLight,
+              color: ColorsUtil.brandOrangeLight,
             ),
             const SizedBox(height: 12),
             Text(
@@ -275,10 +272,7 @@ class _Message extends StatelessWidget {
             Text(
               text,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: ColorsUtil.textMuted, fontSize: 16),
             ),
             const SizedBox(height: 20),
             PillButton(label: action, onPressed: onAction, large: true),

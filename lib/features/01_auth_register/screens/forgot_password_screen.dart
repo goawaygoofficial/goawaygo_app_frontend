@@ -121,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: Text(
                     tr('Back to Sign In'),
                     style: TextStyle(
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

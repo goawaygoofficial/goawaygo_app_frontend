@@ -167,7 +167,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                         onPressed: () => Navigator.of(context).pop(),
                         child: Text(
                           tr('Cancel'),
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: ColorsUtil.textMuted),
                         ),
                       ),
                       const SizedBox(width: 8),

@@ -207,7 +207,7 @@ class _ProofField extends StatelessWidget {
     if (!user.hasPassword) {
       return Text(
         tr('To confirm it’s you, Google asks you to pick your account.'),
-        style: TextStyle(color: Colors.white70),
+        style: TextStyle(color: ColorsUtil.textMuted),
       );
     }
     return TextField(
@@ -565,7 +565,7 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
         ),
       ),
       trailing: isSelected
-          ? Icon(Icons.check, color: ColorsUtil.secondaryLight)
+          ? Icon(Icons.check, color: ColorsUtil.brandOrangeLight)
           : null,
     );
   }
@@ -626,7 +626,7 @@ class _DeleteSheetState extends State<_DeleteSheet> with _Submitting {
               'Your account is hidden from others and signed out at once. Sign in within 30 days to keep it; after that, your posts, photos, trip plans and everything else are deleted for good.',
             ),
           ),
-          style: TextStyle(color: Colors.white70, height: 1.4),
+          style: TextStyle(color: ColorsUtil.textMuted, height: 1.4),
         ),
         _ProofField(user: widget.user, controller: _password),
       ],

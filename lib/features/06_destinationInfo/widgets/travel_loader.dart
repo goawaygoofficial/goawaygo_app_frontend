@@ -127,10 +127,7 @@ class _TravelLoaderState extends State<TravelLoader>
               child: Text(
                 tr(_messages[_message]),
                 key: ValueKey(_message),
-                style: TextStyle(
-                  color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: ColorsUtil.textMuted, fontSize: 16),
               ),
             ),
           ],
@@ -172,7 +169,7 @@ class _GlobePainter extends CustomPainter {
     final scale = radius * 2 / 100;
     // Half a strip per lap: the globe turns slower than the plane flies.
     final shift = (turn * 50) * scale;
-    final landPaint = Paint()..color = ColorsUtil.secondaryLight;
+    final landPaint = Paint()..color = ColorsUtil.brandOrangeLight;
     for (final copy in [0.0, 100.0]) {
       for (final blob in _land) {
         canvas.drawRRect(

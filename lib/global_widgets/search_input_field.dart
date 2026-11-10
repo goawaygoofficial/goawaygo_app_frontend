@@ -98,7 +98,6 @@ class _SearchInputFieldState extends State<SearchInputField> {
         children: [
           IconButton(
             tooltip: tr('Decrease'),
-            visualDensity: VisualDensity.compact,
             onPressed: canDecrement ? () => _step(-1) : null,
             icon: Icon(
               Icons.remove,
@@ -116,7 +115,6 @@ class _SearchInputFieldState extends State<SearchInputField> {
           ),
           IconButton(
             tooltip: tr('Increase'),
-            visualDensity: VisualDensity.compact,
             onPressed: () => _step(1),
             icon: const Icon(Icons.add, color: ColorsUtil.whiteColor),
           ),
@@ -130,7 +128,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
           isExpanded: true,
           isDense: true,
           hint: Text(widget.hint ?? '', style: _valueStyle),
-          dropdownColor: ColorsUtil.primaryLight,
+          dropdownColor: ColorsUtil.field,
           iconEnabledColor: ColorsUtil.whiteColor,
           style: _valueStyle,
           items: [
@@ -170,7 +168,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
         vertical: height * 0.0165,
       ),
       decoration: BoxDecoration(
-        color: ColorsUtil.primaryLight,
+        color: ColorsUtil.field,
         borderRadius: BorderRadius.circular(height * 0.04),
       ),
       child: Row(
@@ -187,7 +185,8 @@ class _SearchInputFieldState extends State<SearchInputField> {
                       Text(
                         widget.caption!.toUpperCase(),
                         style: TextStyle(
-                          color: ColorsUtil.whiteColor.withValues(alpha: 0.85),
+                          // Full white: faded, it is too faint on the field (WCAG 1.4.3).
+                          color: ColorsUtil.whiteColor,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.7,

@@ -62,8 +62,8 @@ class OptionChips extends StatelessWidget {
                             : [...selected, option.value],
                       ),
                 selectedColor: ColorsUtil.secondaryLight,
-                backgroundColor: ColorsUtil.primaryLight,
-                disabledColor: ColorsUtil.primaryLight.withValues(alpha: 0.4),
+                backgroundColor: ColorsUtil.field,
+                disabledColor: ColorsUtil.field.withValues(alpha: 0.4),
                 side: BorderSide.none,
                 shape: const StadiumBorder(),
                 labelStyle: const TextStyle(
@@ -255,7 +255,10 @@ class _DayCardState extends State<DayCard> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [ColorsUtil.secondaryLight, ColorsUtil.secondaryDark],
+                colors: [
+                  ColorsUtil.brandOrangeLight,
+                  ColorsUtil.brandOrangeDark,
+                ],
               ),
             ),
             child: Column(
@@ -318,7 +321,7 @@ class _DayCardState extends State<DayCard> {
                     BookFormat.price(day.cost, widget.currency),
                   ]),
                   style: const TextStyle(
-                    color: ColorsUtil.primaryLight,
+                    color: ColorsUtil.textMuted,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

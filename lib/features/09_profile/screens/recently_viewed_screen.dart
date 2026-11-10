@@ -265,7 +265,7 @@ class _Row extends StatelessWidget {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * 0.3,
-                  color: ColorsUtil.secondary,
+                  color: ColorsUtil.secondaryDark,
                   padding: const EdgeInsets.all(12),
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -299,7 +299,7 @@ class _Row extends StatelessWidget {
                           Text(
                             meta!,
                             style: const TextStyle(
-                              color: Colors.white70,
+                              color: ColorsUtil.textMuted,
                               fontSize: 12,
                             ),
                           ),

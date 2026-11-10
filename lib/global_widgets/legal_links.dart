@@ -13,10 +13,7 @@ class LegalFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(
-      color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-      fontSize: 13,
-    );
+    final style = TextStyle(color: ColorsUtil.textMuted, fontSize: 13);
     return Wrap(
       alignment: WrapAlignment.center,
       children: [
@@ -67,7 +64,7 @@ class _SignUpNoticeState extends State<SignUpNotice> {
     return Text.rich(
       TextSpan(
         style: TextStyle(
-          color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
+          color: ColorsUtil.textMuted,
           fontSize: 13,
           height: 1.4,
         ),

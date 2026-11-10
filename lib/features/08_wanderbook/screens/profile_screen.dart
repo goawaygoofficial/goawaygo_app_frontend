@@ -209,9 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       profile.relationship != Relationship.none)
                     Text(
                       tr('Follows you'),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.75),
-                      ),
+                      style: TextStyle(color: ColorsUtil.textMuted),
                     ),
                 ],
               ),

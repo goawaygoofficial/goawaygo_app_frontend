@@ -72,7 +72,7 @@ class _TripIdeaCardState extends State<TripIdeaCard> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [ColorsUtil.secondaryLight, ColorsUtil.secondaryDark],
+            colors: [ColorsUtil.brandOrangeLight, ColorsUtil.brandOrangeDark],
           ),
         ),
         child: Stack(

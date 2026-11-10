@@ -40,10 +40,10 @@ class MyTripsScreen extends StatefulWidget {
 
 class _MyTripsScreenState extends State<MyTripsScreen> {
   static const _tones = [
-    [ColorsUtil.secondaryLight, ColorsUtil.secondaryDark],
+    [ColorsUtil.brandOrangeLight, ColorsUtil.brandOrangeDark],
     [ColorsUtil.secondary, ColorsUtil.secondaryDark],
-    [ColorsUtil.secondaryLighter, ColorsUtil.secondary],
-    [ColorsUtil.secondaryLight, ColorsUtil.primaryLight],
+    [ColorsUtil.brandOrangeLighter, ColorsUtil.brandOrange],
+    [ColorsUtil.brandOrangeLight, ColorsUtil.primaryLight],
   ];
 
   List<SavedPlace>? _places;
@@ -496,7 +496,7 @@ class _EmptyState extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(width * 0.04),
             decoration: BoxDecoration(
-              color: ColorsUtil.secondaryLight,
+              color: ColorsUtil.brandOrangeLight,
               borderRadius: BorderRadius.circular(width * 0.04),
             ),
             child: Image.asset(
@@ -522,7 +522,7 @@ class _EmptyState extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
+                color: ColorsUtil.textMuted,
                 fontSize: 16,
                 height: 1.4,
               ),
