@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
@@ -38,7 +39,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (email.isEmpty) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Please enter your email.',
+        message: tr('Please enter your email.'),
       );
       return;
     }
@@ -47,7 +48,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await AuthService.requestPasswordReset(email);
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message: _resetRequestedMessage,
+        message: tr(_resetRequestedMessage),
         onDismiss: () {
           _emailController.clear();
           widget.onBack();
@@ -81,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
                 Text(
-                  "Forgot Password?",
+                  tr('Forgot Password?'),
                   style: TextStyle(
                     fontSize: 24,
                     color: ColorsUtil.whiteColor,
@@ -94,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
                   decoration: InputDecoration(
-                    hintText: "Enter your registered email...",
+                    hintText: tr('Enter your registered email...'),
                     filled: true,
                     fillColor: ColorsUtil.whiteColor,
                     contentPadding: EdgeInsets.symmetric(
@@ -110,15 +111,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(height: height * 0.03),
                 AuthButton(
                   icon: 'assets/icons/lock.png',
-                  text: 'SEND RESET LINK',
+                  text: tr('SEND RESET LINK'),
                   bgColor: ColorsUtil.secondary,
                   textColor: ColorsUtil.whiteColor,
                   onTap: _handleResetPassword,
                 ),
                 TextButton(
                   onPressed: widget.onBack,
-                  child: const Text(
-                    "Back to Sign In",
+                  child: Text(
+                    tr('Back to Sign In'),
                     style: TextStyle(
                       color: ColorsUtil.secondary,
                       fontSize: 16,

@@ -18,6 +18,9 @@ class UserModel {
   /// A new email waiting for its confirmation link.
   final String? pendingEmail;
 
+  /// The language the account's pushes and emails use.
+  final String? language;
+
   UserModel({
     required this.id,
     required this.name,
@@ -30,6 +33,7 @@ class UserModel {
     this.hasPassword = true,
     this.googleLinked = false,
     this.pendingEmail,
+    this.language,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +52,7 @@ class UserModel {
       hasPassword: json['has_password'] ?? true,
       googleLinked: json['google_linked'] ?? false,
       pendingEmail: text('pending_email'),
+      language: text('language'),
     );
   }
 
@@ -64,6 +69,7 @@ class UserModel {
       'has_password': hasPassword,
       'google_linked': googleLinked,
       'pending_email': pendingEmail,
+      'language': language,
     };
   }
 }

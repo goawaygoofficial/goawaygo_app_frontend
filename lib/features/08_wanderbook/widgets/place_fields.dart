@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -105,20 +107,20 @@ class _PlaceFieldsState extends State<PlaceFields> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Place',
+        Text(
+          tr('Place'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         if (widget.fromPhoto && widget.value != null)
           Text(
-            "From your photo's location. Change it if it isn't right.",
+            tr('From your photo\'s location. Change it if it isn\'t right.'),
             style: muted,
           ),
         const SizedBox(height: 6),
         TextField(
           controller: _search,
           maxLength: 100,
-          decoration: _decoration('Find a place').copyWith(counterText: ''),
+          decoration: _decoration(tr('Find a place')).copyWith(counterText: ''),
           onChanged: _onSearch,
         ),
         if (_found.isNotEmpty)
@@ -154,9 +156,9 @@ class _PlaceFieldsState extends State<PlaceFields> {
           ),
         const SizedBox(height: 8),
         for (final (controller, hint, max) in [
-          (_name, 'Place', 200),
-          (_region, 'State or region', 200),
-          (_country, 'Country', 100),
+          (_name, tr('Place'), 200),
+          (_region, tr('State or region'), 200),
+          (_country, tr('Country'), 100),
         ])
           Padding(
             padding: const EdgeInsets.only(bottom: 6),
@@ -173,8 +175,8 @@ class _PlaceFieldsState extends State<PlaceFields> {
               _fill(null);
               widget.onChanged(null);
             },
-            child: const Text(
-              'Remove place',
+            child: Text(
+              tr('Remove place'),
               style: TextStyle(color: Colors.white70),
             ),
           ),

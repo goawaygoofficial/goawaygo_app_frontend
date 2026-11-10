@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 
 class FeatureItem extends StatelessWidget {
@@ -42,19 +43,19 @@ class FeatureList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         FeatureItem(
           icon: 'assets/images/auth_image_01.png',
-          text: 'Travel the World in Your Terms',
+          text: tr('Travel the World in Your Terms'),
         ),
         FeatureItem(
           icon: 'assets/images/auth_image_02.png',
-          text: 'Personalised Travel Plans',
+          text: tr('Personalised Travel Plans'),
         ),
         FeatureItem(
           icon: 'assets/images/auth_image_03.png',
-          text: 'Your Own WanderBook',
+          text: tr('Your Own WanderBook'),
         ),
       ],
     );

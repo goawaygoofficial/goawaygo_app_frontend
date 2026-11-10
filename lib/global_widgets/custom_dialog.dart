@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,8 @@ class CustomDialogs {
       dismissible: false,
       duration: duration,
       dialog: _StatusDialog(
-        message: message,
+        // English sentences are translated here; already translated text stays as it is.
+        message: tr(message),
         icon: Icons.check_circle_outline_rounded,
         iconColor: ColorsUtil.success,
       ),
@@ -32,7 +34,8 @@ class CustomDialogs {
       dismissible: true,
       duration: duration,
       dialog: _StatusDialog(
-        message: message,
+        // English sentences are translated here; already translated text stays as it is.
+        message: tr(message),
         icon: Icons.error_outline_rounded,
         iconColor: ColorsUtil.error,
       ),
@@ -50,7 +53,8 @@ class CustomDialogs {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => _StatusDialog(
-        message: message,
+        // English sentences are translated here; already translated text stays as it is.
+        message: tr(message),
         icon: Icons.help_outline_rounded,
         iconColor: ColorsUtil.whiteColor,
         actions: [
@@ -61,8 +65,8 @@ class CustomDialogs {
               side: const BorderSide(color: ColorsUtil.whiteColor, width: 2),
               shape: const StadiumBorder(),
             ),
-            child: const Text(
-              'Cancel',
+            child: Text(
+              tr('Cancel'),
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

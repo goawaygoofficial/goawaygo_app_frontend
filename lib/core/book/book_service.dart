@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/book/book_models.dart';
@@ -8,8 +9,8 @@ import 'package:app_frontend/core/discover/discover_models.dart';
 class BookService {
   BookService._();
 
-  /// Prices in Indian rupees for now (India first); every currency later (4.7).
-  static const currency = 'INR';
+  /// The traveller's currency: the account's, their choice, or a guess from the phone's region (4.7).
+  static String get currency => I18n.currency;
 
   static const _unexpected = ApiException(
     'Unexpected response from the server.',

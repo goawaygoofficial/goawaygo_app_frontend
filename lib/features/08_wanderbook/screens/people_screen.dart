@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
@@ -82,7 +83,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             PillButton(
-              label: 'Approve',
+              label: tr('Approve'),
               onPressed: () => _run(
                 WanderbookService.answerFollowRequest(person.publicId, true),
                 person,
@@ -90,7 +91,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
             ),
             const SizedBox(width: 6),
             PillButton(
-              label: 'Decline',
+              label: tr('Decline'),
               quiet: true,
               onPressed: () => _run(
                 WanderbookService.answerFollowRequest(person.publicId, false),
@@ -101,14 +102,14 @@ class _PeopleScreenState extends State<PeopleScreen> {
         );
       case PeopleMode.blocked:
         return PillButton(
-          label: 'Unblock',
+          label: tr('Unblock'),
           quiet: true,
           onPressed: () =>
               _run(WanderbookService.block(person.publicId, false), person),
         );
       case PeopleMode.followers when _myPublicId == widget.publicId:
         return PillButton(
-          label: 'Remove',
+          label: tr('Remove'),
           quiet: true,
           onPressed: () =>
               _run(WanderbookService.removeFollower(person.publicId), person),
@@ -126,16 +127,16 @@ class _PeopleScreenState extends State<PeopleScreen> {
       appBar: AppBar(
         backgroundColor: ColorsUtil.primary,
         foregroundColor: Colors.white,
-        title: Text(widget.mode.title),
+        title: Text(tr(widget.mode.title)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           if (_people.error != null) StatusText(_people.error!),
           if (items == null && _people.error == null)
-            const StatusText('Loading…'),
+            StatusText(tr('Loading…')),
           if (items != null && items.isEmpty)
-            const StatusText('Nobody here yet.'),
+            StatusText(tr('Nobody here yet.')),
           for (final person in items ?? <Person>[])
             PersonTile(person: person, trailing: _actions(person)),
           _people.moreButton(),

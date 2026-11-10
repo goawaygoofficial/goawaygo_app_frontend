@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
@@ -107,14 +108,14 @@ class _PostScreenState extends State<PostScreen> {
       appBar: AppBar(
         backgroundColor: ColorsUtil.primary,
         foregroundColor: Colors.white,
-        title: Text(_editing ? 'Edit post' : 'Post'),
+        title: Text(_editing ? tr('Edit post') : tr('Post')),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             if (_error != null) StatusText(_error!),
-            if (post == null && _error == null) const StatusText('Loading…'),
+            if (post == null && _error == null) StatusText(tr('Loading…')),
             if (post != null && _editing && post.isYours)
               _EditPost(
                 post: post,
@@ -147,15 +148,17 @@ class _PostScreenState extends State<PostScreen> {
                     }
                   },
                   child: Text(
-                    _likers == null ? 'See who liked this' : 'Hide likes',
+                    _likers == null
+                        ? tr('See who liked this')
+                        : tr('Hide likes'),
                     style: const TextStyle(color: Colors.white70),
                   ),
                 ),
               if (_likers != null)
                 for (final person in _likers!) PersonTile(person: person),
               const Divider(color: Colors.white24),
-              const Text(
-                'Comments',
+              Text(
+                tr('Comments'),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -163,7 +166,7 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               ),
               if (_comments.items?.isEmpty ?? false)
-                const StatusText('No comments yet.'),
+                StatusText(tr('No comments yet.')),
               for (final comment in _comments.items ?? <Comment>[])
                 _CommentTile(
                   comment: comment,
@@ -173,7 +176,7 @@ class _PostScreenState extends State<PostScreen> {
                           context,
                           targetType: 'comment',
                           target: '${comment.id}',
-                          label: 'this comment',
+                          label: tr('this comment'),
                         )
                       : null,
                 ),
@@ -187,7 +190,7 @@ class _PostScreenState extends State<PostScreen> {
                         controller: _newComment,
                         maxLength: 500,
                         decoration: InputDecoration(
-                          hintText: 'Add a comment…',
+                          hintText: tr('Add a comment…'),
                           counterText: '',
                           filled: true,
                           fillColor: Colors.white,
@@ -199,14 +202,14 @@ class _PostScreenState extends State<PostScreen> {
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Post comment',
+                      tooltip: tr('Post comment'),
                       onPressed: _sending ? null : _addComment,
                       icon: const Icon(Icons.send, color: Colors.white),
                     ),
                   ],
                 )
               else
-                const StatusText('Sign in from the Profile tab to comment.'),
+                StatusText(tr('Sign in from the Profile tab to comment.')),
             ],
           ],
         ),
@@ -268,12 +271,12 @@ class _CommentTile extends StatelessWidget {
                     if (comment.canDelete)
                       TextButton(
                         onPressed: onDelete,
-                        child: Text('Delete', style: muted),
+                        child: Text(tr('Delete'), style: muted),
                       ),
                     if (onReport != null)
                       TextButton(
                         onPressed: onReport,
-                        child: Text('Report', style: muted),
+                        child: Text(tr('Report'), style: muted),
                       ),
                   ],
                 ),
@@ -334,8 +337,8 @@ class _EditPostState extends State<_EditPost> {
           maxLength: 2200,
           maxLines: 6,
           minLines: 3,
-          decoration: const InputDecoration(
-            labelText: 'Caption',
+          decoration: InputDecoration(
+            labelText: tr('Caption'),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(),
@@ -347,13 +350,13 @@ class _EditPostState extends State<_EditPost> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PillButton(
-              label: 'Cancel',
+              label: tr('Cancel'),
               quiet: true,
               onPressed: () => widget.onDone(null),
             ),
             const SizedBox(width: 8),
             PillButton(
-              label: _saving ? 'Saving…' : 'Save',
+              label: _saving ? tr('Saving…') : tr('Save'),
               onPressed: _saving ? null : _save,
             ),
           ],

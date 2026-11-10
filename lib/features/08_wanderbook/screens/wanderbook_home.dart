@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -122,7 +124,7 @@ class _WanderbookHomeState extends State<WanderbookHome> {
                 maxLength: 50,
                 onChanged: _onSearch,
                 decoration: InputDecoration(
-                  hintText: 'Search travellers',
+                  hintText: tr('Search travellers'),
                   counterText: '',
                   prefixIcon: const Icon(
                     Icons.search,
@@ -138,7 +140,7 @@ class _WanderbookHomeState extends State<WanderbookHome> {
               ),
               if (_people != null)
                 _people!.isEmpty
-                    ? const StatusText('No travellers found.')
+                    ? StatusText(tr('No travellers found.'))
                     : Column(
                         children: [
                           for (final person in _people!)
@@ -151,18 +153,18 @@ class _WanderbookHomeState extends State<WanderbookHome> {
                   profile: me,
                   actions: [
                     PillButton(
-                      label: 'New post',
+                      label: tr('New post'),
                       icon: Icons.add_a_photo,
                       onPressed: () => _push(const NewPostScreen()),
                     ),
                     PillButton(
-                      label: 'Edit profile',
+                      label: tr('Edit profile'),
                       quiet: true,
                       onPressed: () => _push(const EditProfileScreen()),
                     ),
                     if ((me.followRequests ?? 0) > 0)
                       PillButton(
-                        label: 'Requests (${me.followRequests})',
+                        label: tr('Requests ({0})', [me.followRequests]),
                         quiet: true,
                         onPressed: () => _push(
                           const PeopleScreen(mode: PeopleMode.requests),
@@ -173,14 +175,14 @@ class _WanderbookHomeState extends State<WanderbookHome> {
               if (user == null) const _SignInInvite(),
               if (user != null)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   child: SegmentedButton<bool>(
-                    segments: const [
+                    segments: [
                       ButtonSegment(
                         value: false,
-                        label: Text('My Wanderposts'),
+                        label: Text(tr('My Wanderposts')),
                       ),
-                      ButtonSegment(value: true, label: Text('Feed')),
+                      ButtonSegment(value: true, label: Text(tr('Feed'))),
                     ],
                     selected: {showFeed},
                     showSelectedIcon: false,
@@ -204,9 +206,9 @@ class _WanderbookHomeState extends State<WanderbookHome> {
   List<Widget> _feedItems() {
     final items = _feed.items;
     if (_feed.error != null) return [StatusText(_feed.error!)];
-    if (items == null) return [const StatusText('Loading…')];
+    if (items == null) return [StatusText(tr('Loading…'))];
     if (items.isEmpty) {
-      return [const StatusText('No posts yet. Be the first to share a trip!')];
+      return [StatusText(tr('No posts yet. Be the first to share a trip!'))];
     }
     return [
       for (final post in items)
@@ -229,9 +231,9 @@ class _WanderbookHomeState extends State<WanderbookHome> {
   List<Widget> _mineItems() {
     final items = _mine.items;
     if (_mine.error != null) return [StatusText(_mine.error!)];
-    if (items == null) return [const StatusText('Loading…')];
+    if (items == null) return [StatusText(tr('Loading…'))];
     return [
-      PostGrid(posts: items, empty: 'Share your first trip: tap New post.'),
+      PostGrid(posts: items, empty: tr('Share your first trip: tap New post.')),
       _mine.moreButton(),
     ];
   }
@@ -246,8 +248,8 @@ class _SignInInvite extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          const Text(
-            'Your travel scrapbook',
+          Text(
+            tr('Your travel scrapbook'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -256,8 +258,11 @@ class _SignInInvite extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Keep your trip photos as they are, tag the places, and follow other travellers. Sign in from the '
-            'Profile tab to post.',
+            tr(
+              tr(
+                'Keep your trip photos as they are, tag the places, and follow other travellers. Sign in from the Profile tab to post.',
+              ),
+            ),
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
           ),

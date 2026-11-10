@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,7 +35,9 @@ Future<void> openLegalPage(BuildContext context, LegalPage page) async {
   if (!opened && context.mounted) {
     await CustomDialogs.showErrorDialog(
       context: context,
-      message: "Couldn't open the ${page.title}. Please visit goawaygo.com.",
+      message: tr('Couldn\'t open the {0}. Please visit goawaygo.com.', [
+        page.title,
+      ]),
     );
   }
 }

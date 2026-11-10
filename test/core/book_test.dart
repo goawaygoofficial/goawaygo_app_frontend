@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/book/book_models.dart';
@@ -38,7 +39,12 @@ const mumbai = Airport(
 void main() {
   late FakeBackend backend;
 
-  setUp(() => backend = FakeBackend());
+  setUp(() {
+    backend = FakeBackend();
+    // The traveller's currency (an account's, a choice or the phone's region): rupees here.
+    I18n.accountCurrency = 'INR';
+  });
+  tearDown(I18n.reset);
 
   group('Book models', () {
     test('airports keep cities and airports and drop odd entries', () {
@@ -86,15 +92,17 @@ void main() {
   group('Book format', () {
     test('prices, times, durations and dates read like the website', () {
       expect(BookFormat.price(7517, 'INR'), '₹7,517');
-      expect(BookFormat.time('2026-12-07T07:10:00+05:30'), '7:10 AM');
-      expect(BookFormat.time('2026-12-07T19:05:00+05:30'), '7:05 PM');
+      // Intl writes a narrow no-break space before AM/PM.
+      expect(BookFormat.time('2026-12-07T07:10:00+05:30'), '7:10 AM');
+      expect(BookFormat.time('2026-12-07T19:05:00+05:30'), '7:05 PM');
       expect(BookFormat.duration(125), '2h 05m');
       expect(BookFormat.stops(0), 'Nonstop');
       expect(BookFormat.stops(2), '2 stops');
-      expect(BookFormat.dateRange('2026-12-07', '2026-12-09'), '7–9 Dec');
+      // Tests run in US English: dates as Americans write them.
+      expect(BookFormat.dateRange('2026-12-07', '2026-12-09'), 'Dec 7 – Dec 9');
       expect(
         BookFormat.dateRange('2026-04-28', '2026-05-05'),
-        '28 Apr – 5 May',
+        'Apr 28 – May 5',
       );
       expect(BookFormat.plural(1, 'passenger'), '1 passenger');
       expect(BookFormat.isoDate(DateTime(2026, 3, 4)), '2026-03-04');

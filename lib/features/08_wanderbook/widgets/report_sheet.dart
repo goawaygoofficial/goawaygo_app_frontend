@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
@@ -84,8 +85,8 @@ class _ReportSheetState extends State<_ReportSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Thanks for telling us',
+                Text(
+                  tr('Thanks for telling us'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -93,8 +94,12 @@ class _ReportSheetState extends State<_ReportSheet> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  "Our team will review it. You can also block the person so you don't see them.",
+                Text(
+                  tr(
+                    tr(
+                      'Our team will review it. You can also block the person so you don\'t see them.',
+                    ),
+                  ),
                   style: white,
                 ),
                 const SizedBox(height: 16),
@@ -102,7 +107,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Done'),
+                    child: Text(tr('Done')),
                   ),
                 ),
               ],
@@ -113,7 +118,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Report ${widget.label}',
+                    tr('Report {0}', [widget.label]),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -132,7 +137,7 @@ class _ReportSheetState extends State<_ReportSheet> {
                             dense: true,
                             contentPadding: EdgeInsets.zero,
                             activeColor: ColorsUtil.secondary,
-                            title: Text(entry.value, style: white),
+                            title: Text(tr(entry.value), style: white),
                           ),
                       ],
                     ),
@@ -141,8 +146,8 @@ class _ReportSheetState extends State<_ReportSheet> {
                     controller: _details,
                     maxLength: 500,
                     maxLines: 3,
-                    decoration: const InputDecoration(
-                      hintText: 'Details (optional)',
+                    decoration: InputDecoration(
+                      hintText: tr('Details (optional)'),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
@@ -160,8 +165,8 @@ class _ReportSheetState extends State<_ReportSheet> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'Cancel',
+                        child: Text(
+                          tr('Cancel'),
                           style: TextStyle(color: Colors.white70),
                         ),
                       ),
@@ -172,7 +177,9 @@ class _ReportSheetState extends State<_ReportSheet> {
                           backgroundColor: ColorsUtil.secondary,
                           foregroundColor: Colors.white,
                         ),
-                        child: Text(_sending ? 'Sending…' : 'Send report'),
+                        child: Text(
+                          _sending ? tr('Sending…') : tr('Send report'),
+                        ),
                       ),
                     ],
                   ),

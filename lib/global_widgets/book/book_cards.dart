@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/book/book_models.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -118,7 +119,10 @@ class FareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stops = roundTrip && fare.returnStops != null
-        ? '${BookFormat.stops(fare.stops)} · back ${BookFormat.stops(fare.returnStops!).toLowerCase()}'
+        ? tr('{0} · back {1}', [
+            BookFormat.stops(fare.stops),
+            BookFormat.stops(fare.returnStops!).toLowerCase(),
+          ])
         : BookFormat.stops(fare.stops);
     final duration = !roundTrip && fare.durationMinutes != null
         ? '${BookFormat.duration(fare.durationMinutes!)} · '
@@ -222,7 +226,7 @@ class PartnerCardTile extends StatelessWidget {
           const SizedBox(height: 4),
           Text(kind, style: _small),
           const SizedBox(height: 2),
-          Text('Prices on ${partner.name}', style: _small),
+          Text(tr('Prices on {0}', [partner.name]), style: _small),
         ],
         right: [
           Text(title, style: _title),

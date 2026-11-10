@@ -191,7 +191,7 @@ void main() {
     expect(user.user, isNull);
     expect(
       find.text(
-        'Your account will be deleted on 9 December 2026. Sign in before then to keep it.',
+        'Your account will be deleted on December 9, 2026. Sign in before then to keep it.',
       ),
       findsOneWidget,
     );

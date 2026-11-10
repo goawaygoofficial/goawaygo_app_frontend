@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
@@ -55,10 +56,10 @@ class _TripIdeaCardState extends State<TripIdeaCard> {
   }
 
   String get _saveLabel {
-    if (widget.saved) return 'Saved';
-    if (_saving) return 'Saving…';
-    if (_failed) return 'Try again';
-    return widget.signedIn ? 'Save to My Trips' : 'Sign in to save';
+    if (widget.saved) return tr('Saved');
+    if (_saving) return tr('Saving…');
+    if (_failed) return tr('Try again');
+    return widget.signedIn ? tr('Save to My Trips') : tr('Sign in to save');
   }
 
   @override
@@ -147,7 +148,7 @@ class _TripIdeaCardState extends State<TripIdeaCard> {
                         runSpacing: 4,
                         children: [
                           if (idea.category.isNotEmpty) _Tag(idea.category),
-                          if (idea.hiddenGem) const _Tag('Hidden gem'),
+                          if (idea.hiddenGem) _Tag(tr('Hidden gem')),
                         ],
                       ),
                     ],

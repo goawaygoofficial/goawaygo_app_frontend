@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,7 @@ class ResultsLayout extends StatelessWidget {
                     Image.asset('assets/images/logo.png', height: height * 0.1),
                     const Spacer(),
                     IconButton(
-                      tooltip: 'Back',
+                      tooltip: tr('Back'),
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: ColorsUtil.whiteColor,
@@ -138,7 +139,7 @@ class ResultsLayout extends StatelessWidget {
                   ),
                 const SizedBox(height: 8),
                 Text(
-                  disclosure,
+                  tr(disclosure),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: muted, fontSize: 12),
                 ),
@@ -253,7 +254,7 @@ class ResultsMessage extends StatelessWidget {
           ],
           if (onRetry != null) ...[
             const SizedBox(height: 12),
-            FloatingPill(label: 'Try again', onPressed: onRetry!),
+            FloatingPill(label: tr('Try again'), onPressed: onRetry!),
           ],
           if (action != null) ...[const SizedBox(height: 12), action!],
         ],

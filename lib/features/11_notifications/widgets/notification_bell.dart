@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/notifications/notification_service.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,9 @@ class NotificationBell extends StatelessWidget {
     return ValueListenableBuilder<int>(
       valueListenable: NotificationService.unread,
       builder: (context, unread, _) => IconButton(
-        tooltip: unread > 0 ? 'Notifications, $unread unread' : 'Notifications',
+        tooltip: unread > 0
+            ? tr('Notifications, {0} unread', [unread])
+            : tr('Notifications'),
         onPressed: onPressed,
         icon: Badge(
           isLabelVisible: unread > 0,

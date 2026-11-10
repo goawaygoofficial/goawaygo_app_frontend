@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/book/book_models.dart';
@@ -32,38 +33,42 @@ class _RentalResultsScreenState extends State<RentalResultsScreen> {
         final partners = snapshot.data;
         return ResultsLayout(
           icon: Icons.directions_car,
-          title: 'Car Rentals',
+          title: tr('Car Rentals'),
           heading: search.place,
           dates: dates,
-          note:
-              "Cars and prices open on the partner's site; compare them there",
+          note: tr(
+            'Cars and prices open on the partner\'s site; compare them there',
+          ),
           children: [
             if (snapshot.connectionState != ConnectionState.done)
-              const ResultsMessage(title: 'Opening rental partners…')
+              ResultsMessage(title: tr('Opening rental partners…'))
             else if (snapshot.hasError || partners == null)
               ResultsMessage(
-                title: "Rental partners didn't open",
+                title: tr('Rental partners didn\'t open'),
                 text:
                     snapshot.error?.toString() ??
-                    'Could not open car rental partners.',
+                    tr('Could not open car rental partners.'),
                 onRetry: () =>
                     setState(() => _partners = BookService.carPartners(search)),
               )
             else if (partners.isEmpty)
-              const ResultsMessage(
-                title: 'No rental partners here yet',
-                text: 'Please try again later.',
+              ResultsMessage(
+                title: tr('No rental partners here yet'),
+                text: tr('Please try again later.'),
               )
             else
               for (final partner in partners)
                 PartnerCardTile(
                   partner: partner,
-                  kind: 'Car rental comparison',
-                  title: 'Cars in ${search.place}',
+                  kind: tr('Car rental comparison'),
+                  title: tr('Cars in {0}', [search.place]),
                   detail:
                       partner.id == 'economybookings' && search.airport != null
-                      ? 'Opens on ${search.airport} airport; add your dates ($dates)'
-                      : 'Enter ${search.place} and $dates there',
+                      ? tr('Opens on {0} airport; add your dates ({1})', [
+                          search.airport,
+                          dates,
+                        ])
+                      : tr('Enter {0} and {1} there', [search.place, dates]),
                   onOpen: () {
                     Analytics.track(
                       PartnerOpened(TravelCategory.rentals, partner.id),

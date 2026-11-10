@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/analytics/analytics.dart';
@@ -220,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         CategoryButton(
-                          title: 'Flights',
+                          title: tr('Flights'),
                           imagePath: 'assets/images/flights.png',
                           onTap: () {
                             Analytics.track(
@@ -233,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         CategoryButton(
-                          title: 'Stays',
+                          title: tr('Stays'),
                           imagePath: 'assets/images/stays.png',
                           onTap: () {
                             Analytics.track(
@@ -246,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         CategoryButton(
-                          title: 'Rentals',
+                          title: tr('Rentals'),
                           imagePath: 'assets/images/rentals.png',
                           onTap: () {
                             Analytics.track(
@@ -294,8 +296,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             vertical: height * 0.015,
                           ),
                         ),
-                        child: const Text(
-                          'Search',
+                        child: Text(
+                          tr('Search'),
                           style: TextStyle(
                             color: ColorsUtil.whiteColor,
                             fontSize: 18,
@@ -317,8 +319,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: height * 0.025),
 
                     // Recommendations
-                    const Text(
-                      'IDEAS FOR YOUR NEXT TRIP ...',
+                    Text(
+                      tr('IDEAS FOR YOUR NEXT TRIP ...'),
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontWeight: FontWeight.bold,
@@ -331,7 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 24),
                         child: Text(
-                          ideas == null ? 'Finding ideas…' : 'New ideas are on their way. Check back in a minute.',
+                          ideas == null
+                              ? tr('Finding ideas…')
+                              : tr(
+                                  'New ideas are on their way. Check back in a minute.',
+                                ),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: ColorsUtil.whiteColor.withValues(

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/account/account_models.dart';
 import 'package:app_frontend/core/account/account_service.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -60,8 +61,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
     widget.onClose();
     await CustomDialogs.showSuccessDialog(
       context: context,
-      message:
-          'Your account will be deleted on $deleteOn. Sign in before then to keep it.',
+      message: tr(
+        tr(
+          'Your account will be deleted on {0}. Sign in before then to keep it.',
+        ),
+        [deleteOn],
+      ),
     );
   }
 
@@ -87,8 +92,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       if (mounted) {
         setState(
           () => _message = remove
-              ? 'Photo removed.'
-              : 'Photo changed. Wanderbook shows it too.',
+              ? tr('Photo removed.')
+              : tr('Photo changed. Wanderbook shows it too.'),
         );
       }
     } on ApiException catch (error) {
@@ -128,9 +133,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           height: height * 0.06,
                         ),
                         const SizedBox(width: 6),
-                        const Flexible(
+                        Flexible(
                           child: Text(
-                            'User Profile',
+                            tr('User Profile'),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.white,
@@ -167,42 +172,46 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       ),
                     ),
                   ProfileField(
-                    label: 'Display Name',
-                    value: user?.name ?? _notSet,
+                    label: tr('Display Name'),
+                    value: user?.name ?? tr(_notSet),
                     onEdit: user == null
                         ? null
                         : () => _edit(AccountSheets.name),
                   ),
                   ProfileField(
-                    label: 'Email',
-                    value: user?.email ?? _notSet,
+                    label: tr('Email'),
+                    value: user?.email ?? tr(_notSet),
                     note: user?.pendingEmail == null
                         ? null
-                        : 'Waiting for you to open the link sent to ${user!.pendingEmail}.',
-                    editLabel: 'Change',
+                        : tr('Waiting for you to open the link sent to {0}.', [
+                            user!.pendingEmail,
+                          ]),
+                    editLabel: tr('Change'),
                     onEdit: user == null
                         ? null
                         : () => _edit(AccountSheets.email),
                   ),
                   ProfileField(
-                    label: 'Password',
+                    label: tr('Password'),
                     value: user?.hasPassword == false
-                        ? 'Google sign-in'
+                        ? tr('Google sign-in')
                         : '**************',
                     isObscured: user?.hasPassword != false,
-                    editLabel: user?.hasPassword == false ? 'Set' : 'Change',
+                    editLabel: user?.hasPassword == false
+                        ? tr('Set')
+                        : tr('Change'),
                     onEdit: user == null
                         ? null
                         : () => _edit(AccountSheets.password),
                   ),
                   ProfileField(
-                    label: 'Phone Number',
-                    value: user?.phone ?? _notSet,
+                    label: tr('Phone Number'),
+                    value: user?.phone ?? tr(_notSet),
                   ),
                   ProfileField(
-                    label: 'Country / Region',
+                    label: tr('Country / Region'),
                     value: user?.country == null
-                        ? _notSet
+                        ? tr(_notSet)
                         : (_regions?.countryName(user!.country) ??
                               user!.country!),
                     onEdit: user == null
@@ -210,8 +219,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         : () => _edit(AccountSheets.country),
                   ),
                   ProfileField(
-                    label: 'Currency',
-                    value: user?.currency ?? _notSet,
+                    label: tr('Currency'),
+                    value: user?.currency ?? tr(_notSet),
                     onEdit: user == null
                         ? null
                         : () => _edit(AccountSheets.currency),
@@ -226,8 +235,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         ),
                       ),
                       icon: const Icon(Icons.notifications_outlined),
-                      label: const Text(
-                        'Notification settings',
+                      label: Text(
+                        tr('Notification settings'),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -256,8 +265,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
-                      child: const Text(
-                        'Sign Out',
+                      child: Text(
+                        tr('Sign Out'),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -268,8 +277,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   Center(
                     child: TextButton(
                       onPressed: widget.onClose,
-                      child: const Text(
-                        'Back',
+                      child: Text(
+                        tr('Back'),
                         style: TextStyle(
                           color: ColorsUtil.whiteColor,
                           fontSize: 16,
@@ -283,8 +292,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     Center(
                       child: TextButton(
                         onPressed: _delete,
-                        child: const Text(
-                          'Delete account',
+                        child: Text(
+                          tr('Delete account'),
                           style: TextStyle(
                             color: Colors.white70,
                             decoration: TextDecoration.underline,
@@ -321,13 +330,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   side: const BorderSide(color: Colors.white70),
                   shape: const StadiumBorder(),
                 ),
-                child: Text(_photoBusy ? 'Uploading…' : 'Change photo'),
+                child: Text(_photoBusy ? tr('Uploading…') : tr('Change photo')),
               ),
               if (user.profilePicture != null && !_photoBusy)
                 TextButton(
                   onPressed: () => _changePhoto(remove: true),
-                  child: const Text(
-                    'Remove',
+                  child: Text(
+                    tr('Remove'),
                     style: TextStyle(color: Colors.white70),
                   ),
                 ),

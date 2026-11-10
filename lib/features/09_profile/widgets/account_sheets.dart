@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/account/account_models.dart';
 import 'package:app_frontend/core/account/account_service.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -7,6 +8,7 @@ import 'package:app_frontend/global_widgets/custom_dialog.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:app_frontend/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// The User Profile's edit forms (Me, 4.6), each in a bottom sheet. Each resolves with a message to show on the
@@ -203,8 +205,8 @@ class _ProofField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!user.hasPassword) {
-      return const Text(
-        'To confirm it’s you, Google asks you to pick your account.',
+      return Text(
+        tr('To confirm it’s you, Google asks you to pick your account.'),
         style: TextStyle(color: Colors.white70),
       );
     }
@@ -212,7 +214,7 @@ class _ProofField extends StatelessWidget {
       controller: controller,
       obscureText: true,
       autofillHints: const [AutofillHints.password],
-      decoration: _input('Current password'),
+      decoration: _input(tr('Current password')),
     );
   }
 }
@@ -221,7 +223,7 @@ class _ProofField extends StatelessWidget {
 Future<Proof?> _proof(UserModel user, TextEditingController password) async {
   if (user.hasPassword) {
     if (password.text.isEmpty) {
-      throw const _Invalid('Enter your current password.');
+      throw _Invalid(tr('Enter your current password.'));
     }
     return Proof.password(password.text);
   }
@@ -249,13 +251,13 @@ class _NameSheetState extends State<_NameSheet> with _Submitting {
   @override
   Widget build(BuildContext context) {
     return _SheetBody(
-      title: 'Display name',
+      title: tr('Display name'),
       error: error,
       busy: busy,
-      button: 'Save',
+      button: tr('Save'),
       onSubmit: () => submit(() async {
         final name = _name.text.trim();
-        if (name.isEmpty) throw const _Invalid('Enter your name.');
+        if (name.isEmpty) throw _Invalid(tr('Enter your name.'));
         final users = context.read<UserProvider>();
         final navigator = Navigator.of(context);
         final saved = await AccountService.updateDetails(
@@ -264,7 +266,7 @@ class _NameSheetState extends State<_NameSheet> with _Submitting {
           currency: widget.user.currency,
         );
         users.signIn(saved);
-        navigator.pop('Name saved. Wanderbook shows it too.');
+        navigator.pop(tr('Name saved. Wanderbook shows it too.'));
       }),
       children: [
         TextField(
@@ -272,7 +274,7 @@ class _NameSheetState extends State<_NameSheet> with _Submitting {
           maxLength: 100,
           textCapitalization: TextCapitalization.words,
           autofillHints: const [AutofillHints.name],
-          decoration: _input('Your name').copyWith(counterText: ''),
+          decoration: _input(tr('Your name')).copyWith(counterText: ''),
         ),
       ],
     );
@@ -301,14 +303,14 @@ class _EmailSheetState extends State<_EmailSheet> with _Submitting {
   @override
   Widget build(BuildContext context) {
     return _SheetBody(
-      title: 'Change email',
+      title: tr('Change email'),
       error: error,
       busy: busy,
-      button: 'Send confirmation link',
+      button: tr('Send confirmation link'),
       onSubmit: () => submit(() async {
         final email = _email.text.trim();
         if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
-          throw const _Invalid('Enter a valid email address.');
+          throw _Invalid(tr('Enter a valid email address.'));
         }
         final users = context.read<UserProvider>();
         final navigator = Navigator.of(context);
@@ -316,7 +318,9 @@ class _EmailSheetState extends State<_EmailSheet> with _Submitting {
         if (proof == null) return;
         users.signIn(await AccountService.changeEmail(proof, email));
         navigator.pop(
-          'We sent a link to $email. Your email changes when you open it.',
+          tr('We sent a link to {0}. Your email changes when you open it.', [
+            email,
+          ]),
         );
       }),
       children: [
@@ -324,7 +328,7 @@ class _EmailSheetState extends State<_EmailSheet> with _Submitting {
           controller: _email,
           keyboardType: TextInputType.emailAddress,
           autofillHints: const [AutofillHints.email],
-          decoration: _input('New email'),
+          decoration: _input(tr('New email')),
         ),
         _ProofField(user: widget.user, controller: _password),
       ],
@@ -357,17 +361,17 @@ class _PasswordSheetState extends State<_PasswordSheet> with _Submitting {
   Widget build(BuildContext context) {
     final hasPassword = widget.user.hasPassword;
     return _SheetBody(
-      title: hasPassword ? 'Change password' : 'Set a password',
+      title: hasPassword ? tr('Change password') : tr('Set a password'),
       error: error,
       busy: busy,
-      button: hasPassword ? 'Change password' : 'Set password',
+      button: hasPassword ? tr('Change password') : tr('Set password'),
       onSubmit: () => submit(() async {
         final password = _password.text;
         if (password.length < 8 || password.length > 72) {
-          throw const _Invalid('The new password must be 8 to 72 characters.');
+          throw _Invalid(tr('The new password must be 8 to 72 characters.'));
         }
         if (password != _repeat.text) {
-          throw const _Invalid('The two new passwords don’t match.');
+          throw _Invalid(tr('The two new passwords don’t match.'));
         }
         final users = context.read<UserProvider>();
         final navigator = Navigator.of(context);
@@ -376,8 +380,8 @@ class _PasswordSheetState extends State<_PasswordSheet> with _Submitting {
         users.signIn(await AccountService.changePassword(proof, password));
         navigator.pop(
           hasPassword
-              ? 'Password changed. Your other devices were signed out.'
-              : 'Password set. You can now also sign in with your email.',
+              ? tr('Password changed. Your other devices were signed out.')
+              : tr('Password set. You can now also sign in with your email.'),
         );
       }),
       children: [
@@ -386,13 +390,13 @@ class _PasswordSheetState extends State<_PasswordSheet> with _Submitting {
           controller: _password,
           obscureText: true,
           autofillHints: const [AutofillHints.newPassword],
-          decoration: _input('New password (8+ characters)'),
+          decoration: _input(tr('New password (8+ characters)')),
         ),
         TextField(
           controller: _repeat,
           obscureText: true,
           autofillHints: const [AutofillHints.newPassword],
-          decoration: _input('Repeat the new password'),
+          decoration: _input(tr('Repeat the new password')),
         ),
       ],
     );
@@ -425,7 +429,7 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
           setState(
             () => error = e is ApiException
                 ? e.message
-                : 'Could not load the list.',
+                : tr('Could not load the list.'),
           );
         }
       },
@@ -456,7 +460,7 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
     }
     users.signIn(saved);
     if (!mounted) return;
-    final what = widget.currency ? 'Currency' : 'Country';
+    final what = widget.currency ? tr('Currency') : tr('Country');
     Navigator.of(context).pop(code == null ? '$what cleared.' : '$what saved.');
   });
 
@@ -468,7 +472,7 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
         : widget.user.country;
     final query = _query.toLowerCase();
     final options = regions == null
-        ? const <(String, String)>[]
+        ? <(String, String)>[]
         : widget.currency
         ? [
             for (final c in regions.currencies)
@@ -499,43 +503,45 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
-              widget.currency ? 'Currency' : 'Country / Region',
-              style: const TextStyle(
+              widget.currency ? tr('Currency') : tr('Country / Region'),
+              style: TextStyle(
                 color: ColorsUtil.whiteColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             TextField(
               onChanged: (value) => setState(() => _query = value.trim()),
               decoration: _input(
-                widget.currency ? 'Search currencies' : 'Search countries',
-              ).copyWith(prefixIcon: const Icon(Icons.search)),
+                widget.currency
+                    ? tr('Search currencies')
+                    : tr('Search countries'),
+              ).copyWith(prefixIcon: Icon(Icons.search)),
             ),
             if (error != null)
               Padding(
-                padding: const EdgeInsets.only(top: 12),
+                padding: EdgeInsets.only(top: 12),
                 child: Text(
                   '⚠ $error',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: ColorsUtil.whiteColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Expanded(
               child: regions == null
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(color: Colors.white),
                     )
                   : ListView(
                       children: [
                         if (query.isEmpty)
-                          _option(null, 'Not set', selected == null),
+                          _option(null, tr('Not set'), selected == null),
                         for (final (code, label) in options)
                           _option(code, label, code == selected),
                       ],
@@ -559,7 +565,7 @@ class _RegionSheetState extends State<_RegionSheet> with _Submitting {
         ),
       ),
       trailing: isSelected
-          ? const Icon(Icons.check, color: ColorsUtil.secondaryLight)
+          ? Icon(Icons.check, color: ColorsUtil.secondaryLight)
           : null,
     );
   }
@@ -582,41 +588,44 @@ class _DeleteSheetState extends State<_DeleteSheet> with _Submitting {
     super.dispose();
   }
 
+  /// "9 December 2026", as the traveller's locale writes dates.
   static String _day(DateTime? date) {
-    if (date == null) return 'in 30 days';
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June', //
-      'July', 'August', 'September', 'October', 'November', 'December',
-    ];
-    final local = date.toLocal();
-    return '${local.day} ${months[local.month - 1]} ${local.year}';
+    if (date == null) return tr('in 30 days');
+    return DateFormat.yMMMMd(I18n.locale).format(date.toLocal());
   }
 
   @override
   Widget build(BuildContext context) {
     return _SheetBody(
-      title: 'Delete account',
+      title: tr('Delete account'),
       error: error,
       busy: busy,
       danger: true,
-      button: 'Delete my account',
+      button: tr('Delete my account'),
       onSubmit: () => submit(() async {
         final navigator = Navigator.of(context);
         final proof = await _proof(widget.user, _password);
         if (proof == null || !mounted) return;
         final sure = await CustomDialogs.showConfirmDialog(
           context: this.context,
-          message: 'Delete your GoAwayGo account? You can still keep it by signing in within 30 days.',
-          confirmLabel: 'Delete',
+          message: tr(
+            tr(
+              'Delete your GoAwayGo account? You can still keep it by signing in within 30 days.',
+            ),
+          ),
+          confirmLabel: tr('Delete'),
         );
         if (!sure) return;
         final deleteOn = await AccountService.deleteAccount(proof);
         navigator.pop(_day(deleteOn));
       }),
       children: [
-        const Text(
-          'Your account is hidden from others and signed out at once. Sign in within 30 days to keep it; '
-          'after that, your posts, photos, trip plans and everything else are deleted for good.',
+        Text(
+          tr(
+            tr(
+              'Your account is hidden from others and signed out at once. Sign in within 30 days to keep it; after that, your posts, photos, trip plans and everything else are deleted for good.',
+            ),
+          ),
           style: TextStyle(color: Colors.white70, height: 1.4),
         ),
         _ProofField(user: widget.user, controller: _password),

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
@@ -48,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Please fill all fields.',
+        message: tr('Please fill all fields.'),
       );
       return;
     }
@@ -56,17 +57,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!isStrongPassword(password)) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Password must be 8 to 72 characters long and include uppercase, lowercase, number, and special character.',
+        message: tr(
+          tr(
+            'Password must be 8 to 72 characters long and include uppercase, lowercase, number, and special character.',
+          ),
+        ),
       );
       return;
     }
 
     try {
       await AuthService.signup(name, email, password);
-      Analytics.track(const SignUpCompleted());
+      Analytics.track(SignUpCompleted());
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message: 'Account created! You can now sign in.',
+        message: tr('Account created! You can now sign in.'),
         onDismiss: widget.onBack,
       );
     } on ApiException catch (e) {
@@ -99,18 +104,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 /// --- Feature Items ---
                 Column(
-                  children: const [
+                  children: [
                     FeatureItem(
                       icon: 'assets/images/auth_image_01.png',
-                      text: 'Travel the World in Your Terms',
+                      text: tr('Travel the World in Your Terms'),
                     ),
                     FeatureItem(
                       icon: 'assets/images/auth_image_02.png',
-                      text: 'Personalised Travel Plans',
+                      text: tr('Personalised Travel Plans'),
                     ),
                     FeatureItem(
                       icon: 'assets/images/auth_image_03.png',
-                      text: 'Your Own WanderBook',
+                      text: tr('Your Own WanderBook'),
                     ),
                   ],
                 ),
@@ -119,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    hintText: "Enter your Name...",
+                    hintText: tr('Enter your Name...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -136,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: "Enter your Email address...",
+                    hintText: tr('Enter your Email address...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -154,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: "Password...",
+                    hintText: tr('Password...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -174,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 AuthButton(
                   icon: 'assets/icons/email.png',
-                  text: 'REGISTER',
+                  text: tr('REGISTER'),
                   bgColor: ColorsUtil.secondary,
                   textColor: ColorsUtil.whiteColor,
                   onTap: _handleRegister,
@@ -183,8 +188,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 /// --- Back to Sign In ---
                 TextButton(
                   onPressed: widget.onBack,
-                  child: const Text(
-                    "Already have an account? Sign In",
+                  child: Text(
+                    tr('Already have an account? Sign In'),
                     style: TextStyle(
                       color: ColorsUtil.secondary,
                       fontSize: 16,

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/account/account_models.dart';
 import 'package:app_frontend/core/account/account_service.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -47,8 +48,8 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
   Future<void> _clear() async {
     final sure = await CustomDialogs.showConfirmDialog(
       context: context,
-      message: 'Clear everything you viewed?',
-      confirmLabel: 'Clear',
+      message: tr('Clear everything you viewed?'),
+      confirmLabel: tr('Clear'),
     );
     if (!sure) return;
     try {
@@ -105,7 +106,7 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                   Image.asset('assets/images/logo.png', height: height * 0.1),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Back',
+                    tooltip: tr('Back'),
                     icon: const Icon(
                       Icons.arrow_back_ios_rounded,
                       color: ColorsUtil.whiteColor,
@@ -123,9 +124,9 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                     height: 28,
                   ),
                   const SizedBox(width: 8),
-                  const Flexible(
+                  Flexible(
                     child: Text(
-                      'Recently Viewed',
+                      tr('Recently Viewed'),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
@@ -142,8 +143,8 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                   text: _error!,
                   action: TextButton(
                     onPressed: _load,
-                    child: const Text(
-                      'Try again',
+                    child: Text(
+                      tr('Try again'),
                       style: TextStyle(color: ColorsUtil.secondaryLighter),
                     ),
                   ),
@@ -158,13 +159,17 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                   ),
                 )
               else if (viewed.isEmpty)
-                const _Panel(
-                  title: 'Nothing yet',
-                  text: 'Places and trip plans you open show up here, newest first.',
+                _Panel(
+                  title: tr('Nothing yet'),
+                  text: tr(
+                    tr(
+                      'Places and trip plans you open show up here, newest first.',
+                    ),
+                  ),
                 )
               else ...[
                 if (viewed.places.isNotEmpty) ...[
-                  const _Heading('Places'),
+                  _Heading(tr('Places')),
                   for (final place in viewed.places)
                     _Row(
                       side: place.place.name,
@@ -176,13 +181,13 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                     ),
                 ],
                 if (viewed.plans.isNotEmpty) ...[
-                  const _Heading('Trip plans'),
+                  _Heading(tr('Trip plans')),
                   for (final plan in viewed.plans)
                     _Row(
                       side: plan.placeName,
                       title: plan.title,
                       meta: [
-                        plan.mine ? 'Your plan' : 'Shared with you',
+                        plan.mine ? tr('Your plan') : tr('Shared with you'),
                         if (plan.viewedAt != null) timeAgo(plan.viewedAt!),
                       ].join(' · '),
                       onTap: () => _openPlan(plan),
@@ -197,7 +202,7 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                       side: const BorderSide(color: Colors.white70),
                       shape: const StadiumBorder(),
                     ),
-                    child: const Text('Clear list'),
+                    child: Text(tr('Clear list')),
                   ),
                 ),
               ],

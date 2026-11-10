@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
@@ -106,7 +107,11 @@ void main() {
   group('DiscoverService', () {
     late FakeBackend backend;
 
-    setUp(() => backend = FakeBackend());
+    setUp(() {
+      backend = FakeBackend();
+      I18n.accountCurrency = 'EUR';
+    });
+    tearDown(I18n.reset);
 
     test(
       'opens a picked place by its id, and a typed one by its text',
@@ -129,9 +134,14 @@ void main() {
           const DestinationRequest.text('Hallstatt', 'Hallstatt, Austria'),
         );
 
-        expect(backend.requests[0].url.queryParameters, {'placeId': 'p-1'});
+        // With the traveller's currency, for the exchange rate.
+        expect(backend.requests[0].url.queryParameters, {
+          'placeId': 'p-1',
+          'currency': 'EUR',
+        });
         expect(backend.requests[1].url.queryParameters, {
           'q': 'Hallstatt, Austria',
+          'currency': 'EUR',
         });
       },
     );

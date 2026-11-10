@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/auth/refresh_token_store.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -90,7 +91,11 @@ class AuthSession {
       response = await _client
           .post(
             Uri.parse('$_baseUrl/api/auth/refresh'),
-            headers: {'Content-Type': 'application/json', ...clientTypeHeader},
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept-Language': I18n.code,
+              ...clientTypeHeader,
+            },
             body: jsonEncode({'refreshToken': refreshToken}),
           )
           .timeout(requestTimeout);
