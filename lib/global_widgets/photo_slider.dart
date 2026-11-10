@@ -1,3 +1,5 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/discover/discover_models.dart';
@@ -161,6 +163,7 @@ class _Slide extends StatelessWidget {
               Image.network(
                 photo.url,
                 headers: photoHeaders,
+                cacheWidth: screenDecodeWidth(context),
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, progress) => progress == null
                     ? child

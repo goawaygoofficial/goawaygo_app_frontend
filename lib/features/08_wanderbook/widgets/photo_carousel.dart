@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -44,6 +45,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                 itemBuilder: (context, index) {
                   final image = Image.network(
                     photos[index].url,
+                    cacheWidth: screenDecodeWidth(context),
                     fit: BoxFit.contain,
                     semanticLabel: tr('Photo {0} of {1}', [
                       index + 1,
