@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, use_build_context_synchronously
 
 import 'dart:async';
+
 import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
 import 'package:app_frontend/global_utils/bottom_bar/bottom_bar.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -54,15 +55,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> navigateToNextScreen() async {
-    await Future.delayed(const Duration(milliseconds: 3000));
-
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // The animation, and the session being restored at the same time (main.dart).
+    await Future.wait([
+      Future<void>.delayed(const Duration(milliseconds: 3000)),
+      userProvider.restored,
+    ]);
+    if (!mounted) return;
+
     if (userProvider.user != null) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 1000),
-          pageBuilder: (_, __, ___) => BottomBar(user: userProvider.user),
-          transitionsBuilder: (_, animation, __, child) {
+          pageBuilder: (_, _, _) => BottomBar(user: userProvider.user),
+          transitionsBuilder: (_, animation, _, child) {
             final slide = Tween<Offset>(
               begin: const Offset(1.0, 0.0),
               end: Offset.zero,

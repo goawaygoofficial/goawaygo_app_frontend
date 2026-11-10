@@ -1,12 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
+import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 
+/// Requests a password-reset link. Only the email is collected here; the new password is chosen on the page the
+/// emailed link opens, which proves the person owns the email.
 class ForgotPasswordScreen extends StatefulWidget {
   final VoidCallback onBack;
 
@@ -17,8 +20,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  /// Same wording whether or not the account exists, so this screen can't be used to find out who is registered.
+  static const _resetRequestedMessage =
+      'If an account exists for that email, we have sent a link to reset your password. Please check your inbox.';
+
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -27,51 +33,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _handleResetPassword() async {
+    FocusScope.of(context).unfocus();
     final email = _emailController.text.trim();
-    final newPassword = _newPasswordController.text.trim();
 
-    if (email.isEmpty || newPassword.isEmpty) {
+    if (email.isEmpty) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Please fill all fields.',
+        message: tr('Please enter your email.'),
       );
       return;
     }
 
-    final error = await AuthService.forgotPassword(email, newPassword);
-
-    if (error == null) {
+    try {
+      await AuthService.requestPasswordReset(email);
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message: 'Verification email sent! Please check your inbox.',
+        message: tr(_resetRequestedMessage),
         onDismiss: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, __, ___) => const AuthScreen(),
-              transitionsBuilder: (_, animation, __, child) {
-                final slide = Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-
-                return SlideTransition(
-                  position: slide,
-                  child: FadeTransition(opacity: fade, child: child),
-                );
-              },
-            ),
-          );
+          _emailController.clear();
+          widget.onBack();
         },
       );
-    } else {
-      await CustomDialogs.showErrorDialog(context: context, message: error);
+    } on ApiException catch (e) {
+      await CustomDialogs.showErrorDialog(context: context, message: e.message);
     }
   }
 
@@ -98,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
                 Text(
-                  "Forgot Password?",
+                  tr('Forgot Password?'),
                   style: TextStyle(
                     fontSize: 24,
                     color: ColorsUtil.whiteColor,
@@ -108,32 +92,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(height: height * 0.03),
                 TextField(
                   controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
                   decoration: InputDecoration(
-                    hintText: "Enter your registered email...",
+                    hintText: tr('Enter your registered email...'),
                     filled: true,
                     fillColor: ColorsUtil.whiteColor,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
                       horizontal: width * 0.05,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: height * 0.03),
-                TextField(
-                  controller: _newPasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "New Password...",
-                    filled: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: height * 0.02,
-                      horizontal: width * 0.05,
-                    ),
-                    fillColor: ColorsUtil.whiteColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,
@@ -143,17 +111,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(height: height * 0.03),
                 AuthButton(
                   icon: 'assets/icons/lock.png',
-                  text: 'RESET PASSWORD',
+                  text: tr('SEND RESET LINK'),
                   bgColor: ColorsUtil.secondary,
                   textColor: ColorsUtil.whiteColor,
                   onTap: _handleResetPassword,
                 ),
                 TextButton(
                   onPressed: widget.onBack,
-                  child: const Text(
-                    "Back to Sign In",
+                  child: Text(
+                    tr('Back to Sign In'),
                     style: TextStyle(
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

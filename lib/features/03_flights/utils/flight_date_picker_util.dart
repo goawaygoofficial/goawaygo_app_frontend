@@ -20,9 +20,7 @@ class FlightDatePickerUtils {
               surface: ColorsUtil.primary,
               onSurface: Colors.white,
             ),
-            dialogTheme: DialogThemeData(
-              backgroundColor: ColorsUtil.primaryLight,
-            ),
+            dialogTheme: DialogThemeData(backgroundColor: ColorsUtil.field),
           ),
           child: child!,
         );
