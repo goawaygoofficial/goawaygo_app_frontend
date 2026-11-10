@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/core/book/book_format.dart';
@@ -39,10 +40,10 @@ class MyTripsScreen extends StatefulWidget {
 
 class _MyTripsScreenState extends State<MyTripsScreen> {
   static const _tones = [
-    [ColorsUtil.secondaryLight, ColorsUtil.secondaryDark],
+    [ColorsUtil.brandOrangeLight, ColorsUtil.brandOrangeDark],
     [ColorsUtil.secondary, ColorsUtil.secondaryDark],
-    [ColorsUtil.secondaryLighter, ColorsUtil.secondary],
-    [ColorsUtil.secondaryLight, ColorsUtil.primaryLight],
+    [ColorsUtil.brandOrangeLighter, ColorsUtil.brandOrange],
+    [ColorsUtil.brandOrangeLight, ColorsUtil.primaryLight],
   ];
 
   List<SavedPlace>? _places;
@@ -181,17 +182,21 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
     final plans = _plans;
     if (!signedIn) {
       return _EmptyState(
-        title: 'SAVE PLACES YOU LOVE',
-        text: 'Sign in to keep places from Ideas for your next trip and trip plans in My Trips.',
-        action: 'Sign in',
+        title: tr('SAVE PLACES YOU LOVE'),
+        text: tr(
+          tr(
+            'Sign in to keep places from Ideas for your next trip and trip plans in My Trips.',
+          ),
+        ),
+        action: tr('Sign in'),
         onAction: widget.onSignIn,
       );
     }
     if (_error != null) {
       return _EmptyState(
-        title: 'MY TRIPS',
+        title: tr('MY TRIPS'),
         text: _error!,
-        action: 'Try again',
+        action: tr('Try again'),
         onAction: () {
           setState(() => _error = null);
           _load(_loadedFor!);
@@ -205,11 +210,13 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
     }
     if (places.isEmpty && plans.isEmpty) {
       return _EmptyState(
-        title: 'NO TRIPS YET',
-        text:
-            'Save places from Ideas for your next trip on Home, or plan a trip from any destination, and '
-            "they'll show up here.",
-        action: 'Find ideas',
+        title: tr('NO TRIPS YET'),
+        text: tr(
+          tr(
+            'Save places from Ideas for your next trip on Home, or plan a trip from any destination, and they\'ll show up here.',
+          ),
+        ),
+        action: tr('Find ideas'),
         onAction: widget.onPlanTrip,
       );
     }
@@ -223,8 +230,8 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
           child: Image.asset('assets/images/logo.png', height: height * 0.1),
         ),
         const SizedBox(height: 8),
-        const Text(
-          'MY TRIPS',
+        Text(
+          tr('MY TRIPS'),
           style: TextStyle(
             color: ColorsUtil.whiteColor,
             fontSize: 24,
@@ -233,7 +240,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
           ),
         ),
         if (plans.isNotEmpty) ...[
-          const _Subheading('Trip plans'),
+          _Subheading(tr('Trip plans')),
           for (final plan in plans)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -241,7 +248,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
             ),
         ],
         if (places.isNotEmpty) ...[
-          const _Subheading('Saved places'),
+          _Subheading(tr('Saved places')),
           for (var i = 0; i < places.length; i++)
             _SavedPlaceCard(
               place: places[i],
@@ -320,7 +327,7 @@ class _PlanCard extends StatelessWidget {
             [
               planDates(plan.startDate, end),
               BookFormat.plural(plan.days, 'day'),
-              if (plan.shared) 'Shared',
+              if (plan.shared) tr('Shared'),
             ].join(' · '),
             style: small,
           ),
@@ -423,7 +430,7 @@ class _SavedPlaceCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Remove ${place.name} from My Trips',
+                  tooltip: tr('Remove {0} from My Trips', [place.name]),
                   onPressed: onRemove,
                   icon: const Icon(Icons.delete_outline, color: Colors.white),
                 ),
@@ -447,7 +454,7 @@ class _PlanTripButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: onPressed,
       icon: const Icon(Icons.travel_explore, size: 18),
-      label: const Text('Plan a trip'),
+      label: Text(tr('Plan a trip')),
       style: TextButton.styleFrom(
         backgroundColor: ColorsUtil.whiteColor,
         foregroundColor: ColorsUtil.primary,
@@ -489,7 +496,7 @@ class _EmptyState extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(width * 0.04),
             decoration: BoxDecoration(
-              color: ColorsUtil.secondaryLight,
+              color: ColorsUtil.brandOrangeLight,
               borderRadius: BorderRadius.circular(width * 0.04),
             ),
             child: Image.asset(
@@ -515,7 +522,7 @@ class _EmptyState extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
+                color: ColorsUtil.textMuted,
                 fontSize: 16,
                 height: 1.4,
               ),

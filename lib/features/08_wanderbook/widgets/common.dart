@@ -1,3 +1,5 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/post_screen.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/profile_screen.dart';
@@ -40,7 +42,7 @@ String avatarHeroTag(String publicId) => 'avatar-$publicId';
 /// Shown when a signed-out user tries something that needs an account.
 void showSignInHint(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Sign in from the Profile tab to do this.')),
+    SnackBar(content: Text(tr('Sign in from the Profile tab to do this.'))),
   );
 }
 
@@ -66,6 +68,7 @@ class Avatar extends StatelessWidget {
             ? Icon(Icons.person, color: Colors.white, size: size * 0.6)
             : Image.network(
                 url!,
+                cacheWidth: decodeWidth(context, size),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stack) =>
                     Icon(Icons.person, color: Colors.white, size: size * 0.6),
@@ -101,7 +104,7 @@ class PersonTile extends StatelessWidget {
           ? null
           : Text(
               person.homeTown,
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
       trailing: trailing,
       onTap: () => openProfile(context, person.publicId, preview: person),
@@ -122,7 +125,7 @@ class StatusText extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+        style: TextStyle(color: ColorsUtil.textMuted),
       ),
     );
   }

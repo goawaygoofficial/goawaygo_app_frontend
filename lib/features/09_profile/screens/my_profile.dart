@@ -1,7 +1,10 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/features/01_auth_register/screens/forgot_password_screen.dart';
 import 'package:app_frontend/features/01_auth_register/screens/register_screen.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/sign_in_panel.dart';
+import 'package:app_frontend/features/09_profile/widgets/locale_pickers.dart';
+import 'package:app_frontend/features/09_profile/screens/recently_viewed_screen.dart';
 import 'package:app_frontend/features/09_profile/screens/user_profile.dart';
 import 'package:app_frontend/features/09_profile/widgets/profile_button.dart';
 import 'package:app_frontend/features/09_profile/widgets/verify_email_banner.dart';
@@ -116,6 +119,9 @@ class _MyProfileState extends State<MyProfile> {
           onRegister: () => _open(() => _showRegister = true),
           onForgotPassword: () => _open(() => _showForgotPassword = true),
         ),
+        const SizedBox(height: 16),
+        const LocalePickers(currency: true),
+        const SizedBox(height: 8),
         const LegalFooter(),
       ],
     );
@@ -131,7 +137,7 @@ class _MyProfileState extends State<MyProfile> {
         const VerifyEmailBanner(),
         SizedBox(height: height * 0.02),
         Text(
-          'Hi, $name',
+          tr('Hi, {0}', [name]),
           style: const TextStyle(
             color: ColorsUtil.whiteColor,
             fontSize: 24,
@@ -146,14 +152,22 @@ class _MyProfileState extends State<MyProfile> {
           children: [
             ProfileButton(
               imagePath: 'assets/icons/mytrips_white.png',
-              title: 'My Trips',
+              title: tr('My Trips'),
               onTap: widget.onOpenTrips,
             ),
             ProfileButton(
               imagePath: 'assets/icons/recently_viewed.png',
-              title: 'Recently Viewed',
+              title: tr('Recently Viewed'),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const RecentlyViewedScreen(),
+                ),
+              ),
             ),
-            ProfileButton(imagePath: 'assets/icons/saved.png', title: 'Saved'),
+            ProfileButton(
+              imagePath: 'assets/icons/saved.png',
+              title: tr('Saved'),
+            ),
           ],
         ),
         SizedBox(height: height * 0.03),
@@ -164,20 +178,22 @@ class _MyProfileState extends State<MyProfile> {
           children: [
             ProfileButton(
               imagePath: 'assets/icons/review.png',
-              title: 'Reviews',
+              title: tr('Reviews'),
             ),
             ProfileButton(
               imagePath: 'assets/icons/rewards.png',
-              title: 'Rewards',
+              title: tr('Rewards'),
             ),
             ProfileButton(
               imagePath: 'assets/icons/user_profile.png',
-              title: 'User Profile',
+              title: tr('User Profile'),
               onTap: () => _open(() => _showUserProfile = true),
             ),
           ],
         ),
         SizedBox(height: height * 0.03),
+        const Center(child: LocalePickers(currency: false)),
+        const SizedBox(height: 8),
         const Center(child: LegalFooter()),
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
@@ -58,7 +59,8 @@ class DiscoverService {
         : 'q=${Uri.encodeQueryComponent(request.text!)}';
     final data = await Backend.api.request(
       'GET',
-      '/api/discover/destination?$param',
+      // The exchange rate on the money card is against the traveller's currency.
+      '/api/discover/destination?$param&currency=${I18n.currency}',
       fallbackError: 'Could not open this destination.',
       timeout: destinationTimeout,
     );

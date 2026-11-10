@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/auth/refresh_token_store.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,8 +33,12 @@ class AuthSession {
 
   String? _accessToken;
   Future<UserModel?>? _inFlightRefresh;
+  bool _restored = false;
 
   String? get accessToken => _accessToken;
+
+  /// The last sign-in cancelled the account's pending deletion (4.6): say "welcome back".
+  bool get restoredOnLastStart => _restored;
 
   /// Called with the user on sign-in or refresh, and with `null` when the session ends.
   void Function() addListener(void Function(UserModel? user) listener) {
@@ -50,6 +55,7 @@ class AuthSession {
       throw const ApiException('Unexpected response from the server.', 200);
     }
     final user = UserModel.fromJson(body['user'] as Map<String, dynamic>);
+    _restored = body['accountRestored'] == true;
     await _store.write(body['refreshToken'] as String);
     _accessToken = body['accessToken'] as String;
     _notify(user);
@@ -85,7 +91,11 @@ class AuthSession {
       response = await _client
           .post(
             Uri.parse('$_baseUrl/api/auth/refresh'),
-            headers: {'Content-Type': 'application/json', ...clientTypeHeader},
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept-Language': I18n.code,
+              ...clientTypeHeader,
+            },
             body: jsonEncode({'refreshToken': refreshToken}),
           )
           .timeout(requestTimeout);

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_models.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
@@ -9,6 +10,7 @@ import 'package:app_frontend/global_widgets/book/suggest_field.dart';
 import 'package:app_frontend/features/04_hotels/utils/hotel_form_controllers_utils.dart';
 import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/swap_button.dart';
 import 'package:flutter/material.dart';
 
 class HotelsSearchScreen extends StatefulWidget {
@@ -56,19 +58,19 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
     final checkin = DateTime.tryParse(checkinController.text);
     final checkout = DateTime.tryParse(checkoutController.text);
     if (locationController.text.trim().length < 2) {
-      return 'Type where you want to stay.';
+      return tr('Type where you want to stay.');
     }
     if (checkin == null || checkout == null) {
-      return 'Choose your check-in and check-out dates.';
+      return tr('Choose your check-in and check-out dates.');
     }
     final nights = checkout.difference(checkin).inDays;
-    if (nights < 1) return 'Check-out must be after check-in.';
+    if (nights < 1) return tr('Check-out must be after check-in.');
     if (nights > _maxNights) {
-      return 'Choose a stay of up to $_maxNights nights.';
+      return tr('Choose a stay of up to {0} nights.', [_maxNights]);
     }
     final rooms = int.tryParse(roomsController.text) ?? 1;
     final guests = int.tryParse(adultsController.text) ?? 1;
-    if (rooms > guests) return 'Choose at least one guest per room.';
+    if (rooms > guests) return tr('Choose at least one guest per room.');
     return null;
   }
 
@@ -123,6 +125,7 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                     ),
                     const Spacer(),
                     IconButton(
+                      tooltip: tr('Back'),
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: ColorsUtil.whiteColor,
@@ -141,12 +144,15 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                       'assets/images/stays.png',
                       height: height * 0.1,
                     ),
-                    const Text(
-                      'Book Your Hotels',
-                      style: TextStyle(
-                        color: ColorsUtil.whiteColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    // Wraps instead of overflowing with large text (WCAG 1.4.4).
+                    Flexible(
+                      child: Text(
+                        tr('Book Your Hotels'),
+                        style: TextStyle(
+                          color: ColorsUtil.whiteColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -156,7 +162,7 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                 // Location
                 SuggestField<Place>(
                   icon: Icons.public,
-                  hint: 'Where? (city or area)',
+                  hint: tr('Where? (city or area)'),
                   controller: locationController,
                   suggest: DiscoverService.suggestPlaces,
                   describe: (place) => Suggestion(
@@ -208,53 +214,30 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                     ),
                     Positioned(
                       top: height * 0.03,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorsUtil.primary,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          border: Border.all(
-                            color: ColorsUtil.whiteColor.withValues(alpha: 0.3),
-                            width: width * 0.003,
-                          ),
-                        ),
-                        padding: EdgeInsets.all(width * 0.015),
-                        child: InkWell(
-                          onTap: _swapDates,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          child: Icon(
-                            Icons.swap_horiz,
-                            color: ColorsUtil.whiteColor,
-                            size: height * 0.03,
-                          ),
-                        ),
+                      child: SwapButton(
+                        icon: Icons.swap_horiz,
+                        label: tr('Swap check-in and check-out dates'),
+                        onPressed: _swapDates,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: height * 0.005),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: SearchInputField(
-                        icon: Icons.hotel_rounded,
-                        caption: 'Rooms',
-                        min: 1,
-                        controller: roomsController,
-                        isCounter: true,
-                      ),
-                    ),
-                    SizedBox(width: width * 0.035),
-                    Expanded(
-                      child: SearchInputField(
-                        icon: Icons.person,
-                        caption: 'Guests',
-                        min: 1,
-                        controller: adultsController,
-                        isCounter: true,
-                      ),
-                    ),
-                  ],
+                // One under the other: side by side, a phone has no room for 48 x 48 − and + buttons (WCAG 2.5.8).
+                SearchInputField(
+                  icon: Icons.hotel_rounded,
+                  caption: tr('Rooms'),
+                  min: 1,
+                  controller: roomsController,
+                  isCounter: true,
+                ),
+                SearchInputField(
+                  icon: Icons.person,
+                  caption: tr('Guests'),
+                  min: 1,
+                  controller: adultsController,
+                  isCounter: true,
                 ),
                 SizedBox(height: height * 0.025),
                 if (_error != null) FormError(_error!),
@@ -273,8 +256,8 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                         vertical: height * 0.02,
                       ),
                     ),
-                    child: const Text(
-                      'Search',
+                    child: Text(
+                      tr('Search'),
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontSize: 18,

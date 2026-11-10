@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -43,8 +44,9 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
       if (!mounted) return;
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message:
-            "We've sent a new verification link to ${email ?? 'your email'}.",
+        message: tr('We\'ve sent a new verification link to {0}.', [
+          email ?? 'your email',
+        ]),
       );
     } on ApiException catch (e) {
       // E.g. "already verified" (verified on the website meanwhile): refresh so the banner goes away.
@@ -74,7 +76,7 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
         color: ColorsUtil.whiteColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
         border: const Border(
-          left: BorderSide(color: ColorsUtil.secondary, width: 4),
+          left: BorderSide(color: ColorsUtil.brandOrange, width: 4),
         ),
       ),
       child: Row(
@@ -87,11 +89,13 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
                   height: 1.4,
                 ),
                 children: [
-                  const TextSpan(
-                    text: 'Please verify your email\n',
+                  TextSpan(
+                    text: tr('Please verify your email\n'),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: 'Open the link we sent to ${user.email}.'),
+                  TextSpan(
+                    text: tr('Open the link we sent to {0}.', [user.email]),
+                  ),
                 ],
               ),
             ),
@@ -103,13 +107,13 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
                     dimension: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                     ),
                   )
-                : const Text(
-                    'Resend link',
+                : Text(
+                    tr('Resend link'),
                     style: TextStyle(
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

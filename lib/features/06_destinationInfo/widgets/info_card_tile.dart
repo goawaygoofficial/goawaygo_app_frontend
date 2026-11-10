@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/discover/discover_models.dart';
 import 'package:app_frontend/features/06_destinationInfo/utils/card_meta.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -59,7 +60,7 @@ class _InfoCardTileState extends State<InfoCardTile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              meta.title,
+                              tr(meta.title),
                               style: const TextStyle(
                                 color: ColorsUtil.whiteColor,
                                 fontWeight: FontWeight.bold,
@@ -69,8 +70,8 @@ class _InfoCardTileState extends State<InfoCardTile> {
                             const SizedBox(height: 2),
                             Text(
                               card.available
-                                  ? meta.subtitle
-                                  : 'Not available right now',
+                                  ? tr(meta.subtitle)
+                                  : tr('Not available right now'),
                               style: const TextStyle(
                                 color: ColorsUtil.whiteLight,
                                 fontSize: 13,
@@ -143,9 +144,10 @@ class _Items extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           card.id == 'visa'
-              ? 'Rules change: always check official sources before you travel. AI-generated, may contain '
-                    'mistakes.'
-              : 'AI-generated, may contain mistakes.',
+              ? tr(
+                  'Rules change: always check official sources before you travel. AI-generated, may contain mistakes.',
+                )
+              : tr('AI-generated, may contain mistakes.'),
           style: const TextStyle(color: ColorsUtil.whiteLight, fontSize: 12),
         ),
       ],
@@ -161,7 +163,7 @@ class _Item extends StatelessWidget {
   /// "https://www.indianvisaonline.gov.in/evisa" → "indianvisaonline.gov.in"
   static String _siteName(String link) {
     final host = Uri.tryParse(link)?.host ?? '';
-    return host.isEmpty ? 'Official site' : host.replaceFirst('www.', '');
+    return host.isEmpty ? tr('Official site') : host.replaceFirst('www.', '');
   }
 
   @override
@@ -205,8 +207,8 @@ class _Item extends StatelessWidget {
                       color: ColorsUtil.secondaryLighter,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'May vary, check before you go',
+                    child: Text(
+                      tr('May vary, check before you go'),
                       style: TextStyle(
                         color: ColorsUtil.primary,
                         fontSize: 12,

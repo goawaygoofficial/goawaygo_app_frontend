@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_service.dart';
@@ -80,16 +81,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final sure = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Block ${profile.name}?'),
-          content: const Text("You won't see each other, and follows end."),
+          title: Text(tr('Block {0}?', [profile.name])),
+          content: Text(tr('You won\'t see each other, and follows end.')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Block'),
+              child: Text(tr('Block')),
             ),
           ],
         ),
@@ -102,9 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String _followLabel(Profile profile) => switch (profile.relationship) {
-    Relationship.following => 'Following',
-    Relationship.requested => 'Requested',
-    _ => profile.followsYou ? 'Follow back' : 'Follow',
+    Relationship.following => tr('Following'),
+    Relationship.requested => tr('Requested'),
+    _ => profile.followsYou ? tr('Follow back') : tr('Follow'),
   };
 
   @override
@@ -119,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           if (profile != null && profile.relationship != Relationship.self)
             PopupMenuButton<String>(
-              tooltip: 'More',
+              tooltip: tr('More'),
               onSelected: (choice) {
                 if (choice == 'block') {
                   _toggleBlock(profile);
@@ -137,9 +138,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 'block',
-                  child: Text(profile.blockedByYou ? 'Unblock' : 'Block'),
+                  child: Text(
+                    profile.blockedByYou ? tr('Unblock') : tr('Block'),
+                  ),
                 ),
-                const PopupMenuItem(value: 'report', child: Text('Report')),
+                PopupMenuItem(value: 'report', child: Text(tr('Report'))),
               ],
             ),
         ],
@@ -172,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   placeholder: true,
                 )
               else
-                const StatusText('Loading…'),
+                StatusText(tr('Loading…')),
             if (profile != null) ...[
               ProfileHeader(
                 profile: profile,
@@ -195,7 +198,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               if (following && context.mounted) {
                                 await PushNotifications.askAtUsefulMoment(
                                   context,
-                                  'Know when people accept your request, follow you back, or like and comment on your posts.',
+                                  tr(
+                                    'Know when people accept your request, follow you back, or like and comment on your posts.',
+                                  ),
                                 );
                               }
                             }),
@@ -203,24 +208,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (profile.followsYou &&
                       profile.relationship != Relationship.none)
                     Text(
-                      'Follows you',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.75),
-                      ),
+                      tr('Follows you'),
+                      style: TextStyle(color: ColorsUtil.textMuted),
                     ),
                 ],
               ),
               const SizedBox(height: 12),
               if (profile.blockedByYou)
-                StatusText('You blocked ${profile.name}.')
+                StatusText(tr('You blocked {0}.', [profile.name]))
               else if (!profile.canSeePosts)
-                const StatusText(
-                  'This profile is private. Follow to see their photos.',
+                StatusText(
+                  tr('This profile is private. Follow to see their photos.'),
                 )
               else if (_posts.items == null)
-                const StatusText('Loading…')
+                StatusText(tr('Loading…'))
               else ...[
-                PostGrid(posts: _posts.items!, empty: 'No posts yet.'),
+                PostGrid(posts: _posts.items!, empty: tr('No posts yet.')),
                 _posts.moreButton(),
               ],
             ],

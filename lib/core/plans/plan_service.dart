@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/book/book_format.dart';
@@ -34,7 +35,8 @@ class PlanService {
     final data = await Backend.api.request(
       'POST',
       '/api/plans',
-      body: request.toJson(),
+      // Costs in the traveller's currency.
+      body: {...request.toJson(), 'currency': I18n.currency},
       expectedStatus: 201,
       fallbackError: 'Could not make your plan.',
       timeout: _writeTimeout,

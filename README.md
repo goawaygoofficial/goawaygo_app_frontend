@@ -35,6 +35,8 @@ New here? Read these in order:
 | My Trips            | `lib/features/07_trips`                                   | Trip plans and places saved from the ideas (sign-in needed)                                                      |
 | Trip planner (4.4)  | `lib/features/10_plans`, `lib/core/plans`                 | Plan form, plan with day cards, change a day, share by link (website page), delete                               |
 | Notifications (4.5) | `lib/features/11_notifications`, `lib/core/notifications` | Bell with unread badge, list, settings switches; push (Firebase Cloud Messaging), permission asks, tapped pushes |
+| Me (4.6)            | `lib/features/09_profile`, `lib/core/account`             | User Profile: photo, name, email, password, country, currency (sheets); delete account; Recently Viewed          |
+| Languages (4.7)     | `lib/core/i18n`, `assets/i18n`                            | `tr()`, 7 languages (Arabic right to left), picker on Profile, the traveller's currency, local date formats      |
 | Discover (shared)   | `lib/core/discover`                                       | Discover API calls, models, recent searches on the device                                                        |
 | Wanderbook          | `lib/features/08_wanderbook`                              | Feed, profiles, follow requests, posting original photos, likes, comments, reports                               |
 | Wanderbook (shared) | `lib/core/wanderbook`                                     | Wanderbook API calls and models                                                                                  |
@@ -183,3 +185,18 @@ flutter build apk   # Android release build
 ## Files that are never committed
 
 `.env`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `android/local.properties`, keystores (`*.jks`, `*.keystore`) and `key.properties`. See `.gitignore`.
+
+## Languages and currencies (4.7)
+
+English, Hindi, Spanish, French, German, Arabic (right to left) and Japanese. Text is written in English and
+wrapped in `tr('English sentence {0}', [value])` (`lib/core/i18n/i18n.dart`); `assets/i18n/<code>.json` holds the
+translations (the same sentences as the website). After adding or changing text, run `python tool/i18n_keys.py`
+and add the new sentences to every `assets/i18n/<code>.json`: `test/core/i18n_test.dart` fails while one is missing.
+
+- The language: the traveller's choice (Profile tab), else the phone's, else English. Every API request sends it as
+  `Accept-Language`, and a signed-in account follows it (its pushes and emails). Changing it rebuilds the app and
+  opens the Profile tab.
+- Dates, numbers and prices use the phone's locale for that language (`I18n.locale`).
+- Prices: the account's currency, else the traveller's choice (Profile tab), else a guess from the phone's region.
+- Text defined once (static or top-level lists) is translated where it is shown, with `tr(label)`; never store a
+  translated string in a static field (it would keep the old language).

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -83,14 +84,14 @@ class CustomNavItem extends StatelessWidget {
             _navItem(
               context: context,
               iconPath: 'assets/icons/home.png',
-              label: 'HOME',
+              label: tr('HOME'),
               index: 0,
               isSelected: currentPage == 0,
             ),
             _navItem(
               context: context,
               iconPath: 'assets/icons/mytrips.png',
-              label: 'MY TRIPS',
+              label: tr('MY TRIPS'),
               index: 1,
               isSelected: currentPage == 1,
             ),
@@ -104,7 +105,7 @@ class CustomNavItem extends StatelessWidget {
             _navItem(
               context: context,
               iconPath: 'assets/icons/profile.png',
-              label: user == null ? 'SIGN IN' : 'PROFILE',
+              label: user == null ? tr('SIGN IN') : 'PROFILE',
               index: 3,
               isSelected: currentPage == 3,
             ),

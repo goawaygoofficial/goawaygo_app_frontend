@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/legal/legal_pages.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -60,8 +61,8 @@ class _ConsentSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Help us improve GoAwayGo?',
+            Text(
+              tr('Help us improve GoAwayGo?'),
               style: TextStyle(
                 color: ColorsUtil.whiteColor,
                 fontSize: 18,
@@ -69,17 +70,19 @@ class _ConsentSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'With your permission we collect anonymous usage statistics (which screens and features are '
-              'used) with PostHog. No ads, no tracking across other apps, and you can change your mind any '
-              'time under "Privacy choices" in Profile.',
+            Text(
+              tr(
+                tr(
+                  'With your permission we collect anonymous usage statistics (which screens and features are used) with PostHog. No ads, no tracking across other apps, and you can change your mind any time under "Privacy choices" in Profile.',
+                ),
+              ),
               style: text,
             ),
             TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               onPressed: () => openLegalPage(context, LegalPage.privacy),
-              child: const Text(
-                'Learn more',
+              child: Text(
+                tr('Learn more'),
                 style: TextStyle(
                   color: ColorsUtil.whiteColor,
                   fontWeight: FontWeight.bold,
@@ -93,9 +96,7 @@ class _ConsentSheet extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   'Currently: ${current == AnalyticsConsent.granted ? 'allowed' : 'not allowed'}.',
-                  style: text.copyWith(
-                    color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                  ),
+                  style: text.copyWith(color: ColorsUtil.textMuted),
                 ),
               ),
             const SizedBox(height: 8),

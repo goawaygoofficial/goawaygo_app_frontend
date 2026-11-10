@@ -104,7 +104,7 @@ void main() {
 
     expect(find.text('EconomyBookings'), findsOneWidget);
     expect(
-      find.text('Opens on GOI airport; add your dates (7–10 Dec)'),
+      find.text('Opens on GOI airport; add your dates (Dec 7 – Dec 10)'),
       findsOneWidget,
     );
     expect(find.textContaining('may earn a commission'), findsOneWidget);

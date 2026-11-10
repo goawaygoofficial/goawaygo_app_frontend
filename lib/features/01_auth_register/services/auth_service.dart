@@ -62,6 +62,21 @@ class AuthService {
   /// Google issues the ID token for our **Web** client (`serverClientId`), which is the audience the backend
   /// accepts. The backend verifies it with Google's keys; nothing else from Google is sent or trusted.
   static Future<UserModel?> googleSignin() async {
+    final idToken = await googleIdToken();
+    if (idToken == null) return null;
+    final data = await Backend.api.request(
+      'POST',
+      '/api/auth/google-signin',
+      body: {'idToken': idToken},
+      expectedStatus: 200,
+      fallbackError: 'Google Signin failed',
+    );
+    return Backend.session.start(data);
+  }
+
+  /// A fresh Google ID token from Google's account picker (also "confirm it's you" for accounts without a
+  /// password, 4.6). Returns `null` if the user cancelled.
+  static Future<String?> googleIdToken() async {
     await (_googleInit ??= _initializeGoogle());
     final GoogleSignInAccount account;
     try {
@@ -83,14 +98,7 @@ class AuthService {
         'google_sign_in_failed',
       );
     }
-    final data = await Backend.api.request(
-      'POST',
-      '/api/auth/google-signin',
-      body: {'idToken': idToken},
-      expectedStatus: 200,
-      fallbackError: 'Google Signin failed',
-    );
-    return Backend.session.start(data);
+    return idToken;
   }
 
   static Future<void> _initializeGoogle() {

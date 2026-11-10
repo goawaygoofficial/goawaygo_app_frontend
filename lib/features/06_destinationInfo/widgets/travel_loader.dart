@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -65,7 +67,9 @@ class _TravelLoaderState extends State<TravelLoader>
   Widget build(BuildContext context) {
     return Semantics(
       liveRegion: true,
-      label: 'Getting ${widget.place} ready. This can take up to a minute.',
+      label: tr('Getting {0} ready. This can take up to a minute.', [
+        widget.place,
+      ]),
       child: ExcludeSemantics(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -121,12 +125,9 @@ class _TravelLoaderState extends State<TravelLoader>
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               child: Text(
-                _messages[_message],
+                tr(_messages[_message]),
                 key: ValueKey(_message),
-                style: TextStyle(
-                  color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: ColorsUtil.textMuted, fontSize: 16),
               ),
             ),
           ],
@@ -168,7 +169,7 @@ class _GlobePainter extends CustomPainter {
     final scale = radius * 2 / 100;
     // Half a strip per lap: the globe turns slower than the plane flies.
     final shift = (turn * 50) * scale;
-    final landPaint = Paint()..color = ColorsUtil.secondaryLight;
+    final landPaint = Paint()..color = ColorsUtil.brandOrangeLight;
     for (final copy in [0.0, 100.0]) {
       for (final blob in _land) {
         canvas.drawRRect(

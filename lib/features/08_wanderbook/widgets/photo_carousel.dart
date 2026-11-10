@@ -1,3 +1,5 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +45,12 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                 itemBuilder: (context, index) {
                   final image = Image.network(
                     photos[index].url,
+                    cacheWidth: screenDecodeWidth(context),
                     fit: BoxFit.contain,
-                    semanticLabel: 'Photo ${index + 1} of ${photos.length}',
+                    semanticLabel: tr('Photo {0} of {1}', [
+                      index + 1,
+                      photos.length,
+                    ]),
                     loadingBuilder: (context, child, progress) =>
                         progress == null
                         ? child
@@ -82,7 +88,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: i == _page
-                              ? ColorsUtil.secondary
+                              ? ColorsUtil.brandOrange
                               : Colors.white30,
                         ),
                       ),
@@ -96,9 +102,12 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                       Uri.parse(photos[_page].url),
                       mode: LaunchMode.externalApplication,
                     ),
-                    child: const Text(
-                      'Full size',
-                      style: TextStyle(color: Colors.white60, fontSize: 12),
+                    child: Text(
+                      tr('Full size'),
+                      style: TextStyle(
+                        color: ColorsUtil.textMuted,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),

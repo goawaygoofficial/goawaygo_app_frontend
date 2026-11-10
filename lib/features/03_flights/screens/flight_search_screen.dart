@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_models.dart';
 import 'package:app_frontend/core/book/book_service.dart';
@@ -8,6 +9,7 @@ import 'package:app_frontend/global_widgets/book/suggest_field.dart';
 import 'package:app_frontend/features/03_flights/utils/flight_form_controllers_utils.dart';
 import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/swap_button.dart';
 import 'package:flutter/material.dart';
 
 class FlightSearchScreen extends StatefulWidget {
@@ -81,7 +83,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
     title: '${airport.name} (${airport.code})',
     context: airport.isAirport
         ? '${airport.city.isEmpty ? '' : '${airport.city}, '}${airport.country}'
-        : 'All airports · ${airport.country}',
+        : tr('All airports · {0}', [airport.country]),
     icon: airport.isAirport ? Icons.flight : Icons.location_on_outlined,
   );
 
@@ -89,13 +91,15 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   String? _problem() {
     final depart = departureController.text;
     final back = returnController.text;
-    if (_from == null) return 'Pick where you fly from from the suggestions.';
-    if (_to == null) return 'Pick where you fly to from the suggestions.';
-    if (_from!.code == _to!.code) return 'Pick a different destination.';
-    if (depart.isEmpty) return 'Choose a departure date.';
-    if (isRoundTrip && back.isEmpty) return 'Choose a return date.';
+    if (_from == null) {
+      return tr('Pick where you fly from from the suggestions.');
+    }
+    if (_to == null) return tr('Pick where you fly to from the suggestions.');
+    if (_from!.code == _to!.code) return tr('Pick a different destination.');
+    if (depart.isEmpty) return tr('Choose a departure date.');
+    if (isRoundTrip && back.isEmpty) return tr('Choose a return date.');
     if (isRoundTrip && back.compareTo(depart) < 0) {
-      return 'The return date must be on or after the departure date.';
+      return tr('The return date must be on or after the departure date.');
     }
     return null;
   }
@@ -159,6 +163,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                     ),
                     const Spacer(),
                     IconButton(
+                      tooltip: tr('Back'),
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: ColorsUtil.whiteColor,
@@ -177,12 +182,15 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       'assets/images/flights.png',
                       height: height * 0.1,
                     ),
-                    const Text(
-                      'Book Your Flights',
-                      style: TextStyle(
-                        color: ColorsUtil.whiteColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    // Wraps instead of overflowing with large text (WCAG 1.4.4).
+                    Flexible(
+                      child: Text(
+                        tr('Book Your Flights'),
+                        style: TextStyle(
+                          color: ColorsUtil.whiteColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -197,7 +205,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       children: [
                         SuggestField<Airport>(
                           icon: Icons.location_on_outlined,
-                          hint: 'From (city or airport)',
+                          hint: tr('From (city or airport)'),
                           controller: fromController,
                           suggest: BookService.suggestAirports,
                           describe: _describe,
@@ -212,7 +220,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         ),
                         SuggestField<Airport>(
                           icon: Icons.public,
-                          hint: 'To (city or airport)',
+                          hint: tr('To (city or airport)'),
                           controller: toController,
                           suggest: BookService.suggestAirports,
                           describe: _describe,
@@ -229,37 +237,24 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                     ),
                     Positioned(
                       top: height * 0.085,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorsUtil.primary,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          border: Border.all(
-                            color: ColorsUtil.whiteColor.withValues(alpha: 0.3),
-                            width: width * 0.003,
-                          ),
-                        ),
-                        padding: EdgeInsets.all(width * 0.015),
-                        child: InkWell(
-                          onTap: _swapLocations,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          child: Icon(
-                            Icons.swap_vert,
-                            color: ColorsUtil.whiteColor,
-                            size: height * 0.035,
-                          ),
-                        ),
+                      child: SwapButton(
+                        icon: Icons.swap_vert,
+                        label: tr('Swap origin and destination'),
+                        onPressed: _swapLocations,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: height * 0.025),
 
-                // Trip Type Toggle
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                // Trip Type Toggle (wraps with large text)
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 8,
                   children: [
                     ChoiceChip(
-                      label: Text('One Way'),
+                      label: Text(tr('One Way')),
                       selected: !isRoundTrip,
                       onSelected: (selected) {
                         setState(() {
@@ -270,15 +265,14 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         });
                       },
                       selectedColor: ColorsUtil.secondaryLight,
-                      backgroundColor: ColorsUtil.primaryLight,
+                      backgroundColor: ColorsUtil.field,
                       labelStyle: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(width: 10),
                     ChoiceChip(
-                      label: Text('Round Trip'),
+                      label: Text(tr('Round Trip')),
                       selected: isRoundTrip,
                       onSelected: (selected) {
                         setState(() {
@@ -286,7 +280,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         });
                       },
                       selectedColor: ColorsUtil.secondaryLight,
-                      backgroundColor: ColorsUtil.primaryLight,
+                      backgroundColor: ColorsUtil.field,
                       labelStyle: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontWeight: FontWeight.w500,
@@ -306,7 +300,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         Expanded(
                           child: SearchInputField(
                             icon: Icons.calendar_today,
-                            hint: 'Departure',
+                            hint: tr('Departure'),
                             controller: departureController,
                             onTap: () => FlightDatePickerUtils.selectDate(
                               context,
@@ -320,7 +314,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                           Expanded(
                             child: SearchInputField(
                               icon: Icons.calendar_today,
-                              hint: 'Return',
+                              hint: tr('Return'),
                               controller: returnController,
                               onTap: () => FlightDatePickerUtils.selectDate(
                                 context,
@@ -335,27 +329,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                     if (isRoundTrip)
                       Positioned(
                         top: height * 0.03,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: ColorsUtil.primary,
-                            borderRadius: BorderRadius.circular(width * 0.1),
-                            border: Border.all(
-                              color: ColorsUtil.whiteColor.withValues(
-                                alpha: 0.3,
-                              ),
-                              width: width * 0.003,
-                            ),
-                          ),
-                          padding: EdgeInsets.all(width * 0.015),
-                          child: InkWell(
-                            onTap: _swapDates,
-                            borderRadius: BorderRadius.circular(width * 0.1),
-                            child: Icon(
-                              Icons.swap_horiz,
-                              color: ColorsUtil.whiteColor,
-                              size: height * 0.03,
-                            ),
-                          ),
+                        child: SwapButton(
+                          icon: Icons.swap_horiz,
+                          label: tr('Swap departure and return dates'),
+                          onPressed: _swapDates,
                         ),
                       ),
                   ],
@@ -365,7 +342,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 // Passengers (prices are per passenger)
                 SearchInputField(
                   icon: Icons.person,
-                  caption: 'Passengers',
+                  caption: tr('Passengers'),
                   min: 1,
                   controller: adultsController,
                   isCounter: true,
@@ -387,8 +364,8 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         vertical: height * 0.02,
                       ),
                     ),
-                    child: const Text(
-                      'Search',
+                    child: Text(
+                      tr('Search'),
                       style: TextStyle(
                         color: ColorsUtil.whiteColor,
                         fontSize: 18,

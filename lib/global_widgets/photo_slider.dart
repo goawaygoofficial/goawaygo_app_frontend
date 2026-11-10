@@ -1,3 +1,5 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/discover/discover_models.dart';
@@ -139,7 +141,7 @@ class _Slide extends StatelessWidget {
   static const _gradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [ColorsUtil.secondaryLight, ColorsUtil.primaryLight],
+    colors: [ColorsUtil.brandOrangeLight, ColorsUtil.primaryLight],
   );
 
   @override
@@ -161,6 +163,7 @@ class _Slide extends StatelessWidget {
               Image.network(
                 photo.url,
                 headers: photoHeaders,
+                cacheWidth: screenDecodeWidth(context),
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, progress) => progress == null
                     ? child

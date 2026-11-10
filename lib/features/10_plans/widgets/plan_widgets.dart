@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/plans/plan_models.dart';
@@ -14,7 +15,7 @@ final _muted = TextStyle(
 
 /// "≈ ₹500", or "Free" for nothing.
 String _cost(int value, String currency) =>
-    value > 0 ? '≈ ${BookFormat.price(value, currency)}' : 'Free';
+    value > 0 ? '≈ ${BookFormat.price(value, currency)}' : tr('Free');
 
 /// The plan form's chips: one choice ([selected] has one value) or several, up to [max].
 class OptionChips extends StatelessWidget {
@@ -61,8 +62,8 @@ class OptionChips extends StatelessWidget {
                             : [...selected, option.value],
                       ),
                 selectedColor: ColorsUtil.secondaryLight,
-                backgroundColor: ColorsUtil.primaryLight,
-                disabledColor: ColorsUtil.primaryLight.withValues(alpha: 0.4),
+                backgroundColor: ColorsUtil.field,
+                disabledColor: ColorsUtil.field.withValues(alpha: 0.4),
                 side: BorderSide.none,
                 shape: const StadiumBorder(),
                 labelStyle: const TextStyle(
@@ -99,13 +100,16 @@ class EstimateCard extends StatelessWidget {
     const line = TextStyle(color: ColorsUtil.whiteColor, fontSize: 14);
     return TwoToneCard(
       left: [
-        Text('≈ ${money(estimate.perDay)} a day', style: big),
+        Text(tr('≈ {0} a day', [money(estimate.perDay)]), style: big),
         const SizedBox(height: 4),
-        Text('Food, local transport and activities', style: small),
+        Text(tr('Food, local transport and activities'), style: small),
       ],
       right: [
         if (estimate.nights > 0)
-          Text('Stays ≈ ${money(estimate.stayPerNight)} a night', style: line),
+          Text(
+            tr('Stays ≈ {0} a night', [money(estimate.stayPerNight)]),
+            style: line,
+          ),
         const SizedBox(height: 2),
         Text.rich(
           TextSpan(
@@ -115,12 +119,15 @@ class EstimateCard extends StatelessWidget {
                 text: '≈ ${money(estimate.total)}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              const TextSpan(text: ' for the trip'),
+              TextSpan(text: tr(' for the trip')),
             ],
           ),
         ),
         const SizedBox(height: 4),
-        Text('AI estimate for the group · flights not included', style: small),
+        Text(
+          tr('AI estimate for the group · flights not included'),
+          style: small,
+        ),
       ],
     );
   }
@@ -248,7 +255,10 @@ class _DayCardState extends State<DayCard> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [ColorsUtil.secondaryLight, ColorsUtil.secondaryDark],
+                colors: [
+                  ColorsUtil.brandOrangeLight,
+                  ColorsUtil.brandOrangeDark,
+                ],
               ),
             ),
             child: Column(
@@ -258,7 +268,7 @@ class _DayCardState extends State<DayCard> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Day ${day.day}   ',
+                        text: tr('Day {0}   ', [day.day]),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(text: BookFormat.day(day.date)),
@@ -287,28 +297,31 @@ class _DayCardState extends State<DayCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SlotRow(
-                  label: 'MORNING',
+                  label: tr('MORNING'),
                   slot: day.morning,
                   currency: widget.currency,
                 ),
                 _SlotRow(
-                  label: 'AFTERNOON',
+                  label: tr('AFTERNOON'),
                   slot: day.afternoon,
                   currency: widget.currency,
                 ),
                 _SlotRow(
-                  label: 'EVENING',
+                  label: tr('EVENING'),
                   slot: day.evening,
                   currency: widget.currency,
                 ),
                 if (day.food.isNotEmpty)
-                  _Labelled(label: 'Eat:', text: day.food.join(' · ')),
-                if (day.tip.isNotEmpty) _Labelled(label: 'Tip:', text: day.tip),
+                  _Labelled(label: tr('Eat:'), text: day.food.join(' · ')),
+                if (day.tip.isNotEmpty)
+                  _Labelled(label: tr('Tip:'), text: day.tip),
                 const SizedBox(height: 4),
                 Text(
-                  'Day total ≈ ${BookFormat.price(day.cost, widget.currency)}',
+                  tr('Day total ≈ {0}', [
+                    BookFormat.price(day.cost, widget.currency),
+                  ]),
                   style: const TextStyle(
-                    color: ColorsUtil.primaryLight,
+                    color: ColorsUtil.textMuted,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -318,7 +331,7 @@ class _DayCardState extends State<DayCard> {
                     _changeForm()
                   else
                     PillButton(
-                      label: 'Change this day',
+                      label: tr('Change this day'),
                       quiet: true,
                       onPressed: () => setState(() => _open = true),
                     ),
@@ -335,8 +348,8 @@ class _DayCardState extends State<DayCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'What would you like instead? (optional)',
+        Text(
+          tr('What would you like instead? (optional)'),
           style: TextStyle(
             color: ColorsUtil.whiteColor,
             fontWeight: FontWeight.w600,
@@ -349,7 +362,7 @@ class _DayCardState extends State<DayCard> {
           maxLength: 200,
           style: const TextStyle(color: ColorsUtil.primary),
           decoration: InputDecoration(
-            hintText: 'e.g. more street food, fewer museums',
+            hintText: tr('e.g. more street food, fewer museums'),
             filled: true,
             fillColor: ColorsUtil.whiteColor,
             counterStyle: _muted.copyWith(fontSize: 11),
@@ -386,16 +399,16 @@ class _DayCardState extends State<DayCard> {
                 ),
               ),
               const SizedBox(width: 10),
-              Text('Rewriting this day…', style: _muted),
+              Text(tr('Rewriting this day…'), style: _muted),
             ],
           )
         else
           Wrap(
             spacing: 8,
             children: [
-              PillButton(label: 'Rewrite day', onPressed: _rewrite),
+              PillButton(label: tr('Rewrite day'), onPressed: _rewrite),
               PillButton(
-                label: 'Cancel',
+                label: tr('Cancel'),
                 quiet: true,
                 onPressed: () => setState(() {
                   _open = false;
@@ -525,7 +538,11 @@ class AiNote extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Text(
-        'Plans are written by AI. Check opening times, prices and travel advice before you go.',
+        tr(
+          tr(
+            'Plans are written by AI. Check opening times, prices and travel advice before you go.',
+          ),
+        ),
         textAlign: TextAlign.center,
         style: _muted.copyWith(fontSize: 12),
       ),

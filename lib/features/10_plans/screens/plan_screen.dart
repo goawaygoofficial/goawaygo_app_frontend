@@ -1,3 +1,5 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
+
 import 'dart:async';
 
 import 'package:app_frontend/core/analytics/analytics.dart';
@@ -71,7 +73,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 Image.asset('assets/images/logo.png', height: height * 0.1),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Back',
+                  tooltip: tr('Back'),
                   icon: const Icon(
                     Icons.arrow_back_ios_rounded,
                     color: ColorsUtil.whiteColor,
@@ -83,8 +85,8 @@ class _PlanScreenState extends State<PlanScreen> {
             if (_notFound)
               PlanPanel(
                 children: [
-                  const Text(
-                    "This plan isn't available",
+                  Text(
+                    tr('This plan isn\'t available'),
                     style: TextStyle(
                       color: ColorsUtil.whiteColor,
                       fontSize: 18,
@@ -93,7 +95,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'It may have been deleted.',
+                    tr('It may have been deleted.'),
                     style: TextStyle(
                       color: ColorsUtil.whiteColor.withValues(alpha: 0.8),
                     ),
@@ -103,8 +105,8 @@ class _PlanScreenState extends State<PlanScreen> {
             else if (_error != null)
               PlanPanel(
                 children: [
-                  const Text(
-                    'Something went wrong',
+                  Text(
+                    tr('Something went wrong'),
                     style: TextStyle(
                       color: ColorsUtil.whiteColor,
                       fontSize: 18,
@@ -120,7 +122,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  PillButton(label: 'Try again', onPressed: _load),
+                  PillButton(label: tr('Try again'), onPressed: _load),
                 ],
               )
             else if (plan == null)
@@ -146,7 +148,7 @@ class _PlanScreenState extends State<PlanScreen> {
       fontSize: 15,
       height: 1.35,
     );
-    const info = TextStyle(color: ColorsUtil.primaryLight, fontSize: 13);
+    const info = TextStyle(color: ColorsUtil.textMuted, fontSize: 13);
     return [
       Text(
         plan.title,
@@ -203,17 +205,17 @@ class _PlanScreenState extends State<PlanScreen> {
         children: [
           ShortcutPill(
             icon: Icons.flight,
-            label: 'Flights',
+            label: tr('Flights'),
             onPressed: () => _openFlights(plan),
           ),
           ShortcutPill(
             icon: Icons.hotel,
-            label: 'Stays',
+            label: tr('Stays'),
             onPressed: () => _openStays(plan),
           ),
           ShortcutPill(
             icon: Icons.directions_car,
-            label: 'Car rentals',
+            label: tr('Car rentals'),
             onPressed: () => _openCars(plan),
           ),
         ],
@@ -237,8 +239,8 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
       if (plan.tips.isNotEmpty) ...[
         const SizedBox(height: 4),
-        const Text(
-          'Tips for the trip',
+        Text(
+          tr('Tips for the trip'),
           style: TextStyle(
             color: ColorsUtil.whiteColor,
             fontSize: 17,
@@ -394,8 +396,8 @@ class _OwnerActionsState extends State<_OwnerActions> {
         SnackBar(
           content: Text(
             copied
-                ? 'Link copied'
-                : "Couldn't copy the link. Select it to copy.",
+                ? tr('Link copied')
+                : tr('Couldn\'t copy the link. Select it to copy.'),
           ),
         ),
       );
@@ -409,19 +411,16 @@ class _OwnerActionsState extends State<_OwnerActions> {
     return PlanPanel(
       children: [
         if (plan.shared) ...[
-          const Text(
-            'Anyone with this link can view the plan:',
+          Text(
+            tr('Anyone with this link can view the plan:'),
             textAlign: TextAlign.center,
             style: TextStyle(color: ColorsUtil.whiteColor),
           ),
           const SizedBox(height: 6),
           SelectableText(
-            link ?? 'The website address is missing in this build.',
+            link ?? tr('The website address is missing in this build.'),
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: ColorsUtil.primaryLight,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: ColorsUtil.textMuted, fontSize: 13),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -431,12 +430,12 @@ class _OwnerActionsState extends State<_OwnerActions> {
             children: [
               if (link != null)
                 PillButton(
-                  label: 'Copy link',
+                  label: tr('Copy link'),
                   icon: Icons.link,
                   onPressed: () => _copy(link),
                 ),
               PillButton(
-                label: 'Stop sharing',
+                label: tr('Stop sharing'),
                 quiet: true,
                 onPressed: _busy
                     ? null
@@ -450,7 +449,7 @@ class _OwnerActionsState extends State<_OwnerActions> {
           ),
         ] else
           PillButton(
-            label: 'Share by link',
+            label: tr('Share by link'),
             large: true,
             onPressed: _busy
                 ? null
@@ -468,8 +467,8 @@ class _OwnerActionsState extends State<_OwnerActions> {
         const SizedBox(height: 12),
         PillButton(
           label: _confirmDelete
-              ? 'Tap again to delete this plan'
-              : 'Delete plan',
+              ? tr('Tap again to delete this plan')
+              : tr('Delete plan'),
           quiet: true,
           onPressed: _busy
               ? null

@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/book/book_format.dart';
 import 'package:app_frontend/core/book/book_models.dart';
@@ -32,39 +33,43 @@ class _StayResultsScreenState extends State<StayResultsScreen> {
         final partners = snapshot.data;
         return ResultsLayout(
           icon: Icons.hotel,
-          title: 'Stays',
+          title: tr('Stays'),
           heading: search.place,
           dates: dates,
           travellers:
               '${BookFormat.plural(search.adults, 'guest')} · ${BookFormat.plural(search.rooms, 'room')}',
-          note: "Hotels and prices open on the partner's site, with your dates filled in",
+          note: tr(
+            'Hotels and prices open on the partner\'s site, with your dates filled in',
+          ),
           children: [
             if (snapshot.connectionState != ConnectionState.done)
-              const ResultsMessage(title: 'Opening hotel partners…')
+              ResultsMessage(title: tr('Opening hotel partners…'))
             else if (snapshot.hasError || partners == null)
               ResultsMessage(
-                title: "Hotel partners didn't open",
+                title: tr('Hotel partners didn\'t open'),
                 text:
                     snapshot.error?.toString() ??
-                    'Could not open hotel partners.',
+                    tr('Could not open hotel partners.'),
                 onRetry: () => setState(
                   () => _partners = BookService.stayPartners(search),
                 ),
               )
             else if (partners.isEmpty)
-              const ResultsMessage(
-                title: 'No hotel partners here yet',
-                text: 'Please try again later.',
+              ResultsMessage(
+                title: tr('No hotel partners here yet'),
+                text: tr('Please try again later.'),
               )
             else
               for (final partner in partners)
                 PartnerCardTile(
                   partner: partner,
-                  kind: 'Hotels in ${search.place}',
-                  title: 'See hotels for $dates',
+                  kind: tr('Hotels in {0}', [search.place]),
+                  title: tr('See hotels for {0}', [dates]),
                   detail: partner.id == 'tripcom'
-                      ? "Pick ${search.place} from Trip.com's list to see hotels"
-                      : 'Your dates and guests are filled in',
+                      ? tr('Pick {0} from Trip.com\'s list to see hotels', [
+                          search.place,
+                        ])
+                      : tr('Your dates and guests are filled in'),
                   onOpen: () {
                     Analytics.track(
                       PartnerOpened(TravelCategory.stays, partner.id),

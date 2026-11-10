@@ -1,5 +1,7 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
+import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/global_utils/colors.dart';
@@ -46,7 +48,11 @@ class _SignInPanelState extends State<SignInPanel> {
     context.read<UserProvider>().signIn(user);
     await CustomDialogs.showSuccessDialog(
       context: context,
-      message: '$greeting, ${user.name}!',
+      message: Backend.session.restoredOnLastStart
+          ? tr('Welcome back, {0}! Your account won\'t be deleted.', [
+              user.name,
+            ])
+          : '$greeting, ${user.name}!',
     );
     FocusManager.instance.primaryFocus?.unfocus();
     if (mounted) widget.onSignedIn(user);
@@ -57,7 +63,7 @@ class _SignInPanelState extends State<SignInPanel> {
       final user = await AuthService.googleSignin();
       if (user == null || !mounted) return; // The user closed Google's dialog.
       Analytics.track(SignInCompleted(google: true));
-      await _welcome(user, 'Welcome');
+      await _welcome(user, tr('Welcome'));
     } on ApiException catch (e) {
       if (!mounted) return;
       await CustomDialogs.showErrorDialog(context: context, message: e.message);
@@ -72,7 +78,7 @@ class _SignInPanelState extends State<SignInPanel> {
     if (email.isEmpty || password.isEmpty) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Please enter both email and password.',
+        message: tr('Please enter both email and password.'),
       );
       return;
     }
@@ -81,7 +87,7 @@ class _SignInPanelState extends State<SignInPanel> {
       final user = await AuthService.signin(email, password);
       Analytics.track(SignInCompleted(google: false));
       if (!mounted) return;
-      await _welcome(user, 'Welcome back');
+      await _welcome(user, tr('Welcome back'));
     } on ApiException catch (e) {
       if (!mounted) return;
       await CustomDialogs.showErrorDialog(
@@ -121,7 +127,7 @@ class _SignInPanelState extends State<SignInPanel> {
         children: [
           AuthButton(
             icon: 'assets/icons/google_icon.png',
-            text: 'Continue with Google',
+            text: tr('Continue with Google'),
             bgColor: ColorsUtil.whiteColor,
             textColor: ColorsUtil.secondary,
             onTap: _handleGoogleSignIn,
@@ -129,7 +135,7 @@ class _SignInPanelState extends State<SignInPanel> {
           SizedBox(height: height * 0.02),
           AuthButton(
             icon: 'assets/icons/email.png',
-            text: 'SIGN IN',
+            text: tr('SIGN IN'),
             bgColor: ColorsUtil.secondary,
             textColor: ColorsUtil.whiteColor,
             onTap: () => setState(() => _showForm = true),
@@ -144,7 +150,7 @@ class _SignInPanelState extends State<SignInPanel> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              tooltip: 'Close sign-in form',
+              tooltip: tr('Close sign-in form'),
               icon: Icon(
                 Icons.close_rounded,
                 size: width * 0.075,
@@ -157,22 +163,22 @@ class _SignInPanelState extends State<SignInPanel> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             autofillHints: const [AutofillHints.email],
-            decoration: fieldDecoration('Enter your Email address...'),
+            decoration: fieldDecoration(tr('Enter your Email address...')),
           ),
           SizedBox(height: height * 0.02),
           TextField(
             controller: _passwordController,
             obscureText: true,
             autofillHints: const [AutofillHints.password],
-            decoration: fieldDecoration('Password...'),
+            decoration: fieldDecoration(tr('Password...')),
           ),
           SizedBox(height: height * 0.01),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: widget.onForgotPassword,
-              child: const Text(
-                'Forgot Password?',
+              child: Text(
+                tr('Forgot Password?'),
                 style: TextStyle(
                   color: ColorsUtil.whiteColor,
                   fontWeight: FontWeight.bold,
@@ -183,7 +189,7 @@ class _SignInPanelState extends State<SignInPanel> {
           SizedBox(height: height * 0.01),
           AuthButton(
             icon: 'assets/icons/email.png',
-            text: 'SIGN IN',
+            text: tr('SIGN IN'),
             bgColor: ColorsUtil.secondary,
             textColor: ColorsUtil.whiteColor,
             onTap: _handleSignIn,
@@ -191,10 +197,10 @@ class _SignInPanelState extends State<SignInPanel> {
           SizedBox(height: height * 0.01),
           TextButton(
             onPressed: widget.onRegister,
-            child: const Text(
-              'Not Registered? Register',
+            child: Text(
+              tr('Not Registered? Register'),
               style: TextStyle(
-                color: ColorsUtil.secondary,
+                color: ColorsUtil.secondaryLighter,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),

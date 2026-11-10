@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/notifications/notification_models.dart';
 import 'package:app_frontend/core/notifications/notification_service.dart';
@@ -90,7 +91,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Image.asset('assets/images/logo.png', height: height * 0.1),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Back',
+                  tooltip: tr('Back'),
                   icon: const Icon(
                     Icons.arrow_back_ios_rounded,
                     color: ColorsUtil.whiteColor,
@@ -99,18 +100,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.notifications,
-                  color: ColorsUtil.secondaryLight,
+                  color: ColorsUtil.brandOrangeLight,
                   size: 26,
                 ),
                 SizedBox(width: 8),
                 Flexible(
                   child: Text(
-                    'Notifications',
+                    tr('Notifications'),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: ColorsUtil.whiteColor,
@@ -123,13 +124,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             const SizedBox(height: 16),
             if (!signedIn)
-              const _Panel(
-                text: 'Sign in from the Profile tab to see likes, comments, new followers and trip reminders.',
+              _Panel(
+                text: tr(
+                  tr(
+                    'Sign in from the Profile tab to see likes, comments, new followers and trip reminders.',
+                  ),
+                ),
               )
             else if (_error != null)
               _Panel(
                 text: _error!,
-                action: PillButton(label: 'Try again', onPressed: _load),
+                action: PillButton(label: tr('Try again'), onPressed: _load),
               )
             else if (items == null)
               const Padding(
@@ -141,10 +146,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               )
             else if (items.isEmpty)
-              const _Panel(
+              _Panel(
                 icon: Icons.notifications_none,
-                title: 'No notifications yet',
-                text: 'Likes, comments, new followers and trip reminders show up here.',
+                title: tr('No notifications yet'),
+                text: tr(
+                  tr(
+                    'Likes, comments, new followers and trip reminders show up here.',
+                  ),
+                ),
               )
             else ...[
               for (final item in items) _NotificationTile(item: item),
@@ -158,7 +167,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ),
                         )
                       : PillButton(
-                          label: 'Show older',
+                          label: tr('Show older'),
                           quiet: true,
                           onPressed: _loadMore,
                         ),
@@ -175,7 +184,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ),
                     ),
                     icon: const Icon(Icons.tune, size: 18),
-                    label: const Text('Notification settings'),
+                    label: Text(tr('Notification settings')),
                     style: TextButton.styleFrom(
                       foregroundColor: ColorsUtil.secondaryLighter,
                       textStyle: const TextStyle(fontWeight: FontWeight.w600),
@@ -273,7 +282,7 @@ class _NotificationTile extends StatelessWidget {
                       Text(
                         timeAgo(item.createdAt),
                         style: const TextStyle(
-                          color: ColorsUtil.primaryLight,
+                          color: ColorsUtil.textMuted,
                           fontSize: 12,
                         ),
                       ),
@@ -286,7 +295,7 @@ class _NotificationTile extends StatelessWidget {
                     height: 10,
                     margin: const EdgeInsets.only(top: 6, left: 8),
                     decoration: const BoxDecoration(
-                      color: ColorsUtil.secondaryLight,
+                      color: ColorsUtil.brandOrangeLight,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -319,7 +328,7 @@ class _Panel extends StatelessWidget {
       child: Column(
         children: [
           if (icon != null) ...[
-            Icon(icon, color: ColorsUtil.secondaryLight, size: 40),
+            Icon(icon, color: ColorsUtil.brandOrangeLight, size: 40),
             const SizedBox(height: 8),
           ],
           if (title != null) ...[
