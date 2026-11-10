@@ -55,9 +55,14 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> navigateToNextScreen() async {
-    await Future.delayed(const Duration(milliseconds: 3000));
-
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // The animation, and the session being restored at the same time (main.dart).
+    await Future.wait([
+      Future<void>.delayed(const Duration(milliseconds: 3000)),
+      userProvider.restored,
+    ]);
+    if (!mounted) return;
+
     if (userProvider.user != null) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(

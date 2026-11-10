@@ -49,9 +49,15 @@ void main() {
       () async {
         final provider = UserProvider();
 
+        var restored = false;
+        provider.restored.then((_) => restored = true);
+
         await provider.restoreSession();
+        await Future<void>.delayed(Duration.zero);
 
         expect(provider.user, isNull);
+        // The splash screen waits for this, signed in or not.
+        expect(restored, isTrue);
       },
     );
 

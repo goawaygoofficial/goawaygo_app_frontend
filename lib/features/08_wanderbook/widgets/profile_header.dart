@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/people_screen.dart';
@@ -45,7 +46,11 @@ class ProfileHeader extends StatelessWidget {
                           'assets/images/home_image_01.png',
                           fit: BoxFit.cover,
                         )
-                      : Image.network(profile.coverUrl!, fit: BoxFit.cover),
+                      : Image.network(
+                          profile.coverUrl!,
+                          cacheWidth: screenDecodeWidth(context),
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Positioned(

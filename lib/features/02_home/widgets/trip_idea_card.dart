@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/analytics/analytics.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
@@ -81,6 +82,7 @@ class _TripIdeaCardState extends State<TripIdeaCard> {
             Image.network(
               idea.photo.url,
               headers: photoHeaders,
+              cacheWidth: screenDecodeWidth(context),
               fit: BoxFit.cover,
               errorBuilder: (context, error, stack) => const SizedBox.shrink(),
             ),

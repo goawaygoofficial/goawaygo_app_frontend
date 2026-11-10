@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/wanderbook/wanderbook_models.dart';
 import 'package:app_frontend/features/08_wanderbook/screens/post_screen.dart';
@@ -67,6 +68,7 @@ class Avatar extends StatelessWidget {
             ? Icon(Icons.person, color: Colors.white, size: size * 0.6)
             : Image.network(
                 url!,
+                cacheWidth: decodeWidth(context, size),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stack) =>
                     Icon(Icons.person, color: Colors.white, size: size * 0.6),

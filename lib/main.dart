@@ -32,14 +32,18 @@ void main() async {
     await PushNotifications.init();
 
     final userProvider = UserProvider();
-    await userProvider.restoreSession();
-    // Push follows the signed-in account: registered at start-up and after every sign-in.
-    var signedInAs = userProvider.user?.id;
-    if (signedInAs != null) PushNotifications.onSignedIn();
-    userProvider.addListener(() {
-      final id = userProvider.user?.id;
-      if (id != null && id != signedInAs) PushNotifications.onSignedIn();
-      signedInAs = id;
+    // Speed (4.7): the session is restored (a network call) while the splash screen plays, not before the app
+    // starts; the splash screen waits for it before opening Home or sign-in.
+    int? signedInAs;
+    userProvider.restoreSession().then((_) {
+      // Push follows the signed-in account: registered at start-up and after every sign-in.
+      signedInAs = userProvider.user?.id;
+      if (signedInAs != null) PushNotifications.onSignedIn();
+      userProvider.addListener(() {
+        final id = userProvider.user?.id;
+        if (id != null && id != signedInAs) PushNotifications.onSignedIn();
+        signedInAs = id;
+      });
     });
 
     runApp(

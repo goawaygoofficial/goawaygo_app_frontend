@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/discover/discover_service.dart';
@@ -279,7 +280,15 @@ class PostGrid extends StatelessWidget {
                 if (cover != null)
                   Hero(
                     tag: postHeroTag(post.publicId),
-                    child: Image.network(cover.url, fit: BoxFit.cover),
+                    // A third of the screen wide: the grid's tile size.
+                    child: Image.network(
+                      cover.url,
+                      cacheWidth: decodeWidth(
+                        context,
+                        MediaQuery.sizeOf(context).width / 3,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 if (post.photos.length > 1)
                   const Positioned(

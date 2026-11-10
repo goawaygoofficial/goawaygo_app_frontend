@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/decode_size.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/legal/legal_pages.dart';
@@ -157,6 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ? const ColoredBox(color: Colors.white12)
                             : Image.network(
                                 profile.coverUrl!,
+                                cacheWidth: decodeWidth(context, 110),
                                 fit: BoxFit.cover,
                               ),
                       ),

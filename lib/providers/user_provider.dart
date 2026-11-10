@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/core/backend.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
@@ -42,10 +44,19 @@ class UserProvider extends ChangeNotifier {
 
   /// Restores the session at startup. Leaves the user signed out if there is no session or the server is
   /// unreachable.
+  final _restored = Completer<void>();
+
+  /// Completes when [restoreSession] has finished, signed in or not (the splash screen waits for it).
+  Future<void> get restored => _restored.future;
+
   Future<void> restoreSession() async {
-    await _removeLegacyStoredUser();
-    _user = await AuthService.restoreSession();
-    notifyListeners();
+    try {
+      await _removeLegacyStoredUser();
+      _user = await AuthService.restoreSession();
+      notifyListeners();
+    } finally {
+      if (!_restored.isCompleted) _restored.complete();
+    }
   }
 
   /// Call after a successful sign-in (the session itself is already stored by [AuthService]).
