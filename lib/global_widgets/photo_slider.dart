@@ -139,7 +139,7 @@ class _Slide extends StatelessWidget {
   static const _gradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [ColorsUtil.secondaryLight, ColorsUtil.primaryLight],
+    colors: [ColorsUtil.brandOrangeLight, ColorsUtil.primaryLight],
   );
 
   @override

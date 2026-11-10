@@ -91,7 +91,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final place = post.place;
-    final muted = TextStyle(color: Colors.white.withValues(alpha: 0.7));
+    final muted = TextStyle(color: ColorsUtil.textMuted);
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Column(

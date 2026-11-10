@@ -76,7 +76,7 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
         color: ColorsUtil.whiteColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
         border: const Border(
-          left: BorderSide(color: ColorsUtil.secondary, width: 4),
+          left: BorderSide(color: ColorsUtil.brandOrange, width: 4),
         ),
       ),
       child: Row(
@@ -107,13 +107,13 @@ class _VerifyEmailBannerState extends State<VerifyEmailBanner>
                     dimension: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                     ),
                   )
                 : Text(
                     tr('Resend link'),
                     style: TextStyle(
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -43,7 +43,7 @@ class ResultsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final muted = ColorsUtil.whiteColor.withValues(alpha: 0.75);
+    final muted = ColorsUtil.textMuted;
 
     return Scaffold(
       backgroundColor: ColorsUtil.primary,
@@ -100,14 +100,14 @@ class ResultsLayout extends StatelessWidget {
                 const SizedBox(height: 12),
                 DefaultTextStyle(
                   style: const TextStyle(
-                    color: ColorsUtil.primaryLight,
+                    color: ColorsUtil.textMuted,
                     fontSize: 14,
                   ),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.calendar_today,
-                        color: ColorsUtil.primaryLight,
+                        color: ColorsUtil.textMuted,
                         size: 18,
                       ),
                       const SizedBox(width: 4),
@@ -116,7 +116,7 @@ class ResultsLayout extends StatelessWidget {
                       if (travellers != null) ...[
                         const Icon(
                           Icons.person,
-                          color: ColorsUtil.primaryLight,
+                          color: ColorsUtil.textMuted,
                           size: 18,
                         ),
                         const SizedBox(width: 4),
@@ -185,7 +185,10 @@ class FloatingPill extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: onPressed,
-          child: Padding(
+          // At least 48 high, Android's tap target (WCAG 2.5.8).
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 48),
+            alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
             child: Text(
               label,
@@ -229,7 +232,7 @@ class ResultsMessage extends StatelessWidget {
         children: [
           const Icon(
             Icons.travel_explore,
-            color: ColorsUtil.secondaryLight,
+            color: ColorsUtil.brandOrangeLight,
             size: 36,
           ),
           const SizedBox(height: 8),
@@ -247,9 +250,7 @@ class ResultsMessage extends StatelessWidget {
             Text(
               text!,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-              ),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
           ],
           if (onRetry != null) ...[

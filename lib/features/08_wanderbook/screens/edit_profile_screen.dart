@@ -140,7 +140,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : null,
                         child: Text(
                           tr('Remove'),
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: ColorsUtil.textMuted),
                         ),
                       ),
                   ],
@@ -178,7 +178,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : null,
                         child: Text(
                           tr('Remove'),
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: ColorsUtil.textMuted),
                         ),
                       ),
                   ],
@@ -213,9 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         'Only followers you approve see your posts and lists. Turning it off approves waiting requests.',
                       ),
                     ),
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.75),
-                    ),
+                    style: TextStyle(color: ColorsUtil.textMuted),
                   ),
                 ),
                 const SizedBox(height: 12),

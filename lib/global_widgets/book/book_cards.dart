@@ -30,7 +30,7 @@ class TwoToneCard extends StatelessWidget {
       color: Colors.transparent,
       child: Ink(
         decoration: BoxDecoration(
-          color: ColorsUtil.secondary,
+          color: ColorsUtil.secondaryDark,
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
             BoxShadow(

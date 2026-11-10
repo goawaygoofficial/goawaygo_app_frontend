@@ -34,7 +34,7 @@ class _ProfileButtonState extends State<ProfileButton> {
         Container(
           padding: EdgeInsets.all(width * 0.04),
           decoration: BoxDecoration(
-            color: ColorsUtil.secondaryLight,
+            color: ColorsUtil.brandOrangeLight,
             borderRadius: BorderRadius.circular(width * 0.04),
           ),
           child: Image.asset(

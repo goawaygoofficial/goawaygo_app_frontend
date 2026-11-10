@@ -211,7 +211,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   'Photos are kept exactly as they are. Their hidden location data is removed; only the place name below is shown.',
                 ),
               ),
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
             const SizedBox(height: 16),
             TextField(

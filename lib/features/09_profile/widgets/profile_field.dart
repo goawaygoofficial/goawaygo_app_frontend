@@ -1,3 +1,4 @@
+import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,10 @@ class ProfileField extends StatelessWidget {
                   flex: 4,
                   child: Text(
                     label,
-                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                    style: const TextStyle(
+                      color: ColorsUtil.textMuted,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -101,7 +105,10 @@ class ProfileField extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
               child: Text(
                 note!,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
+                style: const TextStyle(
+                  color: ColorsUtil.textMuted,
+                  fontSize: 12,
+                ),
               ),
             ),
         ],

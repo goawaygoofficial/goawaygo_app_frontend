@@ -23,12 +23,15 @@ class FeatureItem extends StatelessWidget {
             fit: BoxFit.contain,
           ),
           SizedBox(width: width * 0.02),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+          // Wraps instead of overflowing with large text (WCAG 1.4.4).
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

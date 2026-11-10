@@ -105,7 +105,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               children: [
                 Icon(
                   Icons.notifications,
-                  color: ColorsUtil.secondaryLight,
+                  color: ColorsUtil.brandOrangeLight,
                   size: 26,
                 ),
                 SizedBox(width: 8),
@@ -282,7 +282,7 @@ class _NotificationTile extends StatelessWidget {
                       Text(
                         timeAgo(item.createdAt),
                         style: const TextStyle(
-                          color: ColorsUtil.primaryLight,
+                          color: ColorsUtil.textMuted,
                           fontSize: 12,
                         ),
                       ),
@@ -295,7 +295,7 @@ class _NotificationTile extends StatelessWidget {
                     height: 10,
                     margin: const EdgeInsets.only(top: 6, left: 8),
                     decoration: const BoxDecoration(
-                      color: ColorsUtil.secondaryLight,
+                      color: ColorsUtil.brandOrangeLight,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -328,7 +328,7 @@ class _Panel extends StatelessWidget {
       child: Column(
         children: [
           if (icon != null) ...[
-            Icon(icon, color: ColorsUtil.secondaryLight, size: 40),
+            Icon(icon, color: ColorsUtil.brandOrangeLight, size: 40),
             const SizedBox(height: 8),
           ],
           if (title != null) ...[

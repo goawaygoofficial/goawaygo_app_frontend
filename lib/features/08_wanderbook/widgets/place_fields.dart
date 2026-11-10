@@ -103,7 +103,7 @@ class _PlaceFieldsState extends State<PlaceFields> {
 
   @override
   Widget build(BuildContext context) {
-    final muted = TextStyle(color: Colors.white.withValues(alpha: 0.75));
+    final muted = TextStyle(color: ColorsUtil.textMuted);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -177,7 +177,7 @@ class _PlaceFieldsState extends State<PlaceFields> {
             },
             child: Text(
               tr('Remove place'),
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
           ),
       ],

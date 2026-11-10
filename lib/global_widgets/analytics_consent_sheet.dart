@@ -96,9 +96,7 @@ class _ConsentSheet extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   'Currently: ${current == AnalyticsConsent.granted ? 'allowed' : 'not allowed'}.',
-                  style: text.copyWith(
-                    color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                  ),
+                  style: text.copyWith(color: ColorsUtil.textMuted),
                 ),
               ),
             const SizedBox(height: 8),

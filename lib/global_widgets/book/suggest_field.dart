@@ -113,7 +113,7 @@ class _SuggestFieldState<T> extends State<SuggestField<T>> {
             vertical: height * 0.0165,
           ),
           decoration: BoxDecoration(
-            color: ColorsUtil.primaryLight,
+            color: ColorsUtil.field,
             borderRadius: BorderRadius.circular(height * 0.04),
           ),
           child: Row(

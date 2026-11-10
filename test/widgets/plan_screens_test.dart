@@ -145,7 +145,12 @@ void main() {
 
     for (final interest in PlanOptions.interests.take(7)) {
       final chip = find.widgetWithText(FilterChip, interest.label);
-      await tester.ensureVisible(chip);
+      // The form is a lazy list: scroll until the chip is built.
+      await tester.scrollUntilVisible(
+        chip,
+        100,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
       await tester.tap(chip);
       await tester.pumpAndSettle();

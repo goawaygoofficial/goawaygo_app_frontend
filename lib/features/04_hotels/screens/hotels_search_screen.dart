@@ -10,6 +10,7 @@ import 'package:app_frontend/global_widgets/book/suggest_field.dart';
 import 'package:app_frontend/features/04_hotels/utils/hotel_form_controllers_utils.dart';
 import 'package:app_frontend/global_widgets/search_input_field.dart';
 import 'package:app_frontend/global_utils/colors.dart';
+import 'package:app_frontend/global_widgets/swap_button.dart';
 import 'package:flutter/material.dart';
 
 class HotelsSearchScreen extends StatefulWidget {
@@ -124,6 +125,7 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                     ),
                     const Spacer(),
                     IconButton(
+                      tooltip: tr('Back'),
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: ColorsUtil.whiteColor,
@@ -142,12 +144,15 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                       'assets/images/stays.png',
                       height: height * 0.1,
                     ),
-                    Text(
-                      tr('Book Your Hotels'),
-                      style: TextStyle(
-                        color: ColorsUtil.whiteColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    // Wraps instead of overflowing with large text (WCAG 1.4.4).
+                    Flexible(
+                      child: Text(
+                        tr('Book Your Hotels'),
+                        style: TextStyle(
+                          color: ColorsUtil.whiteColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -209,53 +214,30 @@ class _HotelsSearchScreenState extends State<HotelsSearchScreen> {
                     ),
                     Positioned(
                       top: height * 0.03,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorsUtil.primary,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          border: Border.all(
-                            color: ColorsUtil.whiteColor.withValues(alpha: 0.3),
-                            width: width * 0.003,
-                          ),
-                        ),
-                        padding: EdgeInsets.all(width * 0.015),
-                        child: InkWell(
-                          onTap: _swapDates,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          child: Icon(
-                            Icons.swap_horiz,
-                            color: ColorsUtil.whiteColor,
-                            size: height * 0.03,
-                          ),
-                        ),
+                      child: SwapButton(
+                        icon: Icons.swap_horiz,
+                        label: tr('Swap check-in and check-out dates'),
+                        onPressed: _swapDates,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: height * 0.005),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: SearchInputField(
-                        icon: Icons.hotel_rounded,
-                        caption: tr('Rooms'),
-                        min: 1,
-                        controller: roomsController,
-                        isCounter: true,
-                      ),
-                    ),
-                    SizedBox(width: width * 0.035),
-                    Expanded(
-                      child: SearchInputField(
-                        icon: Icons.person,
-                        caption: tr('Guests'),
-                        min: 1,
-                        controller: adultsController,
-                        isCounter: true,
-                      ),
-                    ),
-                  ],
+                // One under the other: side by side, a phone has no room for 48 x 48 − and + buttons (WCAG 2.5.8).
+                SearchInputField(
+                  icon: Icons.hotel_rounded,
+                  caption: tr('Rooms'),
+                  min: 1,
+                  controller: roomsController,
+                  isCounter: true,
+                ),
+                SearchInputField(
+                  icon: Icons.person,
+                  caption: tr('Guests'),
+                  min: 1,
+                  controller: adultsController,
+                  isCounter: true,
                 ),
                 SizedBox(height: height * 0.025),
                 if (_error != null) FormError(_error!),

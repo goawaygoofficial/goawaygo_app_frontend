@@ -9,6 +9,7 @@ import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/book/form_error.dart';
 import 'package:app_frontend/global_widgets/book/suggest_field.dart';
 import 'package:app_frontend/global_widgets/search_input_field.dart';
+import 'package:app_frontend/global_widgets/swap_button.dart';
 import 'package:flutter/material.dart';
 
 /// Rent a car: where and when. Partners compare every rental company there (car type, drop-off elsewhere and
@@ -118,6 +119,7 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                     ),
                     const Spacer(),
                     IconButton(
+                      tooltip: tr('Back'),
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: ColorsUtil.whiteColor,
@@ -217,25 +219,10 @@ class _RentalsSearchScreenState extends State<RentalsSearchScreen> {
                     ),
                     Positioned(
                       top: height * 0.03,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorsUtil.primary,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          border: Border.all(
-                            color: ColorsUtil.whiteColor.withValues(alpha: 0.3),
-                            width: width * 0.003,
-                          ),
-                        ),
-                        padding: EdgeInsets.all(width * 0.015),
-                        child: InkWell(
-                          onTap: _swapDates,
-                          borderRadius: BorderRadius.circular(width * 0.1),
-                          child: Icon(
-                            Icons.swap_horiz,
-                            color: ColorsUtil.whiteColor,
-                            size: height * 0.03,
-                          ),
-                        ),
+                      child: SwapButton(
+                        icon: Icons.swap_horiz,
+                        label: tr('Swap pick-up and drop-off dates'),
+                        onPressed: _swapDates,
                       ),
                     ),
                   ],

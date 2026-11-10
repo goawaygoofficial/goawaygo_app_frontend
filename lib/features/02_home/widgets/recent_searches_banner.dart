@@ -100,9 +100,7 @@ class _RecentSearchesBannerState extends State<RecentSearchesBanner> {
             Text(
               tr('Places you search for will show here.'),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-              ),
+              style: TextStyle(color: ColorsUtil.textMuted),
             ),
           ],
         ),

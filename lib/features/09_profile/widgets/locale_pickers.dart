@@ -42,7 +42,7 @@ class _LocalePickersState extends State<LocalePickers> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70)),
+          Text(label, style: const TextStyle(color: ColorsUtil.textMuted)),
           const SizedBox(width: 10),
           Flexible(child: field),
         ],

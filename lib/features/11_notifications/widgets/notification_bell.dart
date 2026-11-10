@@ -32,7 +32,7 @@ class NotificationBell extends StatelessWidget {
           child: Icon(
             Icons.notifications,
             size: size,
-            color: ColorsUtil.secondaryLight,
+            color: ColorsUtil.brandOrangeLight,
           ),
         ),
       ),

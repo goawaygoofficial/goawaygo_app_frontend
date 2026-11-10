@@ -295,9 +295,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         child: Text(
                           tr('Delete account'),
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: ColorsUtil.textMuted,
                             decoration: TextDecoration.underline,
-                            decorationColor: Colors.white70,
+                            decorationColor: ColorsUtil.textMuted,
                           ),
                         ),
                       ),
@@ -337,7 +337,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   onPressed: () => _changePhoto(remove: true),
                   child: Text(
                     tr('Remove'),
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: ColorsUtil.textMuted),
                   ),
                 ),
             ],

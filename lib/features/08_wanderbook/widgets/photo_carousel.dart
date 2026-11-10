@@ -86,7 +86,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: i == _page
-                              ? ColorsUtil.secondary
+                              ? ColorsUtil.brandOrange
                               : Colors.white30,
                         ),
                       ),
@@ -102,7 +102,10 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                     ),
                     child: Text(
                       tr('Full size'),
-                      style: TextStyle(color: Colors.white60, fontSize: 12),
+                      style: TextStyle(
+                        color: ColorsUtil.textMuted,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),

@@ -164,9 +164,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
               Text(
                 place.where,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: ColorsUtil.whiteColor.withValues(alpha: 0.75),
-                ),
+                style: TextStyle(color: ColorsUtil.textMuted),
               ),
             if (!signedIn)
               PlanPanel(
@@ -194,7 +192,7 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
               PlanPanel(
                 children: [
                   const CircularProgressIndicator(
-                    color: ColorsUtil.secondaryLight,
+                    color: ColorsUtil.brandOrangeLight,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -231,31 +229,23 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
   List<Widget> _form() {
     return [
       const SizedBox(height: 16),
-      Row(
-        children: [
-          Expanded(
-            child: SearchInputField(
-              icon: Icons.calendar_today,
-              hint: tr('Start date'),
-              controller: _start,
-              onTap: () => HotelDatePickerUtils.selectDate(
-                context,
-                _start,
-                () => setState(() => _error = null),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: SearchInputField(
-              icon: Icons.calendar_month,
-              caption: tr('Days'),
-              min: 1,
-              controller: _days,
-              isCounter: true,
-            ),
-          ),
-        ],
+      // One under the other: side by side, a phone has no room for 48 x 48 − and + buttons (WCAG 2.5.8).
+      SearchInputField(
+        icon: Icons.calendar_today,
+        hint: tr('Start date'),
+        controller: _start,
+        onTap: () => HotelDatePickerUtils.selectDate(
+          context,
+          _start,
+          () => setState(() => _error = null),
+        ),
+      ),
+      SearchInputField(
+        icon: Icons.calendar_month,
+        caption: tr('Days'),
+        min: 1,
+        controller: _days,
+        isCounter: true,
       ),
       _Label(tr('Who\'s going?')),
       OptionChips(
