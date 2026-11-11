@@ -1,0 +1,65 @@
+# Release (MVP 2, 5.2): every merge into develop whose CI passes becomes a version, vMAJOR.MINOR.PATCH, with a GitHub
+# Release (.github/scripts/next-version.sh: feat → minor, fix and the rest → patch, "!" or BREAKING CHANGE → major).
+# The Android app is still built and signed on the release PC (the upload key never leaves it): pass the latest version
+# number to scripts/release-android.sh (RELEASING.md).
+name: Release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Version
+    # A push to develop whose CI passed, or a manual run on develop.
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/develop') ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # the version tag and its GitHub Release
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      commit: ${{ steps.version.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # Exactly the commit CI tested, with every tag, to find the latest version.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Work out the version
+        id: version
+        env:
+          COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          version="$(bash .github/scripts/next-version.sh "$COMMIT")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+          echo "### $version" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Tag it and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          COMMIT: ${{ steps.version.outputs.commit }}
+        run: |
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "$VERSION is already released."
+            exit 0
+          fi
+          previous="$(git tag --merged "$COMMIT^" --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+          # A pre-release until it reaches production (controller.yaml, 5.4); the notes list the PRs since the last one.
+          gh release create "$VERSION" --target "$COMMIT" --title "$VERSION" --prerelease \
+            --generate-notes ${previous:+--notes-start-tag "$previous"}
