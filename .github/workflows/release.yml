@@ -63,3 +63,15 @@ jobs:
           # A pre-release until it reaches production (controller.yaml, 5.4); the notes list the PRs since the last one.
           gh release create "$VERSION" --target "$COMMIT" --title "$VERSION" --prerelease \
             --generate-notes ${previous:+--notes-start-tag "$previous"}
+
+  tests:
+    name: Tests on dev
+    needs: [version, version]
+    if: needs.version.result == 'success'
+    permissions:
+      contents: write # the results in the release notes
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
+    with:
+      environment: dev
+      version: ${{ needs.version.outputs.version }}
