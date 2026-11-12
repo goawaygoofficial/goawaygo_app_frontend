@@ -1,0 +1,190 @@
+name: Tests
+
+# Automated (AT) and performance (PT) tests of what runs in one environment (MVP 2, 5.5 and 5.6). The tests come from
+# goawaygo_automation_tests and goawaygo_performance_tests, from the branch for that environment (dev: develop,
+# test: test, prod: main), so a test change reaches an environment only when it is promoted, like the code.
+#
+# With a version, the results are written into its GitHub Release ("AT <env>", "PT <env>"); Controller moves a version
+# up only after both passed in the environment below. Without one (pull requests: the "before" evidence) nothing is
+# recorded. The app is built from the version (or the pull request) for that environment's backend and run on an
+# Android emulator. prod runs the smoke flows only and never PT.
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: dev, test or prod
+        required: true
+        type: string
+      version:
+        description: The version deployed there (recorded in its release); empty for pull requests
+        required: false
+        type: string
+        default: ""
+      scope:
+        description: full (after a deployment) or smoke (pull requests, prod)
+        required: false
+        type: string
+        default: full
+
+permissions:
+  contents: read
+
+jobs:
+  branch:
+    name: Test branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      ref: ${{ steps.ref.outputs.ref }}
+    steps:
+      - id: ref
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          case "$ENVIRONMENT" in
+            dev) echo "ref=develop" >> "$GITHUB_OUTPUT" ;;
+            test) echo "ref=test" >> "$GITHUB_OUTPUT" ;;
+            prod) echo "ref=main" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::Unknown environment $ENVIRONMENT"; exit 1 ;;
+          esac
+
+  app:
+    name: AT and PT ${{ inputs.environment }} (Android app)
+    needs: branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    outputs:
+      at: ${{ steps.results.outputs.at }}
+      pt: ${{ steps.results.outputs.pt }}
+    env:
+      FLUTTER_VERSION: 3.47.7 # same as ci.yml
+      MAESTRO_VERSION: 2.12.0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.version || github.sha }}
+
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # A test build: this environment's backend, the test-run token (not prod), no analytics, crash reports or push.
+      # Signed with the debug key (the upload key never leaves the release PC). Never uploaded anywhere.
+      - name: Configure the test build
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+          TEST_FAKES_TOKEN: ${{ inputs.environment != 'prod' && secrets.TEST_FAKES_TOKEN || '' }}
+        run: |
+          case "$ENVIRONMENT" in
+            dev) api=https://api-dev.goawaygo.com; web=https://dev.goawaygo.com ;;
+            test) api=https://api-test.goawaygo.com; web=https://test.goawaygo.com ;;
+            prod) api=https://api.goawaygo.com; web=https://goawaygo.com ;;
+          esac
+          cp .env.example .env
+          sed -i "s#^BASE_URL=.*#BASE_URL=$api#; s#^WEBSITE_URL=.*#WEBSITE_URL=$web#" .env
+          if [ -n "$TEST_FAKES_TOKEN" ]; then printf 'TEST_FAKES_TOKEN=%s\n' "$TEST_FAKES_TOKEN" >> .env; fi
+          echo "API_URL=$api" >> "$GITHUB_ENV"
+
+      - name: Build the app (release mode, x86_64 for the emulator)
+        run: flutter build apk --release --target-platform android-x64
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: goawaygoofficial/goawaygo_automation_tests
+          ref: ${{ needs.branch.outputs.ref }}
+          path: at
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: goawaygoofficial/goawaygo_performance_tests
+          ref: ${{ needs.branch.outputs.ref }}
+          path: pt
+          persist-credentials: false
+
+      - name: Install Maestro (checksum verified)
+        run: |
+          base="https://github.com/mobile-dev-inc/maestro/releases/download/cli-${MAESTRO_VERSION}"
+          curl -sSfL -o maestro.zip "$base/maestro.zip"
+          curl -sSfL -o checksums.txt "$base/checksums_sha256.txt"
+          grep " maestro.zip\$" checksums.txt | sha256sum --check --strict
+          unzip -q maestro.zip -d "$HOME"
+          echo "$HOME/maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Allow the emulator to use KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run AT and PT on the emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        env:
+          GOAWAYGO_ENV: ${{ inputs.environment }}
+          TEST_FAKES_TOKEN: ${{ inputs.environment != 'prod' && secrets.TEST_FAKES_TOKEN || '' }}
+          AT_ACCOUNT_PASSWORD: ${{ inputs.environment != 'prod' && secrets.AT_ACCOUNT_PASSWORD || '' }}
+          SCOPE: ${{ inputs.scope }}
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          # One script: the runner executes each line of `script` on its own.
+          script: bash .github/scripts/app-tests.sh
+
+      - name: Results
+        id: results
+        if: always()
+        run: |
+          echo "at=$(cat reports/at.result 2>/dev/null || echo failure)" >> "$GITHUB_OUTPUT"
+          echo "pt=$(cat reports/pt.result 2>/dev/null || echo skipped)" >> "$GITHUB_OUTPUT"
+          if grep -qx failure reports/at.result reports/pt.result 2>/dev/null || [ ! -f reports/at.result ]; then
+            echo "::error::App tests or limits failed: see the report"
+            exit 1
+          fi
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: app-${{ inputs.environment }}-${{ inputs.version || github.run_id }}
+          path: reports/
+          retention-days: 90
+
+  record:
+    name: Record the results in the release
+    needs: app
+    if: always() && inputs.version != '' && needs.app.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # the release notes
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Record AT and PT
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          AT: ${{ needs.app.outputs.at || 'failure' }}
+          PT: ${{ needs.app.outputs.pt || 'skipped' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          outcome() { case "$1" in success) echo passed ;; cancelled) echo cancelled ;; *) echo failed ;; esac; }
+          bash .github/scripts/record-deployment.sh "$VERSION" "AT $ENVIRONMENT" "$(outcome "$AT")" "$RUN_URL"
+          if [ "$PT" != skipped ]; then
+            bash .github/scripts/record-deployment.sh "$VERSION" "PT $ENVIRONMENT" "$(outcome "$PT")" "$RUN_URL"
+          fi
