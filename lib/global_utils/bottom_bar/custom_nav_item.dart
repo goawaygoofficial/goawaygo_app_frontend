@@ -32,6 +32,9 @@ class CustomNavItem extends StatelessWidget {
         ? Duration.zero
         : const Duration(milliseconds: 250);
     return GestureDetector(
+      // The whole tab reacts, not only the icon and label: a tap in the gap between them was ignored (found by the
+      // automated app tests, which tap the tab's centre).
+      behavior: HitTestBehavior.opaque,
       onTap: () => onTap(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
