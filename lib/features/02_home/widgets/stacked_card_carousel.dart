@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// Horizontally swiping, endless carousel: the centred card is full size; neighbours shrink and fade with
+/// distance (the website's `TripIdeaCarousel`).
 class StackedCardCarousel extends StatefulWidget {
-  const StackedCardCarousel({super.key});
+  const StackedCardCarousel({
+    super.key,
+    required this.itemCount,
+    required this.itemBuilder,
+    required this.height,
+  });
+
+  final int itemCount;
+  final Widget Function(BuildContext context, int index) itemBuilder;
+  final double height;
 
   @override
   State<StackedCardCarousel> createState() => _StackedCardCarouselState();
@@ -13,14 +24,6 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
     viewportFraction: 0.6,
     initialPage: 1000,
   );
-
-  final List<Color> colors = [
-    Colors.orange,
-    Colors.deepOrange,
-    Colors.orangeAccent,
-    Colors.redAccent,
-    Colors.deepOrangeAccent,
-  ];
 
   double currentPageValue = 1000.0;
 
@@ -51,49 +54,24 @@ class _StackedCardCarouselState extends State<StackedCardCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: height * 0.28,
+      height: widget.height,
       child: PageView.builder(
         controller: _pageController,
         itemBuilder: (context, index) {
-          final actualIndex = index % colors.length;
-
-          double scale = (1 - ((currentPageValue - index).abs() * 0.3)).clamp(
+          final scale = (1 - ((currentPageValue - index).abs() * 0.3)).clamp(
             0.0,
             1.0,
           );
-          double opacity = scale;
-
           return Transform.scale(
             scale: Curves.easeOut.transform(scale),
             child: Opacity(
-              opacity: opacity,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: width * 0.02),
-                decoration: BoxDecoration(
-                  color: colors[actualIndex],
-                  borderRadius: BorderRadius.circular(width * 0.08),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Card ${actualIndex + 1}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              opacity: scale,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                child: widget.itemBuilder(context, index % widget.itemCount),
               ),
             ),
           );

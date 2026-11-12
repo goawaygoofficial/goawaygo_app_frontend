@@ -1,11 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:app_frontend/features/01_auth_register/screens/auth_screen.dart';
+import 'package:app_frontend/core/i18n/i18n.dart';
+import 'package:app_frontend/core/analytics/analytics.dart';
+import 'package:app_frontend/core/api/api_exception.dart';
 import 'package:app_frontend/features/01_auth_register/services/auth_service.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/auth_button.dart';
 import 'package:app_frontend/features/01_auth_register/widgets/feature_item.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/global_widgets/custom_dialog.dart';
+import 'package:app_frontend/global_widgets/legal_links.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -31,7 +34,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool isStrongPassword(String password) {
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    final regex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,72}$',
+    ); // 72: backend/BCrypt limit
     return regex.hasMatch(password);
   }
 
@@ -44,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message: 'Please fill all fields.',
+        message: tr('Please fill all fields.'),
       );
       return;
     }
@@ -52,45 +57,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!isStrongPassword(password)) {
       await CustomDialogs.showErrorDialog(
         context: context,
-        message:
-            'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+        message: tr(
+          tr(
+            'Password must be 8 to 72 characters long and include uppercase, lowercase, number, and special character.',
+          ),
+        ),
       );
       return;
     }
 
-    final error = await AuthService.signup(name, email, password);
-
-    if (error == null) {
+    try {
+      await AuthService.signup(name, email, password);
+      Analytics.track(SignUpCompleted());
       await CustomDialogs.showSuccessDialog(
         context: context,
-        message: 'Verification email sent! Please check your inbox.',
-        onDismiss: () {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 750),
-              pageBuilder: (_, __, ___) => const AuthScreen(),
-              transitionsBuilder: (_, animation, __, child) {
-                final slide = Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-                final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                );
-
-                return SlideTransition(
-                  position: slide,
-                  child: FadeTransition(opacity: fade, child: child),
-                );
-              },
-            ),
-          );
-        },
+        message: tr('Account created! You can now sign in.'),
+        onDismiss: widget.onBack,
       );
-    } else {
-      await CustomDialogs.showErrorDialog(context: context, message: error);
+    } on ApiException catch (e) {
+      await CustomDialogs.showErrorDialog(context: context, message: e.message);
     }
   }
 
@@ -119,18 +104,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 /// --- Feature Items ---
                 Column(
-                  children: const [
+                  children: [
                     FeatureItem(
                       icon: 'assets/images/auth_image_01.png',
-                      text: 'Travel the World in Your Terms',
+                      text: tr('Travel the World in Your Terms'),
                     ),
                     FeatureItem(
                       icon: 'assets/images/auth_image_02.png',
-                      text: 'Personalised Travel Plans',
+                      text: tr('Personalised Travel Plans'),
                     ),
                     FeatureItem(
                       icon: 'assets/images/auth_image_03.png',
-                      text: 'Your Own WanderBook',
+                      text: tr('Your Own WanderBook'),
                     ),
                   ],
                 ),
@@ -139,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    hintText: "Enter your Name...",
+                    hintText: tr('Enter your Name...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -156,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: "Enter your Email address...",
+                    hintText: tr('Enter your Email address...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -174,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: "Password...",
+                    hintText: tr('Password...'),
                     filled: true,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: height * 0.02,
@@ -188,11 +173,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: height * 0.04),
+                SizedBox(height: height * 0.02),
+                const SignUpNotice(),
+                SizedBox(height: height * 0.02),
 
                 AuthButton(
                   icon: 'assets/icons/email.png',
-                  text: 'REGISTER',
+                  text: tr('REGISTER'),
                   bgColor: ColorsUtil.secondary,
                   textColor: ColorsUtil.whiteColor,
                   onTap: _handleRegister,
@@ -201,10 +188,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 /// --- Back to Sign In ---
                 TextButton(
                   onPressed: widget.onBack,
-                  child: const Text(
-                    "Already have an account? Sign In",
+                  child: Text(
+                    tr('Already have an account? Sign In'),
                     style: TextStyle(
-                      color: ColorsUtil.secondary,
+                      color: ColorsUtil.secondaryLighter,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

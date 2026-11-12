@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ColorsUtil.secondary: tints push notifications. -->
+    <color name="notification_orange">#F26C32</color>
+</resources>

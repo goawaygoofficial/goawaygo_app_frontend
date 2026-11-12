@@ -57,3 +57,6 @@ ios/Runner/GoogleService-Info.plist
 *.jks
 *.keystore
 key.properties
+
+# Cloudflare wrangler local cache (account details)
+.wrangler/

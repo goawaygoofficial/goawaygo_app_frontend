@@ -1,3 +1,4 @@
+import 'package:app_frontend/core/i18n/i18n.dart';
 import 'package:app_frontend/global_utils/colors.dart';
 import 'package:app_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -26,15 +27,24 @@ class CustomNavItem extends StatelessWidget {
     final iconSize = screenWidth * 0.075;
     const fontSize = 12.0;
 
+    // The active tab's icon pops a little and an indicator grows under it (the website's tab bar).
+    final duration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : const Duration(milliseconds: 250);
     return GestureDetector(
       onTap: () => onTap(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            iconPath,
-            height: iconSize,
-            color: isSelected ? ColorsUtil.secondary : ColorsUtil.primary,
+          AnimatedScale(
+            scale: isSelected ? 1.15 : 1,
+            duration: duration,
+            curve: Curves.easeOutBack,
+            child: Image.asset(
+              iconPath,
+              height: iconSize,
+              color: isSelected ? ColorsUtil.secondary : ColorsUtil.primary,
+            ),
           ),
           SizedBox(height: screenHeight * 0.005),
           Text(
@@ -43,6 +53,17 @@ class CustomNavItem extends StatelessWidget {
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: isSelected ? ColorsUtil.secondary : ColorsUtil.primary,
+            ),
+          ),
+          const SizedBox(height: 3),
+          AnimatedContainer(
+            duration: duration,
+            curve: Curves.easeOutCubic,
+            width: isSelected ? 24 : 0,
+            height: 3,
+            decoration: BoxDecoration(
+              color: ColorsUtil.secondary,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
         ],
@@ -63,14 +84,14 @@ class CustomNavItem extends StatelessWidget {
             _navItem(
               context: context,
               iconPath: 'assets/icons/home.png',
-              label: 'HOME',
+              label: tr('HOME'),
               index: 0,
               isSelected: currentPage == 0,
             ),
             _navItem(
               context: context,
               iconPath: 'assets/icons/mytrips.png',
-              label: 'MY TRIPS',
+              label: tr('MY TRIPS'),
               index: 1,
               isSelected: currentPage == 1,
             ),
@@ -84,7 +105,7 @@ class CustomNavItem extends StatelessWidget {
             _navItem(
               context: context,
               iconPath: 'assets/icons/profile.png',
-              label: user == null ? 'SIGN IN' : 'PROFILE',
+              label: user == null ? tr('SIGN IN') : 'PROFILE',
               index: 3,
               isSelected: currentPage == 3,
             ),
