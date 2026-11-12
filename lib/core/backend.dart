@@ -1,4 +1,5 @@
 import 'package:app_frontend/core/api/api_client.dart';
+import 'package:app_frontend/core/api/test_run_client.dart';
 import 'package:app_frontend/core/auth/auth_session.dart';
 import 'package:app_frontend/core/auth/refresh_token_store.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -22,11 +23,18 @@ class Backend {
     RefreshTokenStore? store,
     String? baseUrl,
   }) {
-    final httpClient = client ?? http.Client();
     final url = (baseUrl ?? dotenv.env['BASE_URL'] ?? '').replaceAll(
       RegExp(r'/+$'),
       '',
     );
+    // Automated test builds only: their `.env` has TEST_FAKES_TOKEN (see TestRunClient). Never in a release build.
+    final testToken =
+        (dotenv.isInitialized ? dotenv.env['TEST_FAKES_TOKEN'] ?? '' : '')
+            .trim();
+    final plainClient = client ?? http.Client();
+    final httpClient = testToken.isEmpty
+        ? plainClient
+        : TestRunClient(plainClient, testToken, url);
     _session = AuthSession(
       client: httpClient,
       store: store ?? const SecureRefreshTokenStore(),
