@@ -28,7 +28,7 @@ Breadcrumb? scrubBreadcrumb(Breadcrumb? breadcrumb, [Hint? hint]) {
   return breadcrumb;
 }
 
-/// Error tracking for builds that set SENTRY_DSN in their env file (staging, production). Local runs (`.env`
+/// Error tracking for builds that set SENTRY_DSN in their env file (release builds: production). Local runs (`.env`
 /// without it) send nothing. Crashes, including native Android ones, go to Sentry project goawaygo-app with the
 /// environment and release (package@version+build). No personal data: no user details, IPs or screenshots (view
 /// hierarchy is off by default too), and tokens are cut out of URLs.
@@ -42,7 +42,7 @@ Future<void> runWithMonitoring(FutureOr<void> Function() appRunner) async {
   }
   await SentryFlutter.init((options) {
     options.dsn = dsn;
-    options.environment = dotenv.env['SENTRY_ENVIRONMENT'] ?? 'staging';
+    options.environment = dotenv.env['SENTRY_ENVIRONMENT'] ?? 'production';
     options.sendDefaultPii = false;
     options.attachScreenshot = false;
     options.tracesSampleRate = 0.1;

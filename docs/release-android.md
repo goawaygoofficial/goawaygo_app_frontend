@@ -16,7 +16,7 @@ The app reads its settings from a bundled env file (public values only — never
 | Build               | Env file                      | Backend                           |
 | ------------------- | ----------------------------- | --------------------------------- |
 | `flutter run` (dev) | `.env` (local, gitignored)    | your PC (`http://localhost:8080`) |
-| Staging (testers)   | `env/staging.env` (committed) | `https://api.goawaygo.com`        |
+| Release (testers)   | `env/prod.env` (committed)    | `https://api.goawaygo.com`        |
 
 Pick the file with `--dart-define=ENV_FILE=...`; without it the app uses `.env`.
 
@@ -47,10 +47,10 @@ bash scripts/firebase-key.sh
 ```
 
 It saves the key to `~/.goawaygo/firebase.env` without showing it; `release-android.sh` passes it with
-`--dart-define=FIREBASE_ANDROID_API_KEY`. The other Firebase IDs are public values in `env/staging.env`. Builds without
+`--dart-define=FIREBASE_ANDROID_API_KEY`. The other Firebase IDs are public values in `env/prod.env`. Builds without
 the key (local runs, CI, tests) work normally without push, and the release script warns.
 
-## Release a staging build
+## Release a build
 
 One command builds both APKs, writes `latest.json` and (with `--upload`) publishes them:
 
