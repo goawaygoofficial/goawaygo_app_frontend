@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Creates the Android upload key that signs GoAwayGo release builds (see docs/release-android.md). Run once.
+# Creates the Android upload key that signs GoAwayGo release builds (see README.md, Android releases). Run once.
 #
 #   Usage:  bash scripts/create-upload-key.sh
 #   Needs:  keytool (part of the JDK), openssl (Git Bash has it).
