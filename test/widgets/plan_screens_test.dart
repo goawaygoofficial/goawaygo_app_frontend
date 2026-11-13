@@ -19,9 +19,7 @@ void main() {
 
   setUp(() {
     backend = FakeBackend();
-    dotenv.loadFromString(
-      envString: 'WEBSITE_URL=https://goawaygo.com',
-    );
+    dotenv.loadFromString(envString: 'WEBSITE_URL=https://goawaygo.com');
   });
 
   Future<void> scrollTo(WidgetTester tester, Finder finder) async {
