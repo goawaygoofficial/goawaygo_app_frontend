@@ -88,7 +88,7 @@ if [[ "$UPLOAD" == "--upload" ]]; then
   done
   $WRANGLER r2 object put "$BUCKET/android/latest.json" --file "$OUT/latest.json" --remote \
     --content-type application/json --cache-control "no-cache"
-  echo "==> Live: https://staging.goawaygo.com/download"
+  echo "==> Live: https://goawaygo.com/download"
 else
   echo "Not uploaded (add --upload to publish)."
 fi
