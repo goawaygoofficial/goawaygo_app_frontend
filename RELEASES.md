@@ -93,5 +93,6 @@ Every build published for testers (Firebase App Distribution and goawaygo.com/do
 | 2026-11-09 | 1.4.0   | 10    | Notifications: a bell on Home with an unread count; push for new followers, likes, comments, trip reminders and opened shared plans; notification settings with a switch per type                                                                                      |
 | 2026-11-10 | 1.5.0   | 11    | Me: edit name, photo, password, email, country and currency; recently viewed; delete account. 7 languages (en, hi, es, fr, de, ar, ja) and prices in your currency; accessibility (contrast, 48dp buttons, labels) and faster start                                    |
 | 2026-11-10 | 1.5.0   | 12    | Updated crash reporting (Sentry) and usage statistics (PostHog) libraries                                                                                                                                                                                              |
+| 2026-11-14 | 1.5.0   | 13    | Privacy, Terms, Delete my data and shared trip plans open on goawaygo.com (staging.goawaygo.com is gone); crash reports go to production                                                                                                                               |
 
 Add a row for every Android build.
