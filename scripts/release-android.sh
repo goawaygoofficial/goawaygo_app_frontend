@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds an Android release (production API) and publishes it for direct download (docs/release-android.md).
+# Builds an Android release (production API) and publishes it for direct download (README.md, Android releases).
 #
 #   Usage:  bash scripts/release-android.sh <version> <build-number> "<release notes>" [--upload]
 #   e.g.    bash scripts/release-android.sh 1.0.0 3 "Wanderbook photos, bug fixes" --upload

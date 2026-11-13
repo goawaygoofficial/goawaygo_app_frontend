@@ -1,5 +1,5 @@
 /// Shapes of the backend's Wanderbook API (`/api/wanderbook/*`), the same as the website's
-/// `features/wanderbook/types.ts`. Decided for 4.2 (see ROADMAP.md).
+/// `features/wanderbook/types.ts`. Decided for 4.2 (README.md, Roadmap).
 library;
 
 import 'package:app_frontend/core/i18n/i18n.dart';
