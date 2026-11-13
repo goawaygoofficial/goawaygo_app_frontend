@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Local development reads .env; release builds pick their environment's file, e.g.
-  // --dart-define=ENV_FILE=env/staging.env (see docs/release-android.md).
+  // --dart-define=ENV_FILE=env/prod.env (see docs/release-android.md).
   await dotenv.load(
     fileName: const String.fromEnvironment('ENV_FILE', defaultValue: '.env'),
   );

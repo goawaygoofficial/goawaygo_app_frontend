@@ -217,8 +217,8 @@ void main() {
   group('plan helpers', () {
     test('the shared link is the website page', () {
       expect(
-        PlanService.sharedLink('abc', 'https://staging.goawaygo.com/'),
-        'https://staging.goawaygo.com/plans/shared/abc',
+        PlanService.sharedLink('abc', 'https://goawaygo.com/'),
+        'https://goawaygo.com/plans/shared/abc',
       );
       expect(PlanService.sharedLink('abc', ' '), isNull);
     });
