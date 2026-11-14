@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('legal pages point at the website routes', () {
     expect(
-      LegalPage.privacy.uri('https://staging.goawaygo.com/').toString(),
-      'https://staging.goawaygo.com/privacy',
+      LegalPage.privacy.uri('https://goawaygo.com/').toString(),
+      'https://goawaygo.com/privacy',
     );
     expect(
       LegalPage.terms.uri('https://goawaygo.com').toString(),
