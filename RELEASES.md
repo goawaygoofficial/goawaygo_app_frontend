@@ -5,6 +5,20 @@ moves to **test** and **prod** only through the Controller, after it passed belo
 approval. Newest first. Each entry: the changes (pull requests) and where it ran. Update this file in the PR
 that records a release reaching prod (README → Releasing).
 
+## v1.9.12 — 2026-11-14
+
+Ran in: test ✅ 2026-11-14 · prod ✅ 2026-11-14
+
+- LINKS.md: team-only dev and test (Cloudflare Access) ([#82](https://github.com/goawaygoofficial/goawaygo_app_frontend/pull/82))
+
+## v1.9.11 — 2026-11-13
+
+- RELEASES.md: Android build 13 ([#81](https://github.com/goawaygoofficial/goawaygo_app_frontend/pull/81))
+
+## v1.9.10 — 2026-11-13
+
+- Docs: only README.md, LINKS.md and RELEASES.md ([#80](https://github.com/goawaygoofficial/goawaygo_app_frontend/pull/80))
+
 ## v1.9.9 — 2026-11-13
 
 - CLEANUP.md: accounts done ([#79](https://github.com/goawaygoofficial/goawaygo_app_frontend/pull/79))
