@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds a staging Android release and publishes it for direct download (docs/release-android.md).
+# Builds an Android release (production API) and publishes it for direct download (README.md, Android releases).
 #
 #   Usage:  bash scripts/release-android.sh <version> <build-number> "<release notes>" [--upload]
 #   e.g.    bash scripts/release-android.sh 1.0.0 3 "Wanderbook photos, bug fixes" --upload
@@ -16,7 +16,7 @@ VERSION="${1:?Usage: release-android.sh <version> <build-number> \"<notes>\" [--
 BUILD="${2:?Usage: release-android.sh <version> <build-number> \"<notes>\" [--upload]}"
 NOTES="${3:-}"
 UPLOAD="${4:-}"
-ENV_FILE=env/staging.env
+ENV_FILE=env/prod.env
 BUCKET=goawaygo-downloads
 BASE_URL=https://downloads.goawaygo.com/android
 WRANGLER="npx --yes wrangler@4.145.0"
@@ -88,7 +88,7 @@ if [[ "$UPLOAD" == "--upload" ]]; then
   done
   $WRANGLER r2 object put "$BUCKET/android/latest.json" --file "$OUT/latest.json" --remote \
     --content-type application/json --cache-control "no-cache"
-  echo "==> Live: https://staging.goawaygo.com/download"
+  echo "==> Live: https://goawaygo.com/download"
 else
   echo "Not uploaded (add --upload to publish)."
 fi

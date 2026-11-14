@@ -5,8 +5,8 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 void main() {
   test('scrubUrl removes tokens and OAuth values from URLs', () {
     expect(
-      scrubUrl('https://staging.goawaygo.com/reset-password?token=abc123&x=1'),
-      'https://staging.goawaygo.com/reset-password?token=[Filtered]&x=1',
+      scrubUrl('https://goawaygo.com/reset-password?token=abc123&x=1'),
+      'https://goawaygo.com/reset-password?token=[Filtered]&x=1',
     );
     expect(
       scrubUrl('https://x.test/cb?state=s1&code=c2'),
@@ -20,12 +20,12 @@ void main() {
 
   test('scrubBreadcrumb cleans both URL keys (sentry_flutter 9 and 10)', () {
     final crumb = Breadcrumb.http(
-      url: Uri.parse('https://staging.goawaygo.com/verify-email?token=t1'),
+      url: Uri.parse('https://goawaygo.com/verify-email?token=t1'),
       method: 'GET',
     );
     crumb.data = {
       ...?crumb.data,
-      'url.full': 'https://staging.goawaygo.com/reset-password?token=t2',
+      'url.full': 'https://goawaygo.com/reset-password?token=t2',
     };
 
     final data = scrubBreadcrumb(crumb)!.data!;

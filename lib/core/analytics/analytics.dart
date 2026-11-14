@@ -136,7 +136,7 @@ class Analytics {
       await Posthog().setup(config);
       await Posthog().register(
         'environment',
-        dotenv.env['SENTRY_ENVIRONMENT'] ?? 'staging',
+        dotenv.env['SENTRY_ENVIRONMENT'] ?? 'production',
       );
       _started = true;
     } on Object catch (error) {

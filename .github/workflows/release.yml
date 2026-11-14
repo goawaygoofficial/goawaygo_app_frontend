@@ -1,7 +1,7 @@
 # Release (MVP 2, 5.2): every merge into develop whose CI passes becomes a version, vMAJOR.MINOR.PATCH, with a GitHub
 # Release (.github/scripts/next-version.sh: feat → minor, fix and the rest → patch, "!" or BREAKING CHANGE → major).
 # The Android app is still built and signed on the release PC (the upload key never leaves it): pass the latest version
-# number to scripts/release-android.sh (RELEASING.md).
+# number to scripts/release-android.sh (README.md, Releasing).
 name: Release
 
 on:

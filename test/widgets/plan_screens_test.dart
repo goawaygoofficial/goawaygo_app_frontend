@@ -19,9 +19,7 @@ void main() {
 
   setUp(() {
     backend = FakeBackend();
-    dotenv.loadFromString(
-      envString: 'WEBSITE_URL=https://staging.goawaygo.com',
-    );
+    dotenv.loadFromString(envString: 'WEBSITE_URL=https://goawaygo.com');
   });
 
   Future<void> scrollTo(WidgetTester tester, Finder finder) async {
@@ -97,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('https://staging.goawaygo.com/plans/shared/abc123def456'),
+      find.text('https://goawaygo.com/plans/shared/abc123def456'),
       findsOneWidget,
     );
     expect(find.text('Stop sharing'), findsOneWidget);
