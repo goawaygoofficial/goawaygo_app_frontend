@@ -1,5 +1,5 @@
 /// Shapes of the backend's Discover API (`/api/discover/*`, `/api/me/saved-places`), the same as the website's
-/// `features/discover/types.ts`. See backend `docs/destination-prompts.md`.
+/// `features/discover/types.ts`. See the backend README ("Discover: destination pages, photos and ideas").
 library;
 
 String _string(Object? value) => value is String ? value : '';
